@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="FaceRecognitionApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:FaceRecognitionApp"
+    xmlns:views="clr-namespace:FaceRecognitionApp.Views"
+    Title="Face Recognition"
+    FlyoutBackgroundColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}">
+
+    <Shell.FlyoutHeader>
+        <Border Padding="20,40,20,20">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="{StaticResource Primary}" Offset="0.0"/>
+                    <GradientStop Color="{StaticResource Accent}" Offset="1.0"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <VerticalStackLayout Spacing="8">
+                <Label Text="🔐"
+                       FontSize="48"
+                       HorizontalOptions="Center"/>
+                <Label Text="Face Recognition"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       HorizontalTextAlignment="Center"/>
+                <Label Text="Secure Identity System"
+                       FontSize="14"
+                       TextColor="White"
+                       Opacity="0.9"
+                       HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+        </Border>
+    </Shell.FlyoutHeader>
+
+    <TabBar>
+        <ShellContent
+            Title="Register"
+            Icon="person_add.png"
+            ContentTemplate="{DataTemplate views:UserRegistrationPage}"
+            Route="RegistrationPage">
+            <ShellContent.Icon>
+                <FontImageSource 
+                    Glyph="➕" 
+                    FontFamily="OpenSansRegular"
+                    Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}"/>
+            </ShellContent.Icon>
+        </ShellContent>
+
+        <ShellContent
+            Title="Verify"
+            Icon="search.png"
+            ContentTemplate="{DataTemplate views:FaceVerificationPage}"
+            Route="FaceVerificationPage">
+            <ShellContent.Icon>
+                <FontImageSource 
+                    Glyph="🔍" 
+                    FontFamily="OpenSansRegular"
+                    Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}"/>
+            </ShellContent.Icon>
+        </ShellContent>
+
+        <ShellContent
+            Title="Users"
+            Icon="people.png"
+            ContentTemplate="{DataTemplate views:UsersListPage}"
+            Route="UsersPage">
+            <ShellContent.Icon>
+                <FontImageSource 
+                    Glyph="👥" 
+                    FontFamily="OpenSansRegular"
+                    Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}"/>
+            </ShellContent.Icon>
+        </ShellContent>
+    </TabBar>
+
+</Shell>

@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "FaceRecognitionApp\\FaceRecognitionApp.csproj",
+        "Action": "Start",
+        "DebugTarget": "Windows Machine"
+      },
+      {
+        "Path": "FaceRecognition.Api\\FaceRecognition.Api.csproj",
+        "Action": "Start",
+        "DebugTarget": "https (dev tunnel)"
+      }
+    ]
+  }
+]

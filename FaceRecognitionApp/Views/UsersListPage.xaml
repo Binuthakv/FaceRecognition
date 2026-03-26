@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:FaceRecognitionApp.ViewModels"
+             xmlns:models="clr-namespace:FaceRecognitionApp.Models"
+             x:Class="FaceRecognitionApp.Views.UsersListPage"
+             x:DataType="viewmodels:UsersListViewModel"
+             Title="Registered Users"
+             BackgroundColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}">
+
+    <Grid RowDefinitions="Auto,*" Padding="0">
+        
+        <!-- Modern Header Section -->
+        <Border Grid.Row="0"
+                Padding="20,20,20,24"
+                StrokeThickness="0">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="{StaticResource Primary}" Offset="0.0"/>
+                    <GradientStop Color="{StaticResource Accent}" Offset="1.0"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Border.Shadow>
+                <OnPlatform x:TypeArguments="x:Object">
+                    <On Platform="Android"><x:Null/></On>
+                    <On Platform="Default">
+                        <Shadow Brush="{StaticResource Primary}"
+                                Offset="0,4"
+                                Radius="12"
+                                Opacity="0.15"/>
+                    </On>
+                </OnPlatform>
+            </Border.Shadow>
+            
+            <Grid ColumnDefinitions="*,Auto" RowSpacing="16">
+                <!-- Title Section -->
+                <VerticalStackLayout Grid.Column="0" Spacing="6">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="👥"
+                               FontSize="32"
+                               VerticalOptions="Center"/>
+                        <VerticalStackLayout Spacing="2">
+                            <Label Text="Registered Users"
+                                   FontSize="24"
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+                            <Border StrokeShape="RoundRectangle 12"
+                                    BackgroundColor="#33FFFFFF"
+                                    Padding="12,4"
+                                    HorizontalOptions="Start">
+                                <Label Text="{Binding TotalUsers, StringFormat='{0} users enrolled'}"
+                                       FontSize="12"
+                                       FontAttributes="Bold"
+                                       TextColor="White"/>
+                            </Border>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+
+                <!-- Action Buttons -->
+                <VerticalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                    <Button Text="➕ Add"
+                            Command="{Binding AddUserCommand}"
+                            Style="{StaticResource PrimaryButton}"
+                            FontSize="14"
+                            Padding="16,10"
+                            WidthRequest="100"/>
+                    <Button Text="🔄 Refresh"
+                            Command="{Binding RefreshUsersCommand}"
+                            Style="{StaticResource SecondaryButton}"
+                            FontSize="14"
+                            Padding="16,10"
+                            WidthRequest="100"/>
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- Users List with Modern Cards -->
+        <RefreshView Grid.Row="1"
+                     IsRefreshing="{Binding IsRefreshing}"
+                     Command="{Binding RefreshUsersCommand}"
+                     Margin="0,8,0,0">
+            <CollectionView ItemsSource="{Binding Users}"
+                           SelectionMode="None"
+                           Margin="16,0">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Spacing="16" 
+                                        VerticalOptions="Center" 
+                                        HorizontalOptions="Center"
+                                        Padding="40">
+                        <Label Text="📭"
+                               FontSize="80"
+                               HorizontalOptions="Center"
+                               TextColor="{StaticResource Gray400}"/>
+                        <Label Text="No Users Yet"
+                               Style="{StaticResource SectionTitle}"
+                               HorizontalOptions="Center"
+                               TextColor="{StaticResource Gray600}"/>
+                        <Label Text="Get started by registering your first user"
+                               Style="{StaticResource Caption}"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"/>
+                        <Button Text="➕ Register First User"
+                                Command="{Binding AddUserCommand}"
+                                Style="{StaticResource PrimaryButton}"
+                                HorizontalOptions="Center"
+                                Margin="0,16,0,0"/>
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+                
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="16"/>
+                </CollectionView.ItemsLayout>
+
+				<CollectionView.ItemTemplate>
+					<DataTemplate x:DataType="models:UserRegistration">
+						<!-- Modern User Card without SwipeView for Android stability -->
+						<Border Style="{StaticResource CardFrame}"
+								Padding="0"
+								Margin="0,4">
+							<Grid ColumnDefinitions="Auto,*" Padding="16" ColumnSpacing="16">
+
+								<!-- User Avatar -->
+								<Border Grid.Column="0"
+									   StrokeThickness="3"
+									   StrokeShape="RoundRectangle 50"
+									   HeightRequest="100"
+									   WidthRequest="100"
+									   VerticalOptions="Center">
+									<Border.Stroke>
+										<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+											<GradientStop Color="{StaticResource Primary}" Offset="0.0"/>
+											<GradientStop Color="{StaticResource Secondary}" Offset="1.0"/>
+										</LinearGradientBrush>
+									</Border.Stroke>
+									<Border.Shadow>
+										<OnPlatform x:TypeArguments="x:Object">
+											<On Platform="Android"><x:Null/></On>
+											<On Platform="Default">
+												<Shadow Brush="{StaticResource Primary}"
+														Offset="0,4"
+														Radius="8"
+														Opacity="0.2"/>
+											</On>
+										</OnPlatform>
+									</Border.Shadow>
+
+									<Grid>
+										<!-- Photo -->
+										<Image Source="{Binding Photo1, Converter={StaticResource ByteArrayToImageConverter}}"
+											   Aspect="AspectFill"
+											   IsVisible="{Binding Photo1, Converter={StaticResource IsNotNullConverter}}"/>
+										<!-- Placeholder -->
+										<Border BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}"
+												IsVisible="{Binding Photo1, Converter={StaticResource IsNullConverter}}">
+											<Label Text="👤"
+												   FontSize="48"
+												   HorizontalOptions="Center"
+												   VerticalOptions="Center"
+												   TextColor="{StaticResource Gray400}"/>
+										</Border>
+									</Grid>
+								</Border>
+
+								<!-- User Details -->
+								<VerticalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+									<!-- Name & ID -->
+									<VerticalStackLayout Spacing="2">
+										<Label Text="{Binding Name}"
+											   FontSize="20"
+											   FontAttributes="Bold"
+											   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
+										<Border StrokeShape="RoundRectangle 8"
+												BackgroundColor="{StaticResource PrimaryLight}"
+												Padding="8,4"
+												HorizontalOptions="Start">
+											<Label Text="{Binding UserId, StringFormat='ID: {0}'}"
+												   FontSize="12"
+												   FontAttributes="Bold"
+												   TextColor="White"/>
+										</Border>
+									</VerticalStackLayout>
+
+									<!-- Info Grid -->
+									<Grid ColumnDefinitions="Auto,*,Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="4">
+										<!-- Age -->
+										<Label Grid.Row="0" Grid.Column="0"
+											   Text="🎂"
+											   FontSize="16"
+											   VerticalOptions="Center"/>
+										<Label Grid.Row="0" Grid.Column="1"
+											   Text="{Binding Age, StringFormat='{0} years'}"
+											   FontSize="14"
+											   TextColor="{StaticResource Gray600}"
+											   VerticalOptions="Center"/>
+
+										<!-- Photos -->
+										<Label Grid.Row="0" Grid.Column="2"
+											   Text="📸"
+											   FontSize="16"
+											   VerticalOptions="Center"/>
+										<Label Grid.Row="0" Grid.Column="3"
+											   Text="{Binding PhotoCount, StringFormat='{0}/3 photos'}"
+											   FontSize="14"
+											   TextColor="{StaticResource Gray600}"
+											   VerticalOptions="Center"/>
+
+										<!-- Date -->
+										<Label Grid.Row="1" Grid.Column="0"
+											   Text="📅"
+											   FontSize="16"
+											   VerticalOptions="Center"/>
+										<Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
+											   Text="{Binding RegisteredDate, StringFormat='Enrolled: {0:MMM dd, yyyy}'}"
+											   FontSize="12"
+											   TextColor="{StaticResource Gray500}"
+											   VerticalOptions="Center"/>
+									</Grid>
+
+									<!-- Action Buttons -->
+									<Grid ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,8,0,0">
+										<Button Grid.Column="0"
+											   Text="📝 Edit"
+											   Command="{Binding BindingContext.EditUserCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+											   CommandParameter="{Binding .}"
+											   Style="{StaticResource SecondaryButton}"
+											   HeightRequest="40"
+											   FontSize="14"/>
+										<Button Grid.Column="1"
+											   Text="🗑️ Delete"
+											   Command="{Binding BindingContext.DeleteUserCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+											   CommandParameter="{Binding .}"
+											   Style="{StaticResource DangerButton}"
+											   HeightRequest="40"
+											   FontSize="14"/>
+									</Grid>
+										</VerticalStackLayout>
+									</Grid>
+								</Border>
+					</DataTemplate>
+				</CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <!-- Loading Overlay -->
+        <Border Grid.Row="1"
+                IsVisible="{Binding IsLoading}"
+                BackgroundColor="#CC000000"
+                HorizontalOptions="Fill"
+                VerticalOptions="Fill">
+            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="16">
+                <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                   Color="White"
+                                   WidthRequest="48"
+                                   HeightRequest="48"/>
+                <Label Text="{Binding StatusMessage}"
+                       FontSize="16"
+                       FontAttributes="Bold"
+                       TextColor="White"
+                       HorizontalTextAlignment="Center"/>
+            </VerticalStackLayout>
+        </Border>
+    </Grid>
+
+</ContentPage>

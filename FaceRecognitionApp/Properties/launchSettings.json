@@ -1,0 +1,37 @@
+{
+  "profiles": {
+    "Windows Machine": {
+      "commandName": "Project",
+      "nativeDebugging": false,
+      "environmentVariables": {
+        "API_BASE_URL": "https://localhost:7053/"
+      }
+    },
+    "Windows Machine (Dev Tunnel)": {
+      "commandName": "Project",
+      "nativeDebugging": false,
+      "environmentVariables": {
+        "API_BASE_URL": "https://lb97vc47-7053.inc1.devtunnels.ms/"
+      }
+    },
+    "Android Emulator Pixel 7": {
+      "commandName": "Project",
+      "nativeDebugging": false,
+      "targetFramework": "net10.0-android",
+      "androidDevice": "pixel_7_-_api_36",
+      "environmentVariables": {
+        "API_BASE_URL": "https://lb97vc47-7053.inc1.devtunnels.ms/"
+      }
+    },
+    "Android Local Device": {
+      "commandName": "Project",
+      "nativeDebugging": false,
+      "targetFramework": "net10.0-android",
+      "androidDevice": "Samsung_SM-S928B",
+      "environmentVariables": {
+        "API_BASE_URL": "https://lb97vc47-7053.inc1.devtunnels.ms/"
+      }
+    }
+  }
+ }
+  
