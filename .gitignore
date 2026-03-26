@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/FaceRecognitionApp/FileContentIndex
+/FaceRecognition.Api/obj
+/FaceRecognition.Api/obj/Debug/net10.0/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs
+/FaceRecognitionApp/obj
