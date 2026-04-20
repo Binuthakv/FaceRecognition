@@ -1,5 +1,4 @@
 using FaceRecognitionApp.Api.Services;
-using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,9 +6,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<IUserDatabaseService, UserDatabaseService>();
 builder.Services.AddSingleton<IFaceRecognitionService, FaceRecognitionService>();
 builder.Services.AddSingleton<IAttendanceService, AttendanceService>();
+builder.Services.AddSingleton<IUserWorkingHoursService, UserWorkingHoursService>();
 
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+builder.Services.AddRazorPages();
+builder.Services.AddAntiforgery();
 
 var app = builder.Build();
 
@@ -31,7 +32,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapOpenApi();
-app.MapScalarApiReference();
+app.MapRazorPages();
 
 app.Run();

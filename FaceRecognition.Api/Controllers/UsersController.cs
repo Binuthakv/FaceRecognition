@@ -71,6 +71,10 @@ public class UsersController : ControllerBase
         {
             embeddingsExtracted = await _db.SaveUserEmbeddingsAsync(user.UserId, emb1, emb2, emb3);
         }
+        else
+        {
+
+        }
 
         var response = new UserRegistrationResponse(
             userId,//user.Id,

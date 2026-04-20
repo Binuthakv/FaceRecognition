@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FaceRecognitionApp.Views.AttendanceListPage"
+             Title="Attendance Records"
+             BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E1E1E}">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="0" RowSpacing="0">
+        <!-- Header with refresh button -->
+        <Grid Grid.Row="0" Padding="16,12" ColumnDefinitions="*,Auto" ColumnSpacing="8" BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#2D2D2D}">
+            <Label Text="Attendance Records" FontSize="20" FontAttributes="Bold" VerticalOptions="Center"/>
+            <Button Grid.Column="1" 
+                    Text="Refresh" 
+                    Command="{Binding RefreshCommand}"
+                    Padding="12,8"
+                    CornerRadius="4"
+                    BackgroundColor="#2196F3"
+                    TextColor="White"
+                    IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                    FontSize="14"/>
+        </Grid>
+
+        <!-- Table Header and Content -->
+        <Grid Grid.Row="1" Padding="0" RowSpacing="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Column Headers -->
+            <Grid Grid.Row="0" Padding="12" ColumnDefinitions="1.2*,2*,2.5*,1.5*" ColumnSpacing="8" 
+                  BackgroundColor="{AppThemeBinding Light=#E8E8E8, Dark=#3D3D3D}" 
+                  BorderStrokeThickness="1" 
+                  BorderStroke="{AppThemeBinding Light=#CCCCCC, Dark=#555555}">
+                <Label Text="User ID" FontAttributes="Bold" FontSize="13" VerticalOptions="Center"/>
+                <Label Grid.Column="1" Text="Name" FontAttributes="Bold" FontSize="13" VerticalOptions="Center"/>
+                <Label Grid.Column="2" Text="Scan Time" FontAttributes="Bold" FontSize="13" VerticalOptions="Center"/>
+                <Label Grid.Column="3" Text="Processed" FontAttributes="Bold" FontSize="13" VerticalOptions="Center" HorizontalTextAlignment="Center"/>
+            </Grid>
+
+            <!-- Data Rows using CollectionView -->
+            <CollectionView Grid.Row="1" ItemsSource="{Binding AttendanceRecords}" SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="12" ColumnDefinitions="1.2*,2*,2.5*,1.5*" ColumnSpacing="8"
+                              BorderStrokeThickness="0,0,0,1" 
+                              BorderStroke="{AppThemeBinding Light=#EEEEEE, Dark=#404040}"
+                              BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#252525}">
+                            <Label Text="{Binding UserId}" FontSize="12" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                            <Label Grid.Column="1" Text="{Binding Name}" FontSize="12" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                            <Label Grid.Column="2" Text="{Binding ScanTimeFormatted}" FontSize="12" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                            <Label Grid.Column="3" Text="{Binding ProcessedStatus}" FontSize="12" VerticalOptions="Center" HorizontalTextAlignment="Center"
+                                   TextColor="{Binding Processed, Converter={StaticResource ProcessedStatusColorConverter}}"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <StackLayout Padding="20" Spacing="10" HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label Text="No attendance records found" FontSize="16" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                        <Label Text="Pull down to refresh" FontSize="13" HorizontalTextAlignment="Center" Opacity="0.6"/>
+                    </StackLayout>
+                </CollectionView.EmptyView>
+            </CollectionView>
+        </Grid>
+
+        <!-- Loading and Status Bar -->
+        <StackLayout Grid.Row="2" Padding="16" Spacing="8" BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#2D2D2D}">
+            <ActivityIndicator IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}" Color="#2196F3"/>
+            <Label Text="{Binding StatusMessage}" FontSize="12" HorizontalTextAlignment="Center" TextColor="{Binding StatusColor}"/>
+        </StackLayout>
+    </Grid>
+</ContentPage>

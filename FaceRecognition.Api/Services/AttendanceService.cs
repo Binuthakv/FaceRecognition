@@ -68,16 +68,27 @@ public class AttendanceService : IAttendanceService, IDisposable
                 ScanTime TEXT NOT NULL,
                 Processed INTEGER NOT NULL DEFAULT 0
             );
-            
+
             CREATE INDEX IF NOT EXISTS idx_attendance_userid ON Attendance(UserId);
             CREATE INDEX IF NOT EXISTS idx_attendance_processed ON Attendance(Processed);
+
+            CREATE TABLE IF NOT EXISTS UserWorkingHours (
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                UserId TEXT NOT NULL,
+                LoginDate TEXT NOT NULL,
+                WorkingHours REAL NOT NULL,
+                UNIQUE(UserId, LoginDate)
+            );
+
+            CREATE INDEX IF NOT EXISTS idx_working_hours_userid ON UserWorkingHours(UserId);
+            CREATE INDEX IF NOT EXISTS idx_working_hours_logindate ON UserWorkingHours(LoginDate);
         ";
 
         using var command = _connection.CreateCommand();
         command.CommandText = sql;
         await command.ExecuteNonQueryAsync();
 
-        _logger.LogDebug("Attendance table created or verified");
+        _logger.LogDebug("Attendance and UserWorkingHours tables created or verified");
     }
 
     public async Task<int> InsertAttendanceAsync(string userId, DateTime scanTime)
@@ -196,6 +207,149 @@ public class AttendanceService : IAttendanceService, IDisposable
         await command.ExecuteNonQueryAsync();
 
         _logger.LogDebug("Attendance record marked as processed. Id: {Id}", attendanceId);
+    }
+
+    /// <summary>
+    /// Insert or update working hours for a user on a specific date.
+    /// </summary>
+    public async Task<int> InsertOrUpdateWorkingHoursAsync(string userId, DateTime loginDate, decimal workingHours)
+    {
+        if (_connection is null) throw new InvalidOperationException("Database not initialized");
+
+        const string sql = @"
+            INSERT INTO UserWorkingHours (UserId, LoginDate, WorkingHours)
+            VALUES (@userId, @loginDate, @workingHours)
+            ON CONFLICT(UserId, LoginDate) DO UPDATE SET
+                WorkingHours = @workingHours
+            RETURNING Id;
+        ";
+
+        using var command = _connection.CreateCommand();
+        command.CommandText = sql;
+        command.Parameters.AddWithValue("@userId", userId);
+        command.Parameters.AddWithValue("@loginDate", loginDate.ToString("yyyy-MM-dd"));
+        command.Parameters.AddWithValue("@workingHours", workingHours);
+
+        var result = await command.ExecuteScalarAsync();
+        var recordId = Convert.ToInt32(result);
+
+        _logger.LogInformation("Working hours inserted/updated for UserId: {UserId}, LoginDate: {LoginDate}, Hours: {Hours}",
+            userId, loginDate.Date, workingHours);
+
+        return recordId;
+    }
+
+    /// <summary>
+    /// Get working hours for a specific user.
+    /// </summary>
+    public async Task<List<UserWorkingHours>> GetUserWorkingHoursAsync(string userId)
+    {
+        if (_connection is null) throw new InvalidOperationException("Database not initialized");
+
+        const string sql = "SELECT Id, UserId, LoginDate, WorkingHours FROM UserWorkingHours WHERE UserId = @userId ORDER BY LoginDate DESC";
+
+        using var command = _connection.CreateCommand();
+        command.CommandText = sql;
+        command.Parameters.AddWithValue("@userId", userId);
+
+        var result = new List<UserWorkingHours>();
+        using var reader = await command.ExecuteReaderAsync();
+
+        while (await reader.ReadAsync())
+        {
+            result.Add(new UserWorkingHours
+            {
+                Id = reader.GetInt32(0),
+                UserId = reader.GetString(1),
+                LoginDate = DateTime.Parse(reader.GetString(2)),
+                WorkingHours = reader.GetDecimal(3)
+            });
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Get all working hours records.
+    /// </summary>
+    public async Task<List<UserWorkingHours>> GetAllWorkingHoursAsync()
+    {
+        if (_connection is null) throw new InvalidOperationException("Database not initialized");
+
+        const string sql = "SELECT Id, UserId, LoginDate, WorkingHours FROM UserWorkingHours ORDER BY LoginDate DESC";
+
+        using var command = _connection.CreateCommand();
+        command.CommandText = sql;
+
+        var result = new List<UserWorkingHours>();
+        using var reader = await command.ExecuteReaderAsync();
+
+        while (await reader.ReadAsync())
+        {
+            result.Add(new UserWorkingHours
+            {
+                Id = reader.GetInt32(0),
+                UserId = reader.GetString(1),
+                LoginDate = DateTime.Parse(reader.GetString(2)),
+                WorkingHours = reader.GetDecimal(3)
+            });
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Get working hours for a specific date range.
+    /// </summary>
+    public async Task<List<UserWorkingHours>> GetWorkingHoursByDateRangeAsync(DateTime startDate, DateTime endDate)
+    {
+        if (_connection is null) throw new InvalidOperationException("Database not initialized");
+
+        const string sql = @"
+            SELECT Id, UserId, LoginDate, WorkingHours 
+            FROM UserWorkingHours 
+            WHERE LoginDate >= @startDate AND LoginDate <= @endDate 
+            ORDER BY LoginDate DESC, UserId ASC
+        ";
+
+        using var command = _connection.CreateCommand();
+        command.CommandText = sql;
+        command.Parameters.AddWithValue("@startDate", startDate.ToString("yyyy-MM-dd"));
+        command.Parameters.AddWithValue("@endDate", endDate.ToString("yyyy-MM-dd"));
+
+        var result = new List<UserWorkingHours>();
+        using var reader = await command.ExecuteReaderAsync();
+
+        while (await reader.ReadAsync())
+        {
+            result.Add(new UserWorkingHours
+            {
+                Id = reader.GetInt32(0),
+                UserId = reader.GetString(1),
+                LoginDate = DateTime.Parse(reader.GetString(2)),
+                WorkingHours = reader.GetDecimal(3)
+            });
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Delete working hours record by ID.
+    /// </summary>
+    public async Task DeleteWorkingHoursAsync(int id)
+    {
+        if (_connection is null) throw new InvalidOperationException("Database not initialized");
+
+        const string sql = "DELETE FROM UserWorkingHours WHERE Id = @id";
+
+        using var command = _connection.CreateCommand();
+        command.CommandText = sql;
+        command.Parameters.AddWithValue("@id", id);
+
+        await command.ExecuteNonQueryAsync();
+
+        _logger.LogDebug("Working hours record deleted. Id: {Id}", id);
     }
 
     public void Dispose()

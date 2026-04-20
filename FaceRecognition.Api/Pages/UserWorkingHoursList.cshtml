@@ -1,0 +1,562 @@
+@page
+@model FaceRecognitionApp.Api.Pages.UserWorkingHoursListModel
+@{
+    ViewData["Title"] = "User Working Hours";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Face Recognition API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header h1::before {
+            content: "⏱️";
+            font-size: 32px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .filter-section {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            color: #555;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #667eea;
+        }
+
+        .stat-card .number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .label {
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: #17a2b8;
+            color: #0c5460;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        th {
+            padding: 20px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid #dee2e6;
+            color: #555;
+            font-size: 14px;
+        }
+
+        tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .user-id {
+            font-family: 'Courier New', monospace;
+            background-color: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+        .hours-badge {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .date-badge {
+            background-color: #e3f2fd;
+            color: #1565c0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: white;
+            color: #667eea;
+            border: 1px solid #667eea;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #667eea;
+            color: white;
+        }
+
+        .active-filter {
+            background-color: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+        }
+
+        .active-filter::before {
+            content: "🔍 ";
+        }
+
+        @@media (max-width: 768px) {
+            .header {
+                padding: 20px;
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            th, td {
+                padding: 12px 10px;
+                font-size: 12px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .filter-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <a href="/" class="back-button">← Back to Home</a>
+            <h1>User Working Hours</h1>
+            <p>View and analyze user working hours with flexible filtering options</p>
+        </div>
+
+      <!-- Processing Summary -->
+      @if (Model.ShowProcessingInfo && Model.ProcessingSummary != null)
+        {
+            <div style="background: white; border-radius: 8px; padding: 20px; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); border-left: 4px solid #28a745;">
+                <div style="font-weight: 600; color: #28a745; margin-bottom: 10px;">✅ Working Hours Processing Summary</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; color: #555; font-size: 14px;">
+                    <div>
+                        <span style="color: #28a745; font-weight: 600;">@Model.ProcessingSummary.TotalUsersProcessed</span> users processed
+                    </div>
+                    <div>
+                        <span style="color: #ffc107; font-weight: 600;">@Model.ProcessingSummary.UsersSkipped</span> users skipped (insufficient records)
+                    </div>
+                    @if (Model.ProcessingSummary.ProcessedRecords.Any())
+                    {
+                        <div>
+                            <span style="color: #17a2b8; font-weight: 600;">@Model.ProcessingSummary.ProcessedRecords.Sum(r => r.RecordsProcessed)</span> attendance records processed
+                        </div>
+                    }
+                </div>
+                @if (Model.ProcessingSummary.ProcessedRecords.Any())
+                {
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e0e0;">
+                        <div style="font-weight: 600; color: #333; margin-bottom: 8px;">Processed Users:</div>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px;">
+                            @foreach (var record in Model.ProcessingSummary.ProcessedRecords)
+                            {
+                                <div style="background: #f0f9ff; padding: 10px; border-radius: 4px; font-size: 13px;">
+                                    <div><strong>@record.UserId</strong> - <strong style="color: #28a745;">@record.WorkingHours:F2 hours</strong></div>
+                                    <div style="color: #999; font-size: 12px;">@record.FirstScanTime.ToString("HH:mm") - @record.LastScanTime.ToString("HH:mm") (@record.RecordsProcessed scans)</div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <h3>🔍 Filter Records</h3>
+            <form method="get" asp-page="UserWorkingHoursList">
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" id="startDate" name="StartDate" 
+                               value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="filter-group">
+                        <label for="endDate">End Date</label>
+                        <input type="date" id="endDate" name="EndDate" 
+                               value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="filter-group">
+                        <label for="filterUserId">User ID</label>
+                        <select id="filterUserId" name="FilterUserId">
+                            <option value="">-- All Users --</option>
+                            @foreach (var userId in Model.UniqueUserIds)
+                            {
+                                <option value="@userId" selected="@(Model.FilterUserId == userId)">
+                                    @userId
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <input type="hidden" name="ViewType" value="@Model.ViewType" />
+                </div>
+
+                <div class="filter-buttons">
+                    <button type="submit" class="btn btn-primary">📊 Apply Filters</button>
+                    <a href="/UserWorkingHoursList" class="btn btn-secondary">🔄 Clear Filters</a>
+                </div>
+
+                @if (Model.StartDate.HasValue || Model.EndDate.HasValue || !string.IsNullOrWhiteSpace(Model.FilterUserId))
+                {
+                    <div class="alert active-filter" style="margin-top: 15px;">
+                        Active filters applied
+                    </div>
+                }
+            </form>
+        </div>
+
+        <!-- View Type Selection -->
+        <div style="margin: 30px 0; text-align: center;">
+            <h3 style="margin-bottom: 15px;">📈 Select View Type</h3>
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <form method="get" asp-page="UserWorkingHoursList" style="display: inline;">
+                    <input type="hidden" name="viewType" value="daily" />
+                    <input type="hidden" name="startDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
+                    <input type="hidden" name="endDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
+                    <input type="hidden" name="filterUserId" value="@Model.FilterUserId" />
+                    <button type="submit" class="btn @(Model.ViewType == "daily" ? "btn-primary" : "btn-secondary")" style="min-width: 120px;">
+                        📅 Daily
+                    </button>
+                </form>
+                <form method="get" asp-page="UserWorkingHoursList" style="display: inline;">
+                    <input type="hidden" name="viewType" value="weekly" />
+                    <input type="hidden" name="startDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
+                    <input type="hidden" name="endDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
+                    <input type="hidden" name="filterUserId" value="@Model.FilterUserId" />
+                    <button type="submit" class="btn @(Model.ViewType == "weekly" ? "btn-primary" : "btn-secondary")" style="min-width: 120px;">
+                        📊 Weekly
+                    </button>
+                </form>
+                <form method="get" asp-page="UserWorkingHoursList" style="display: inline;">
+                    <input type="hidden" name="viewType" value="monthly" />
+                    <input type="hidden" name="startDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
+                    <input type="hidden" name="endDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
+                    <input type="hidden" name="filterUserId" value="@Model.FilterUserId" />
+                    <button type="submit" class="btn @(Model.ViewType == "monthly" ? "btn-primary" : "btn-secondary")" style="min-width: 120px;">
+                        📆 Monthly
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Table Section -->
+        <div class="table-container">
+            @if (Model.ViewType == "weekly" && Model.WeeklyWorkingHours.Any())
+            {
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Week Period</th>
+                            <th>User ID</th>
+                            <th>User Name</th>
+                            <th>Total Hours</th>
+                            <th>Days Worked</th>
+                            <th>Avg Hours/Day</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var record in Model.WeeklyWorkingHours)
+                        {
+                            <tr>
+                                <td><span class="date-badge">@record.WeekPeriod</span></td>
+                                <td><span class="user-id">@record.UserId</span></td>
+                                <td>@record.UserName</td>
+                                <td><span class="hours-badge">@record.TotalHoursFormatted</span></td>
+                                <td><span style="background-color: #f0f0f0; padding: 4px 8px; border-radius: 4px;">@record.DaysWorked days</span></td>
+                                <td><span style="background-color: #e8f5e9; padding: 4px 8px; border-radius: 4px; color: #2e7d32; font-weight: 600;">@record.AverageFormatted</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else if (Model.ViewType == "monthly" && Model.MonthlyWorkingHours.Any())
+            {
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>User ID</th>
+                            <th>User Name</th>
+                            <th>Total Hours</th>
+                            <th>Days Worked</th>
+                            <th>Avg Hours/Day</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var record in Model.MonthlyWorkingHours)
+                        {
+                            <tr>
+                                <td><span class="date-badge">@record.MonthPeriod</span></td>
+                                <td><span class="user-id">@record.UserId</span></td>
+                                <td>@record.UserName</td>
+                                <td><span class="hours-badge">@record.TotalHoursFormatted</span></td>
+                                <td><span style="background-color: #f0f0f0; padding: 4px 8px; border-radius: 4px;">@record.DaysWorked days</span></td>
+                                <td><span style="background-color: #e8f5e9; padding: 4px 8px; border-radius: 4px; color: #2e7d32; font-weight: 600;">@record.AverageFormatted</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else if (Model.ViewType == "daily" && Model.WorkingHoursRecords.Any())
+            {
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Date</th>
+                            <th>Working Hours</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var record in Model.WorkingHoursRecords)
+                        {
+                            <tr>
+                                <td><span class="user-id">@record.UserId</span></td>
+                                <td>@record.Name</td>
+                                <td><span class="date-badge">@record.LoginDateFormatted</span></td>
+                                <td><span class="hours-badge">@record.WorkingHoursFormatted</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <h3>No Records Found</h3>
+                    <p>No working hours records match your current filters.</p>
+                </div>
+            }
+        </div>
+    </div>
+</body>
+</html>

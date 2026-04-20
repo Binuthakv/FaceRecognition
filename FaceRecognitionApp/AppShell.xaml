@@ -37,7 +37,6 @@
     <TabBar>
         <ShellContent
             Title="Register"
-            Icon="person_add.png"
             ContentTemplate="{DataTemplate views:UserRegistrationPage}"
             Route="RegistrationPage">
             <ShellContent.Icon>
@@ -50,7 +49,6 @@
 
         <ShellContent
             Title="Verify"
-            Icon="search.png"
             ContentTemplate="{DataTemplate views:FaceVerificationPage}"
             Route="FaceVerificationPage">
             <ShellContent.Icon>
@@ -63,7 +61,6 @@
 
         <ShellContent
             Title="Users"
-            Icon="people.png"
             ContentTemplate="{DataTemplate views:UsersListPage}"
             Route="UsersPage">
             <ShellContent.Icon>
@@ -73,6 +70,18 @@
                     Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}"/>
             </ShellContent.Icon>
         </ShellContent>
+
+        <!--<ShellContent
+            Title="Attendance"
+            ContentTemplate="{DataTemplate views:AttendanceListPage}"
+            Route="AttendanceListPage">
+            <ShellContent.Icon>
+                <FontImageSource 
+                    Glyph="📋" 
+                    FontFamily="OpenSansRegular"
+                    Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}"/>
+            </ShellContent.Icon>
+        </ShellContent>-->
     </TabBar>
 
 </Shell>
