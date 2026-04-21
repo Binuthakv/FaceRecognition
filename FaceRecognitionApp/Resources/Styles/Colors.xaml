@@ -10,15 +10,15 @@
     <Color x:Key="Primary">#6366F1</Color>
     <Color x:Key="PrimaryDark">#4F46E5</Color>
     <Color x:Key="PrimaryLight">#818CF8</Color>
-    <Color x:Key="PrimaryLighter">#A5B4FC</Color>
+    <Color x:Key="PrimaryLighter">#EFF6FF</Color>
     
     <!-- Secondary Colors - Cyan/Teal -->
-    <Color x:Key="Secondary">#06B6D4</Color>
+    <Color x:Key="Secondary">#0058BB</Color>
     <Color x:Key="SecondaryDark">#0891B2</Color>
     <Color x:Key="SecondaryLight">#22D3EE</Color>
     
     <!-- Accent Colors -->
-    <Color x:Key="Accent">#8B5CF6</Color>
+    <Color x:Key="Accent">#2E6FD8</Color>
     <Color x:Key="AccentLight">#A78BFA</Color>
     
     <!-- Success, Warning, Error -->
@@ -45,8 +45,8 @@
     <Color x:Key="Gray950">#030712</Color>
     
     <!-- Background Colors -->
-    <Color x:Key="PageBackground">#F9FAFB</Color>
-    <Color x:Key="PageBackgroundDark">#111827</Color>
+    <Color x:Key="PageBackground">#F7F9FF</Color>
+    <Color x:Key="PageBackgroundDark">#1A1A2E</Color>
     <Color x:Key="CardBackground">#FFFFFF</Color>
     <Color x:Key="CardBackgroundDark">#1F2937</Color>
     
