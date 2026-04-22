@@ -205,6 +205,7 @@ public partial class UsersListViewModel : ObservableObject
                          $"Name: {user.Name}\n" +
                          $"Age: {user.Age} years\n" +
                          $"Date of Birth: {user.DateOfBirth:MMM dd, yyyy}\n" +
+                         $"Sex: {user.Sex}\n" +
                          $"Registered: {user.RegisteredDate:MMM dd, yyyy HH:mm}\n" +
                          $"Photos: {user.PhotoCount}/3";
 

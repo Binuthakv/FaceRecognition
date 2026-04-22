@@ -22,6 +22,11 @@ public partial class UserRegistrationViewModel : ObservableObject
     private DateTime _dateOfBirth = DateTime.Today.AddYears(-18);
 
     [ObservableProperty]
+    private string _sex = string.Empty;
+
+    public List<string> SexOptions { get; } = new() { "Male", "Female", "Other" };
+
+    [ObservableProperty]
     private ImageSource? _photo1;
 
     [ObservableProperty]
@@ -77,6 +82,7 @@ public partial class UserRegistrationViewModel : ObservableObject
             UserId = user.UserId;
             Name = user.Name;
             DateOfBirth = user.DateOfBirth;
+            Sex = user.Sex;
 
             await Task.Run(async () =>
             {
@@ -378,6 +384,7 @@ public partial class UserRegistrationViewModel : ObservableObject
                     UserId = UserId.Trim(),
                     Name = Name.Trim(),
                     DateOfBirth = DateOfBirth,
+                    Sex = Sex,
                     Photo1 = _photo1Data,
                     Photo2 = _photo2Data,
                     Photo3 = _photo3Data
@@ -408,6 +415,7 @@ public partial class UserRegistrationViewModel : ObservableObject
                     UserId = UserId.Trim(),
                     Name = Name.Trim(),
                     DateOfBirth = DateOfBirth,
+                    Sex = Sex,
                     Photo1 = _photo1Data,
                     Photo2 = _photo2Data,
                     Photo3 = _photo3Data
@@ -497,6 +505,13 @@ public partial class UserRegistrationViewModel : ObservableObject
         if (DateOfBirth.Year < 1900)
         {
             StatusMessage = "Please enter a valid Date of Birth";
+            StatusColor = Colors.Orange;
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(Sex))
+        {
+            StatusMessage = "Please select a Sex";
             StatusColor = Colors.Orange;
             return false;
         }

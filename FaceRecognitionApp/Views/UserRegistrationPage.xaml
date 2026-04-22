@@ -45,7 +45,7 @@
                            Style="{StaticResource FormEntryStyle}"
                            Text="{Binding UserId}"
                            IsReadOnly="{Binding IsUserIdReadOnly}"
-                           Placeholder="User ID"
+                           Placeholder="Employee ID"
                            Margin="8,0" />
                 </Border>
 
@@ -67,6 +67,20 @@
                         <DatePicker Date="{Binding DateOfBirth}"
                                     MinimumDate="01/01/1900"
                                     FontSize="16"/>
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Sex/Gender -->
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Sex *"
+                           FontAttributes="Bold"
+                           FontSize="14"
+                           TextColor="{StaticResource Primary}"/>
+                    <Border Style="{StaticResource InputContainer}">
+                        <Picker ItemsSource="{Binding SexOptions}"
+                                SelectedItem="{Binding Sex}"
+                                Title="Select Sex"
+                                FontSize="16"/>
                     </Border>
                 </VerticalStackLayout>
 
