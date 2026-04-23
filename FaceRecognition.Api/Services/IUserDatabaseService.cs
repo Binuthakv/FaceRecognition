@@ -48,7 +48,6 @@ public interface IUserDatabaseService
     Task<List<EmbeddingSearchResult>> SearchByEmbeddingAsync(float[] queryEmbedding, int topK = 5, float threshold = 0.42f);
     Task<List<EmbeddingSearchResult>> SearchByEmbeddingSQLAsync(float[] queryEmbedding, int topK = 5, float threshold = 0.42f);
 
-
     /// <summary>
     /// Gets all stored embeddings for a specific user.
     /// </summary>
@@ -58,6 +57,12 @@ public interface IUserDatabaseService
     /// Gets the count of embeddings stored for a user.
     /// </summary>
     Task<int> GetUserEmbeddingCountAsync(string userId);
+
+    // Admin User operations
+    Task<AdminUser?> GetAdminUserByUsernameAsync(string username);
+    Task<AdminUser?> GetAdminUserByEmailAsync(string email);
+    Task<int> SaveAdminUserAsync(AdminUser adminUser);
+    Task<int> UpdateAdminUserLastLoginAsync(int adminUserId);
 }
 
 /// <summary>

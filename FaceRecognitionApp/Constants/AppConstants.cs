@@ -28,10 +28,10 @@ public static class AppConstants
     //public static string ApiBaseUrl =>
     //    Environment.GetEnvironmentVariable("API_BASE_URL")
     //    ?? "https://localhost:7053/";
-    public static string ApiBaseUrl =
-        "https://1j45b432-7053.inc1.devtunnels.ms/";
     //public static string ApiBaseUrl =
-    //    "https://localhost:7053/";
+    //    "https://1j45b432-7053.inc1.devtunnels.ms/";
+    public static string ApiBaseUrl =
+        "https://localhost:7053/";
     public const string ApiHttpClientName = "FaceRecognitionApi";
 
     // Database

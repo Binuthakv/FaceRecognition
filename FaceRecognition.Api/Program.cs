@@ -12,6 +12,18 @@ builder.Services.AddControllers();
 builder.Services.AddRazorPages();
 builder.Services.AddAntiforgery();
 
+// Add Authentication
+builder.Services.AddAuthentication("AdminCookie")
+    .AddCookie("AdminCookie", options =>
+    {
+        options.LoginPath = "/Login";
+        options.AccessDeniedPath = "/Login";
+        options.ExpireTimeSpan = TimeSpan.FromHours(8);
+        options.SlidingExpiration = true;
+    });
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 // Initialize the database on startup
@@ -29,7 +41,15 @@ using (var scope = app.Services.CreateScope())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+// Redirect root path to Login page
+app.MapGet("/", context =>
+{
+    context.Response.Redirect("/Login", permanent: false);
+    return Task.CompletedTask;
+});
 
 app.MapControllers();
 app.MapRazorPages();

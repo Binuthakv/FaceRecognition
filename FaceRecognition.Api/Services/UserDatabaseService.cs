@@ -89,6 +89,25 @@ public class UserDatabaseService : IUserDatabaseService, IDisposable
                 """;       
             await cmd.ExecuteNonQueryAsync();
 
+            // Create AdminUsers table
+            _logger.LogDebug("Creating AdminUsers table if not exists...");
+            cmd.CommandText = """
+                CREATE TABLE IF NOT EXISTS AdminUsers (
+                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    Username TEXT NOT NULL UNIQUE,
+                    Email TEXT NOT NULL UNIQUE,
+                    PasswordHash TEXT NOT NULL,
+                    Role TEXT NOT NULL DEFAULT 'Admin',
+                    IsActive INTEGER NOT NULL DEFAULT 1,
+                    CreatedDate TEXT NOT NULL,
+                    LastLoginDate TEXT
+                );
+                CREATE INDEX IF NOT EXISTS IX_AdminUsers_Username ON AdminUsers(Username);
+                CREATE INDEX IF NOT EXISTS IX_AdminUsers_Email ON AdminUsers(Email);
+                """;
+            await cmd.ExecuteNonQueryAsync();
+            _logger.LogInformation("AdminUsers table created/verified successfully");
+
             _initialized = true;
             _logger.LogInformation("Database initialized successfully with embedding support at {Path}", _dbPath);
         }
@@ -722,6 +741,148 @@ public class UserDatabaseService : IUserDatabaseService, IDisposable
         var array = new float[blob.Length / sizeof(float)];
         Buffer.BlockCopy(blob, 0, array, 0, blob.Length);
         return array;
+    }
+
+    // ── Admin User operations ─────────────────────────────────────────────────
+
+    public async Task<AdminUser?> GetAdminUserByUsernameAsync(string username)
+    {
+        _logger.LogDebug("Getting admin user by username: {Username}", username);
+        await EnsureInitializedAsync();
+
+        try
+        {
+            await using var cmd = _connection!.CreateCommand();
+            cmd.CommandText = """
+                SELECT Id, Username, Email, PasswordHash, Role, IsActive, CreatedDate, LastLoginDate
+                FROM AdminUsers
+                WHERE Username = @username AND IsActive = 1;
+                """;
+            cmd.Parameters.AddWithValue("@username", username);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+            {
+                return new AdminUser
+                {
+                    Id = reader.GetInt32(0),
+                    Username = reader.GetString(1),
+                    Email = reader.GetString(2),
+                    PasswordHash = reader.GetString(3),
+                    Role = reader.GetString(4),
+                    IsActive = reader.GetInt32(5) == 1,
+                    CreatedDate = DateTime.Parse(reader.GetString(6)),
+                    LastLoginDate = reader.IsDBNull(7) ? null : DateTime.Parse(reader.GetString(7))
+                };
+            }
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to get admin user by username: {Username}", username);
+            throw;
+        }
+    }
+
+    public async Task<AdminUser?> GetAdminUserByEmailAsync(string email)
+    {
+        _logger.LogDebug("Getting admin user by email: {Email}", email);
+        await EnsureInitializedAsync();
+
+        try
+        {
+            await using var cmd = _connection!.CreateCommand();
+            cmd.CommandText = """
+                SELECT Id, Username, Email, PasswordHash, Role, IsActive, CreatedDate, LastLoginDate
+                FROM AdminUsers
+                WHERE Email = @email AND IsActive = 1;
+                """;
+            cmd.Parameters.AddWithValue("@email", email);
+
+            using var reader = await cmd.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+            {
+                return new AdminUser
+                {
+                    Id = reader.GetInt32(0),
+                    Username = reader.GetString(1),
+                    Email = reader.GetString(2),
+                    PasswordHash = reader.GetString(3),
+                    Role = reader.GetString(4),
+                    IsActive = reader.GetInt32(5) == 1,
+                    CreatedDate = DateTime.Parse(reader.GetString(6)),
+                    LastLoginDate = reader.IsDBNull(7) ? null : DateTime.Parse(reader.GetString(7))
+                };
+            }
+
+            return null;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to get admin user by email: {Email}", email);
+            throw;
+        }
+    }
+
+    public async Task<int> SaveAdminUserAsync(AdminUser adminUser)
+    {
+        _logger.LogDebug("Saving admin user {Username}", adminUser.Username);
+        await EnsureInitializedAsync();
+
+        try
+        {
+            await using var cmd = _connection!.CreateCommand();
+            cmd.CommandText = """
+                INSERT INTO AdminUsers (Username, Email, PasswordHash, Role, IsActive, CreatedDate)
+                VALUES (@username, @email, @passwordHash, @role, @isActive, @createdDate);
+                SELECT last_insert_rowid();
+                """;
+            cmd.Parameters.AddWithValue("@username", adminUser.Username);
+            cmd.Parameters.AddWithValue("@email", adminUser.Email);
+            cmd.Parameters.AddWithValue("@passwordHash", adminUser.PasswordHash);
+            cmd.Parameters.AddWithValue("@role", adminUser.Role);
+            cmd.Parameters.AddWithValue("@isActive", adminUser.IsActive ? 1 : 0);
+            cmd.Parameters.AddWithValue("@createdDate", adminUser.CreatedDate.ToString("O"));
+
+            var result = await cmd.ExecuteScalarAsync();
+            adminUser.Id = Convert.ToInt32(result);
+
+            _logger.LogInformation("Admin user '{Username}' saved successfully (Id={Id})", adminUser.Username, adminUser.Id);
+            return adminUser.Id;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to save admin user {Username}", adminUser.Username);
+            throw;
+        }
+    }
+
+    public async Task<int> UpdateAdminUserLastLoginAsync(int adminUserId)
+    {
+        _logger.LogDebug("Updating last login for admin user {AdminUserId}", adminUserId);
+        await EnsureInitializedAsync();
+
+        try
+        {
+            await using var cmd = _connection!.CreateCommand();
+            cmd.CommandText = """
+                UPDATE AdminUsers
+                SET LastLoginDate = @lastLoginDate
+                WHERE Id = @id;
+                """;
+            cmd.Parameters.AddWithValue("@lastLoginDate", DateTime.UtcNow.ToString("O"));
+            cmd.Parameters.AddWithValue("@id", adminUserId);
+
+            var result = await cmd.ExecuteNonQueryAsync();
+            _logger.LogInformation("Updated last login for admin user {AdminUserId}", adminUserId);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to update last login for admin user {AdminUserId}", adminUserId);
+            throw;
+        }
     }
 
     public void Dispose()

@@ -1,0 +1,293 @@
+@page
+@model FaceRecognitionApp.Api.Pages.SetupModel
+@{
+    ViewData["Title"] = "Admin Setup";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Face Recognition API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .setup-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+        }
+
+        .setup-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .setup-header h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .setup-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #555;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background-color: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+            font-size: 14px;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: #17a2b8;
+            color: #0c5460;
+        }
+
+        .info-box {
+            background: #f5f7fa;
+            border-left: 4px solid #667eea;
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .form-helper {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .password-requirements {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+            padding: 8px;
+            background: #f5f7fa;
+            border-radius: 4px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="setup-container">
+        <!-- Header -->
+        <div class="setup-header">
+            <h1>⚙️ Admin Setup</h1>
+            <p>Create your first administrator account</p>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="alert alert-danger">
+                ❌ @Model.ErrorMessage
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+        {
+            <div class="alert alert-success">
+                ✅ @Model.SuccessMessage
+                <p style="margin-top: 10px;">
+                    <a href="/Login" style="color: #155724; text-decoration: none; font-weight: 600;">Click here to login →</a>
+                </p>
+            </div>
+        }
+
+        @if (Model.AdminExists)
+        {
+            <div class="alert alert-info">
+                ℹ️ An admin account already exists. Please <a href="/Login" style="color: #0c5460; text-decoration: none; font-weight: 600;">login here</a>.
+            </div>
+        }
+        else
+        {
+            <div class="info-box">
+                <strong>📋 Setup Instructions:</strong><br/>
+                Create the administrator account for the Face Recognition System. This account will have full access to all features.
+            </div>
+
+            <form method="post" asp-page="Setup" id="setupForm">
+                @Html.AntiForgeryToken()
+                <!-- Username -->
+                <div class="form-group">
+                    <label for="username">Username *</label>
+                    <input type="text" 
+                           id="username" 
+                           name="Username" 
+                           placeholder="e.g., admin"
+                           value="@Model.Username"
+                           required 
+                           minlength="3"
+                           maxlength="50" />
+                    <div class="form-helper">Username must be at least 3 characters</div>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" 
+                           id="email" 
+                           name="Email" 
+                           placeholder="e.g., admin@example.com"
+                           value="@Model.Email"
+                           required />
+                    <div class="form-helper">A valid email address</div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <input type="password" 
+                           id="password" 
+                           name="Password" 
+                           placeholder="Enter a strong password"
+                           required 
+                           minlength="8" />
+                    <div class="password-requirements">
+                        <strong>Password Requirements:</strong><br/>
+                        • At least 8 characters<br/>
+                        • Mix of uppercase and lowercase<br/>
+                        • Include numbers and special characters
+                    </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password *</label>
+                    <input type="password" 
+                           id="confirmPassword" 
+                           name="ConfirmPassword" 
+                           placeholder="Re-enter your password"
+                           required />
+                </div>
+
+                <!-- Role -->
+                <div class="form-group">
+                    <label for="role">Role *</label>
+                    <select id="role" name="Role" required>
+                        <option value="Admin">Admin (Full Access)</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Viewer">Viewer (Read-Only)</option>
+                    </select>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn-submit">
+                    Create Admin Account
+                </button>
+                <!-- Back to Login -->
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="/Login"
+                       style="color: #667eea; text-decoration: none; font-size: 14px; font-weight: 600;">
+                        ← Back to Login
+                    </a>
+                </div>
+            </form>
+        }
+    </div>
+
+    <script>
+        // Debug form submission
+        console.log('Setup script loaded, setting up form listener...');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded');
+            var form = document.getElementById('setupForm');
+            console.log('Form element found:', form);
+
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    console.log('Setup form submit event triggered');
+                    // Allow form to submit - don't prevent default
+                });
+            }
+        });
+    </script>
+</body>
+</html>
