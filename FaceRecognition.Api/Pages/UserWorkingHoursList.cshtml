@@ -369,7 +369,7 @@
                         </div>
                     }
                 </div>
-                @if (Model.ProcessingSummary.ProcessedRecords.Any())
+               @*  @if (Model.ProcessingSummary.ProcessedRecords.Any())
                 {
                     <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e0e0;">
                         <div style="font-weight: 600; color: #333; margin-bottom: 8px;">Processed Users:</div>
@@ -383,7 +383,7 @@
                             }
                         </div>
                     </div>
-                }
+                } *@
             </div>
         }
 
@@ -408,10 +408,10 @@
                         <label for="filterUserId">User ID</label>
                         <select id="filterUserId" name="FilterUserId">
                             <option value="">-- All Users --</option>
-                            @foreach (var userId in Model.UniqueUserIds)
+                            @foreach (var user in Model.Users)
                             {
-                                <option value="@userId" selected="@(Model.FilterUserId == userId)">
-                                    @userId
+                                <option value="@user.UserId" selected="@(Model.FilterUserId == user.UserId)">
+                                    @user.UserName
                                 </option>
                             }
                         </select>
@@ -424,12 +424,7 @@
                     <a href="/UserWorkingHoursList" class="btn btn-secondary">🔄 Clear Filters</a>
                 </div>
 
-                @if (Model.StartDate.HasValue || Model.EndDate.HasValue || !string.IsNullOrWhiteSpace(Model.FilterUserId))
-                {
-                    <div class="alert active-filter" style="margin-top: 15px;">
-                        Active filters applied
-                    </div>
-                }
+              
             </form>
         </div>
 

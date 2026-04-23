@@ -10,6 +10,8 @@ public class UserRegistration
 
     public DateTime DateOfBirth { get; set; }
 
+    public string Sex { get; set; } = string.Empty; // Male, Female, Other
+
     public DateTime RegisteredDate { get; set; } = DateTime.Now;
 
     public byte[]? Photo1 { get; set; }

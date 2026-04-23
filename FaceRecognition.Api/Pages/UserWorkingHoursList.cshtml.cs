@@ -28,8 +28,9 @@ public class UserWorkingHoursListModel : PageModel
     public List<DailyWorkingHoursViewModel> DailyWorkingHours { get; set; } = new();
     public List<WeeklyWorkingHoursViewModel> WeeklyWorkingHours { get; set; } = new();
     public List<MonthlyWorkingHoursViewModel> MonthlyWorkingHours { get; set; } = new();
-
+    public List<UserDropdownItem> Users { get; set; }
     public List<string> UniqueUserIds { get; set; } = new();
+    public Dictionary<string, string> UserIdToNameMap { get; set; } = new();
     public string? StatusMessage { get; set; }
     public string? ErrorMessage { get; set; }
 
@@ -88,7 +89,14 @@ public class UserWorkingHoursListModel : PageModel
             var allUsers = await _userDatabaseService.GetAllUsersAsync();
 
             var userDictionary = allUsers.ToDictionary(u => u.UserId, u => u.Name);
-
+            Users = allUsers
+            .Select(u => new UserDropdownItem
+             {
+                 UserId = u.UserId,
+                 UserName = u.Name
+             })
+            .OrderBy(u => u.UserName)
+             .ToList();
             // Extract unique user IDs for filter dropdown
             UniqueUserIds = allRecords
                 .Select(r => r.UserId)
@@ -257,6 +265,9 @@ public class UserWorkingHoursListModel : PageModel
 
         var userDictionary = allUsers.ToDictionary(u => u.UserId, u => u.Name);
 
+        // Store the user ID to name mapping for the filter dropdown
+        UserIdToNameMap = userDictionary;
+
         // Extract unique user IDs for filter dropdown
         UniqueUserIds = allRecords
             .Select(r => r.UserId)
@@ -329,7 +340,11 @@ public class UserWorkingHoursListModel : PageModel
         _logger.LogInformation("User working hours records retrieved. Count: {Count}, ViewType: {ViewType}", TotalRecords, ViewType);
     }
 }
-
+public class UserDropdownItem
+{
+    public string UserId { get; set; } = string.Empty;
+    public string UserName { get; set; } = string.Empty;
+}
 public class UserWorkingHoursViewModel
 {
     public int Id { get; set; }

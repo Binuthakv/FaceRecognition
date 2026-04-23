@@ -17,7 +17,7 @@ public class AttendanceService : IAttendanceService, IDisposable
         _logger = logger;
         _dbPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "FaceRecognitionAttendance.db");
+            "FaceRecognitionDB.db");
         _logger.LogInformation("AttendanceService created. Database path: {Path}", _dbPath);
     }
 

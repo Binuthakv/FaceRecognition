@@ -21,7 +21,7 @@ public class UserDatabaseService : IUserDatabaseService, IDisposable
         _logger = logger;
         _dbPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "FaceRecognitionUsers.db");
+            "FaceRecognitionDB.db");
         _logger.LogInformation("UserDatabaseService created. Database path: {Path}", _dbPath);
     }
 
@@ -56,6 +56,7 @@ public class UserDatabaseService : IUserDatabaseService, IDisposable
                     UserId TEXT NOT NULL UNIQUE,
                     Name TEXT NOT NULL,
                     DateOfBirth TEXT NOT NULL,
+                    Sex TEXT NOT NUll,
                     RegisteredDate TEXT NOT NULL,
                     Photo1 BLOB,
                     Photo2 BLOB,
@@ -123,13 +124,14 @@ public class UserDatabaseService : IUserDatabaseService, IDisposable
         {
             await using var cmd = _connection!.CreateCommand();
             cmd.CommandText = """
-                INSERT INTO Users (UserId, Name, DateOfBirth, RegisteredDate, Photo1, Photo2, Photo3)
-                VALUES (@userId, @name, @dob, @regDate, @photo1, @photo2, @photo3);
+                INSERT INTO Users (UserId, Name, DateOfBirth,Sex, RegisteredDate, Photo1, Photo2, Photo3)
+                VALUES (@userId, @name, @dob, @sex, @regDate, @photo1, @photo2, @photo3);
                 SELECT last_insert_rowid();
                 """;
             cmd.Parameters.AddWithValue("@userId", user.UserId);
             cmd.Parameters.AddWithValue("@name", user.Name);
             cmd.Parameters.AddWithValue("@dob", user.DateOfBirth.ToString("O"));
+            cmd.Parameters.AddWithValue("@sex", user.Sex);
             cmd.Parameters.AddWithValue("@regDate", user.RegisteredDate.ToString("O"));
             cmd.Parameters.AddWithValue("@photo1", user.Photo1 ?? (object)DBNull.Value);
             cmd.Parameters.AddWithValue("@photo2", user.Photo2 ?? (object)DBNull.Value);
@@ -160,6 +162,7 @@ public class UserDatabaseService : IUserDatabaseService, IDisposable
                 UPDATE Users SET 
                     Name = @name,
                     DateOfBirth = @dob,
+                    Sex = @sex,
                     Photo1 = @photo1,
                     Photo2 = @photo2,
                     Photo3 = @photo3
@@ -168,6 +171,7 @@ public class UserDatabaseService : IUserDatabaseService, IDisposable
             cmd.Parameters.AddWithValue("@userId", user.UserId);
             cmd.Parameters.AddWithValue("@name", user.Name);
             cmd.Parameters.AddWithValue("@dob", user.DateOfBirth.ToString("O"));
+            cmd.Parameters.AddWithValue("@sex", user.Sex);
             cmd.Parameters.AddWithValue("@photo1", user.Photo1 ?? (object)DBNull.Value);
             cmd.Parameters.AddWithValue("@photo2", user.Photo2 ?? (object)DBNull.Value);
             cmd.Parameters.AddWithValue("@photo3", user.Photo3 ?? (object)DBNull.Value);
@@ -661,6 +665,7 @@ public class UserDatabaseService : IUserDatabaseService, IDisposable
             UserId = reader.GetString(reader.GetOrdinal("UserId")),
             Name = reader.GetString(reader.GetOrdinal("Name")),
             DateOfBirth = DateTime.Parse(reader.GetString(reader.GetOrdinal("DateOfBirth"))),
+            Sex = reader.GetString(reader.GetOrdinal("Sex")),
             RegisteredDate = DateTime.Parse(reader.GetString(reader.GetOrdinal("RegisteredDate"))),
             Photo1 = reader.IsDBNull(reader.GetOrdinal("Photo1")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("Photo1")),
             Photo2 = reader.IsDBNull(reader.GetOrdinal("Photo2")) ? null : (byte[])reader.GetValue(reader.GetOrdinal("Photo2")),
