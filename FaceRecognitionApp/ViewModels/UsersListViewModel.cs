@@ -42,7 +42,7 @@ public partial class UsersListViewModel : ObservableObject
     private async Task LoadUsersAsync()
     {
         IsLoading = true;
-        StatusMessage = "Loading users...";
+        StatusMessage = "Loading Employees...";
         StatusColor = Colors.Blue;
 
         try
@@ -56,16 +56,16 @@ public partial class UsersListViewModel : ObservableObject
             }
 
             TotalUsers = Users.Count;
-            StatusMessage = $"Loaded {TotalUsers} users";
+            StatusMessage = $"Loaded {TotalUsers} Employees";
             StatusColor = Colors.Green;
 
-            AppLogger.Info($"Loaded {TotalUsers} users");
+            AppLogger.Info($"Loaded {TotalUsers} Employees");
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Error loading users: {ex.Message}";
+            StatusMessage = $"Error loading Employees: {ex.Message}";
             StatusColor = Colors.Red;
-            AppLogger.Error("Error loading users", ex);
+            AppLogger.Error("Error loading Employees", ex);
         }
         finally
         {
@@ -143,7 +143,7 @@ public partial class UsersListViewModel : ObservableObject
             if (Application.Current?.MainPage != null)
             {
                 confirm = await Application.Current.MainPage.DisplayAlert(
-                    "Delete User",
+                    "Delete Employee",
                     $"Are you sure you want to delete '{user.Name}' (ID: {user.UserId})?",
                     "Delete",
                     "Cancel");
@@ -161,30 +161,30 @@ public partial class UsersListViewModel : ObservableObject
             Users.Remove(user);
             TotalUsers = Users.Count;
 
-            StatusMessage = $"User '{user.Name}' deleted successfully";
+            StatusMessage = $"Employee '{user.Name}' deleted successfully";
             StatusColor = Colors.Green;
 
-            AppLogger.Success($"Deleted user: {user.Name} ({user.UserId})");
+            AppLogger.Success($"Deleted Employee: {user.Name} ({user.UserId})");
 
             if (Application.Current?.MainPage != null)
             {
                 await Application.Current.MainPage.DisplayAlert(
-                    "User Deleted",
+                    "Employee Deleted",
                     $"'{user.Name}' has been removed from the database.",
                     "OK");
             }
         }
         catch (Exception ex)
         {
-            StatusMessage = $"Error deleting user: {ex.Message}";
+            StatusMessage = $"Error deleting Employee: {ex.Message}";
             StatusColor = Colors.Red;
-            AppLogger.Error("Error deleting user", ex);
+            AppLogger.Error("Error deleting Employee", ex);
 
             if (Application.Current?.MainPage != null)
             {
                 await Application.Current.MainPage.DisplayAlert(
                     "Delete Failed",
-                    $"Unable to delete user: {ex.Message}",
+                    $"Unable to delete Employee: {ex.Message}",
                     "OK");
             }
         }
@@ -201,7 +201,7 @@ public partial class UsersListViewModel : ObservableObject
 
         try
         {
-            var details = $"User ID: {user.UserId}\n" +
+            var details = $"Employee ID: {user.UserId}\n" +
                          $"Name: {user.Name}\n" +
                          $"Age: {user.Age} years\n" +
                          $"Date of Birth: {user.DateOfBirth:MMM dd, yyyy}\n" +
@@ -212,7 +212,7 @@ public partial class UsersListViewModel : ObservableObject
             if (Application.Current?.MainPage != null)
             {
                 await Application.Current.MainPage.DisplayAlert(
-                    "User Details",
+                    "Employee Details",
                     details,
                     "OK");
             }

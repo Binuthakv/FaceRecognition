@@ -67,4 +67,23 @@ public class ApiUserDatabaseService : IUserDatabaseService
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<int>();
     }
+
+    public async Task<AdminLoginResponse?> LoginAdminAsync(string username, string password, bool rememberMe)
+    {
+        try
+        {
+            var request = new AdminLoginRequest(username, password, rememberMe);
+            var response = await _http.PostAsJsonAsync("api/auth/login", request);
+
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+                return null;
+
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<AdminLoginResponse>();
+        }
+        catch (HttpRequestException)
+        {
+            return null;
+        }
+    }
 }

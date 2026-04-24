@@ -5,7 +5,7 @@
              xmlns:models="clr-namespace:FaceRecognitionApp.Models"
              x:Class="FaceRecognitionApp.Views.UsersListPage"
              x:DataType="viewmodels:UsersListViewModel"
-             Title="Registered Users"
+             Title="Registered Employees"
              BackgroundColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}">
 
     <Grid RowDefinitions="Auto,*" Padding="0">
@@ -40,7 +40,7 @@
                                FontSize="32"
                                VerticalOptions="Center"/>
                         <VerticalStackLayout Spacing="2">
-                            <Label Text="Registered Users"
+                            <Label Text="Registered Employees"
                                    FontSize="24"
                                    FontAttributes="Bold"
                                    TextColor="White"/>
@@ -92,15 +92,15 @@
                                FontSize="80"
                                HorizontalOptions="Center"
                                TextColor="{StaticResource Gray400}"/>
-                        <Label Text="No Users Yet"
+                        <Label Text="No Employees Yet"
                                Style="{StaticResource SectionTitle}"
                                HorizontalOptions="Center"
                                TextColor="{StaticResource Gray600}"/>
-                        <Label Text="Get started by registering your first user"
+                        <Label Text="Get started by registering your first Employee"
                                Style="{StaticResource Caption}"
                                HorizontalOptions="Center"
                                HorizontalTextAlignment="Center"/>
-                        <Button Text="➕ Register First User"
+                        <Button Text="➕ Register First Employee"
                                 Command="{Binding AddUserCommand}"
                                 Style="{StaticResource PrimaryButton}"
                                 HorizontalOptions="Center"
