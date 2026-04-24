@@ -63,7 +63,7 @@ public partial class AdminLoginViewModel : ObservableObject
             await SecureStorage.Default.SetAsync("AdminRole", result.Role);
 
             // Navigate to EmployeeRegistrationPage
-            await Shell.Current.GoToAsync("///registration");
+            await Shell.Current.GoToAsync("///LandingPage");
         }
         catch (Exception ex)
         {

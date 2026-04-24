@@ -6,122 +6,20 @@
              x:Class="FaceRecognitionApp.Views.UserRegistrationPage"
              x:DataType="viewmodels:UserRegistrationViewModel"
              Title="Register User"
-             BackgroundColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}">
-
-    <ContentPage.Resources>
-
-        <!-- COLOR PALETTE -->
-        <Color x:Key="Primary">#0056BB</Color>
-        <Color x:Key="PrimaryContainer">#2E6FD8</Color>
-        <Color x:Key="OnPrimary">#FFFFFF</Color>
-        <Color x:Key="Surface">#F7F9FF</Color>
-        <Color x:Key="SurfaceContainerLow">#F0F4FC</Color>
-        <Color x:Key="SurfaceContainerLowest">#FFFFFF</Color>
-        <Color x:Key="SurfaceContainer">#EAEEF6</Color>
-        <Color x:Key="SurfaceVariant">#DEE3EB</Color>
-        <Color x:Key="OnSurface">#171C22</Color>
-        <Color x:Key="OnSurfaceVariant">#424753</Color>
-        <Color x:Key="Outline">#727784</Color>
-        <Color x:Key="OutlineVariant">#C2C6D5</Color>
-        <Color x:Key="ErrorColor">#BA1A1A</Color>
-        <Color x:Key="SuccessGreen">#16A34A</Color>
-        <Color x:Key="SuccessGreenBg">#F0FDF4</Color>
-        <Color x:Key="SuccessGreenBorder">#BBF7D0</Color>
-
-        <!-- ENTRY STYLE  -->
-        <Style x:Key="FormEntryStyle" TargetType="Entry">
-            <Setter Property="FontSize" Value="15"/>
-            <Setter Property="FontFamily" Value="Inter"/>
-            <Setter Property="TextColor" Value="{StaticResource OnSurface}"/>
-            <Setter Property="PlaceholderColor" Value="{StaticResource OutlineVariant}"/>
-            <Setter Property="BackgroundColor" Value="Transparent"/>
-            <Setter Property="MinimumHeightRequest" Value="56"/>
-            <Setter Property="VisualStateManager.VisualStateGroups">
-                <VisualStateGroupList>
-                    <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="Normal"/>
-                        <VisualState x:Name="Focused"/>
-                        <VisualState x:Name="Disabled">
-                            <VisualState.Setters>
-                                <Setter Property="TextColor" Value="{StaticResource OnSurface}"/>
-                                <Setter Property="BackgroundColor" Value="Transparent"/>
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateGroupList>
-            </Setter>
-        </Style>
-
-        <!-- Field container border -->
-        <Style x:Key="FieldBorder" TargetType="Border">
-            <Setter Property="BackgroundColor" Value="{StaticResource SurfaceContainerLow}"/>
-            <Setter Property="StrokeShape" Value="RoundRectangle 12"/>
-            <Setter Property="Stroke" Value="Transparent"/>
-            <Setter Property="StrokeThickness" Value="0"/>
-            <Setter Property="Padding" Value="4,0"/>
-        </Style>
-
-        <!-- Section overline label -->
-        <Style x:Key="OverlineLabel" TargetType="Label">
-            <Setter Property="FontFamily" Value="Monospace"/>
-            <Setter Property="FontSize" Value="10"/>
-            <Setter Property="CharacterSpacing" Value="3"/>
-            <Setter Property="TextColor" Value="{StaticResource Outline}"/>
-            <Setter Property="FontAttributes" Value="None"/>
-        </Style>
-
-        <!-- Photo slot wrapper card -->
-        <Style x:Key="PhotoCard" TargetType="Border">
-            <Setter Property="BackgroundColor" Value="{StaticResource SurfaceContainerLowest}"/>
-            <Setter Property="StrokeShape" Value="RoundRectangle 20"/>
-            <Setter Property="Stroke" Value="{StaticResource SurfaceVariant}"/>
-            <Setter Property="StrokeThickness" Value="1"/>
-            <Setter Property="Padding" Value="0"/>
-            <Setter Property="Shadow">
-                <Setter.Value>
-                    <Shadow Brush="#0A0056BB" Offset="0,4" Radius="16" Opacity="0.08"/>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Photo slot label — tiny monospace uppercase -->
-        <Style x:Key="SlotLabel" TargetType="Label">
-            <Setter Property="FontFamily" Value="Monospace"/>
-            <Setter Property="FontSize" Value="10"/>
-            <Setter Property="CharacterSpacing" Value="3"/>
-            <Setter Property="FontAttributes" Value="Bold"/>
-            <Setter Property="TextColor" Value="{StaticResource Primary}"/>
-        </Style>
-
-        <!-- CAPTURE primary button -->
-        <Style x:Key="CaptureBtn" TargetType="Button">
-            <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
-            <Setter Property="TextColor" Value="{StaticResource OnPrimary}"/>
-            <Setter Property="FontFamily" Value="Inter"/>
-            <Setter Property="FontAttributes" Value="Bold"/>
-            <Setter Property="FontSize" Value="11"/>
-            <Setter Property="CharacterSpacing" Value="1"/>
-            <Setter Property="CornerRadius" Value="12"/>
-            <Setter Property="HeightRequest" Value="44"/>
-            <Setter Property="Padding" Value="0"/>
-        </Style>
-
-        <!-- SELECT outline button -->
-        <Style x:Key="SelectBtn" TargetType="Button">
-            <Setter Property="BackgroundColor" Value="{StaticResource SurfaceContainerLowest}"/>
-            <Setter Property="TextColor" Value="{StaticResource OnSurface}"/>
-            <Setter Property="FontFamily" Value="Inter"/>
-            <Setter Property="FontAttributes" Value="Bold"/>
-            <Setter Property="FontSize" Value="11"/>
-            <Setter Property="CharacterSpacing" Value="1"/>
-            <Setter Property="CornerRadius" Value="12"/>
-            <Setter Property="HeightRequest" Value="44"/>
-            <Setter Property="BorderColor" Value="{StaticResource OutlineVariant}"/>
-            <Setter Property="BorderWidth" Value="1"/>
-            <Setter Property="Padding" Value="0"/>
-        </Style>
-
-    </ContentPage.Resources>
+             BackgroundColor="{StaticResource Surface}"
+            Shell.NavBarIsVisible="False"
+            Shell.TabBarIsVisible="False">
+    <!--
+        All color tokens and reusable styles removed from this page.
+        They now live in AppStyles.xaml (merged at App.xaml level).
+        Key renames for clarity:
+          FieldBorder  → InputBorderStyle
+          OverlineLabel → OverlineLabelStyle
+          PhotoCard     → PhotoCardStyle
+          SlotLabel     → SlotLabelStyle
+          CaptureBtn    → CaptureButtonStyle
+          SelectBtn     → SelectButtonStyle
+    -->
 
     <Grid>
 
@@ -204,11 +102,11 @@
                             <!-- ── IDENTIFICATION ENTRY SECTION ── -->
                             <VerticalStackLayout Spacing="12">
                                 <Label Text="IDENTIFICATION ENTRY"
-                                       Style="{StaticResource OverlineLabel}"
+                                       Style="{StaticResource OverlineLabelStyle}"
                                        Margin="4,0"/>
 
                                 <!-- Employee ID -->
-                                <Border Style="{StaticResource FieldBorder}">
+                                <Border Style="{StaticResource InputBorderStyle}">
                                     <Entry x:Name="userIdEntry"
                                            Style="{StaticResource FormEntryStyle}"
                                            Text="{Binding UserId}"
@@ -218,7 +116,7 @@
                                 </Border>
 
                                 <!-- Full Name -->
-                                <Border Style="{StaticResource FieldBorder}">
+                                <Border Style="{StaticResource InputBorderStyle}">
                                     <Entry Style="{StaticResource FormEntryStyle}"
                                            Text="{Binding Name}"
                                            Placeholder="Full Name"
@@ -226,7 +124,7 @@
                                 </Border>
 
                                 <!-- Date of Birth -->
-                                <Border Style="{StaticResource FieldBorder}">
+                                <Border Style="{StaticResource InputBorderStyle}">
                                     <DatePicker Date="{Binding DateOfBirth}"
                                                 MinimumDate="01/01/1900"
                                                 FontSize="15"
@@ -237,7 +135,7 @@
                                 </Border>
 
                                 <!-- Sex / Gender -->
-                                <Border Style="{StaticResource FieldBorder}">
+                                <Border Style="{StaticResource InputBorderStyle}">
                                     <Picker ItemsSource="{Binding SexOptions}"
                                             SelectedItem="{Binding Sex}"
                                             Title="Select Sex"
@@ -257,7 +155,7 @@
                                 <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
                                     <Label Grid.Row="0" Grid.Column="0"
                                            Text="MULTI-ANGLE BIOMETRIC CAPTURE"
-                                           Style="{StaticResource OverlineLabel}"
+                                           Style="{StaticResource OverlineLabelStyle}"
                                            Margin="4,0"/>
                                     <!-- Photo count badge -->
                                     <Border Grid.Row="0" Grid.Column="1"
@@ -278,14 +176,14 @@
                                 </Grid>
 
                                 <!-- ── PHOTO 1: FRONT FACE ── -->
-                                <Border Style="{StaticResource PhotoCard}">
+                                <Border Style="{StaticResource PhotoCardStyle}">
                                     <VerticalStackLayout Spacing="0">
                                         <!-- Card header -->
                                         <Grid ColumnDefinitions="*,Auto"
                                               Padding="16,14,16,10">
                                             <Label Grid.Column="0"
                                                    Text="1. FRONT FACE"
-                                                   Style="{StaticResource SlotLabel}"
+                                                   Style="{StaticResource SlotLabelStyle}"
                                                    VerticalOptions="Center"/>
                                             <Label Grid.Column="1"
                                                    Text="REQUIRED"
@@ -297,7 +195,7 @@
                                         </Grid>
 
                                         <!-- Photo frame with corner guides -->
-                                        <Grid HeightRequest="200" Margin="12,0">
+                                        <Grid HeightRequest="280" Margin="12,0">
                                             <!-- Placeholder when no photo -->
                                             <Border BackgroundColor="{StaticResource SurfaceContainerLow}"
                                                     StrokeShape="RoundRectangle 16"
@@ -370,7 +268,7 @@
                                             Text="CAPTURE"
                                             ImageSource="icon_camera.png"
                                             ContentLayout="Left,8"
-                                            Style="{StaticResource CaptureBtn}"
+                                            Style="{StaticResource CaptureButtonStyle}"
                                             Command="{Binding StartCapturePhoto1Command}" />
 
                                             <!-- Select -->
@@ -378,7 +276,7 @@
                                             Text="SELECT"
                                             ImageSource="icon_upload.png"
                                             ContentLayout="Left,8"
-                                            Style="{StaticResource SelectBtn}"
+                                            Style="{StaticResource SelectButtonStyle}"
                                             Command="{Binding PickPhoto1Command}" />
 
                                         </Grid>
@@ -386,13 +284,13 @@
                                 </Border>
 
                                 <!-- ── PHOTO 2: LEFT PROFILE ── -->
-                                <Border Style="{StaticResource PhotoCard}">
+                                <Border Style="{StaticResource PhotoCardStyle}">
                                     <VerticalStackLayout Spacing="0">
                                         <Grid ColumnDefinitions="*,Auto"
                                               Padding="16,14,16,10">
                                             <Label Grid.Column="0"
                                                    Text="2. LEFT PROFILE"
-                                                   Style="{StaticResource SlotLabel}"
+                                                   Style="{StaticResource SlotLabelStyle}"
                                                    VerticalOptions="Center"/>
                                             <Label Grid.Column="1"
                                                    Text="REQUIRED"
@@ -403,7 +301,7 @@
                                                    VerticalOptions="Center"/>
                                         </Grid>
 
-                                        <Grid HeightRequest="200" Margin="12,0">
+                                        <Grid HeightRequest="280" Margin="12,0">
                                             <Border BackgroundColor="{StaticResource SurfaceContainerLow}"
                                                     StrokeShape="RoundRectangle 16"
                                                     Stroke="{StaticResource SurfaceVariant}"
@@ -467,7 +365,7 @@
                                             Text="CAPTURE"
                                             ImageSource="icon_camera.png"
                                             ContentLayout="Left,8"
-                                            Style="{StaticResource CaptureBtn}"
+                                            Style="{StaticResource CaptureButtonStyle}"
                                             Command="{Binding StartCapturePhoto1Command}" />
 
                                             <!-- Select -->
@@ -475,7 +373,7 @@
                                             Text="SELECT"
                                             ImageSource="icon_upload.png"
                                             ContentLayout="Left,8"
-                                            Style="{StaticResource SelectBtn}"
+                                            Style="{StaticResource SelectButtonStyle}"
                                             Command="{Binding PickPhoto1Command}" />
 
                                         </Grid>
@@ -483,13 +381,13 @@
                                 </Border>
 
                                 <!-- ── PHOTO 3: RIGHT PROFILE ── -->
-                                <Border Style="{StaticResource PhotoCard}">
+                                <Border Style="{StaticResource PhotoCardStyle}">
                                     <VerticalStackLayout Spacing="0">
                                         <Grid ColumnDefinitions="*,Auto"
                                               Padding="16,14,16,10">
                                             <Label Grid.Column="0"
                                                    Text="3. RIGHT PROFILE"
-                                                   Style="{StaticResource SlotLabel}"
+                                                   Style="{StaticResource SlotLabelStyle}"
                                                    VerticalOptions="Center"/>
                                             <Label Grid.Column="1"
                                                    Text="REQUIRED"
@@ -500,7 +398,7 @@
                                                    VerticalOptions="Center"/>
                                         </Grid>
 
-                                        <Grid HeightRequest="200" Margin="12,0">
+                                        <Grid HeightRequest="280" Margin="12,0">
                                             <Border BackgroundColor="{StaticResource SurfaceContainerLow}"
                                                     StrokeShape="RoundRectangle 16"
                                                     Stroke="{StaticResource SurfaceVariant}"
@@ -564,7 +462,7 @@
                                             Text="CAPTURE"
                                             ImageSource="icon_camera.png"
                                             ContentLayout="Left,8"
-                                            Style="{StaticResource CaptureBtn}"
+                                            Style="{StaticResource CaptureButtonStyle}"
                                             Command="{Binding StartCapturePhoto1Command}" />
 
                                             <!-- Select -->
@@ -572,7 +470,7 @@
                                             Text="SELECT"
                                             ImageSource="icon_upload.png"
                                             ContentLayout="Left,8"
-                                            Style="{StaticResource SelectBtn}"
+                                            Style="{StaticResource SelectButtonStyle}"
                                             Command="{Binding PickPhoto1Command}" />
 
                                         </Grid>
@@ -667,6 +565,58 @@
             <camera:CameraView x:Name="cameraView"
                                HorizontalOptions="Fill"
                                VerticalOptions="Fill"/>
+
+            <!-- Face-guide oval: helps user centre their face before capture -->
+            <Grid HorizontalOptions="Fill"
+                  VerticalOptions="Fill"
+                  InputTransparent="True">
+                <!-- Dark vignette mask — four semi-transparent strips around the oval -->
+                <BoxView Color="#99000000"
+                         HorizontalOptions="Fill"
+                         VerticalOptions="Start"
+                         HeightRequest="160"/>
+                <BoxView Color="#99000000"
+                         HorizontalOptions="Fill"
+                         VerticalOptions="End"
+                         HeightRequest="220"/>
+                <BoxView Color="#99000000"
+                         WidthRequest="40"
+                         HorizontalOptions="Start"
+                         VerticalOptions="Fill"/>
+                <BoxView Color="#99000000"
+                         WidthRequest="40"
+                         HorizontalOptions="End"
+                         VerticalOptions="Fill"/>
+
+                <!-- Oval outline -->
+                <Border StrokeShape="Ellipse"
+                        Stroke="White"
+                        StrokeThickness="2.5"
+                        BackgroundColor="Transparent"
+                        WidthRequest="260"
+                        HeightRequest="340"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Margin="0,-20,0,0"/>
+
+                <!-- Corner accent — top-left -->
+                <Border StrokeShape="RoundRectangle 3"
+                        Stroke="{StaticResource Primary}"
+                        StrokeThickness="4"
+                        BackgroundColor="Transparent"
+                        WidthRequest="28" HeightRequest="4"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Margin="-232,-354,0,0"/>
+                <Border StrokeShape="RoundRectangle 3"
+                        Stroke="{StaticResource Primary}"
+                        StrokeThickness="4"
+                        BackgroundColor="Transparent"
+                        WidthRequest="4" HeightRequest="28"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Margin="-218,-340,0,0"/>
+            </Grid>
 
             <!-- Top info bar -->
             <Border BackgroundColor="#CC000000"
