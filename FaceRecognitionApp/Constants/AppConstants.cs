@@ -43,8 +43,8 @@ public static class AppConstants
         public const string CameraStartPrompt = "Click 'Start Camera' to begin face verification";
         public const string CameraActive = "Camera active";
         public const string CameraInactive = "Camera inactive";
-        public const string NoUsersRegistered = "No users registered in database. Please register users first.";
-        public const string LoadingUsers = "Loading registered users from database...";
+        public const string NoUsersRegistered = "No Employees registered in database. Please register Employees first.";
+        public const string LoadingUsers = "Loading registered Employees from database...";
         public const string ScanningFaces = "Scanning for registered faces...";
     }
 }
