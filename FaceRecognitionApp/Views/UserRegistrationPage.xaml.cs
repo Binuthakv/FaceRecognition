@@ -24,6 +24,7 @@ public partial class UserRegistrationPage : ContentPage
         _faceRecognitionService = faceRecognitionService ?? throw new ArgumentNullException(nameof(faceRecognitionService));
         BindingContext = _viewModel;
     }
+    
 
     private async void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -186,5 +187,10 @@ public partial class UserRegistrationPage : ContentPage
         _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
         if (_viewModel.IsCameraPreviewVisible)
             cameraView.StopCameraPreview();
+    }
+
+    private async void OnBackClicked(object? sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync($"//{nameof(LandingPage)}");
     }
 }

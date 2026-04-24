@@ -5,261 +5,368 @@
              xmlns:models="clr-namespace:FaceRecognitionApp.Models"
              x:Class="FaceRecognitionApp.Views.UsersListPage"
              x:DataType="viewmodels:UsersListViewModel"
-             Title="Registered Employees"
+             Title="Registered Users"
              BackgroundColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}">
 
-    <Grid RowDefinitions="Auto,*" Padding="0">
-        
-        <!-- Modern Header Section -->
-        <Border Grid.Row="0"
-                Padding="20,20,20,24"
-                StrokeThickness="0">
-            <Border.Background>
-                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                    <GradientStop Color="{StaticResource Primary}" Offset="0.0"/>
-                    <GradientStop Color="{StaticResource Accent}" Offset="1.0"/>
-                </LinearGradientBrush>
-            </Border.Background>
-            <Border.Shadow>
-                <OnPlatform x:TypeArguments="x:Object">
-                    <On Platform="Android"><x:Null/></On>
-                    <On Platform="Default">
-                        <Shadow Brush="{StaticResource Primary}"
-                                Offset="0,4"
-                                Radius="12"
-                                Opacity="0.15"/>
-                    </On>
-                </OnPlatform>
-            </Border.Shadow>
-            
-            <Grid ColumnDefinitions="*,Auto" RowSpacing="16">
-                <!-- Title Section -->
-                <VerticalStackLayout Grid.Column="0" Spacing="6">
-                    <HorizontalStackLayout Spacing="12">
-                        <Label Text="👥"
-                               FontSize="32"
-                               VerticalOptions="Center"/>
-                        <VerticalStackLayout Spacing="2">
-                            <Label Text="Registered Employees"
-                                   FontSize="24"
-                                   FontAttributes="Bold"
-                                   TextColor="White"/>
-                            <Border StrokeShape="RoundRectangle 12"
-                                    BackgroundColor="#33FFFFFF"
-                                    Padding="12,4"
-                                    HorizontalOptions="Start">
-                                <Label Text="{Binding TotalUsers, StringFormat='{0} users enrolled'}"
-                                       FontSize="12"
-                                       FontAttributes="Bold"
-                                       TextColor="White"/>
-                            </Border>
-                        </VerticalStackLayout>
-                    </HorizontalStackLayout>
-                </VerticalStackLayout>
+    <ContentPage.Resources>
 
-                <!-- Action Buttons -->
-                <VerticalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
-                    <Button Text="➕ Add"
-                            Command="{Binding AddUserCommand}"
-                            Style="{StaticResource PrimaryButton}"
-                            FontSize="14"
-                            Padding="16,10"
-                            WidthRequest="100"/>
-                    <Button Text="🔄 Refresh"
-                            Command="{Binding RefreshUsersCommand}"
-                            Style="{StaticResource SecondaryButton}"
-                            FontSize="14"
-                            Padding="16,10"
-                            WidthRequest="100"/>
-                </VerticalStackLayout>
-            </Grid>
-        </Border>
+        <!-- ═══════════════════════════  COLOR TOKENS  ═══════════════════════════ -->
+        <Color x:Key="Primary">#2E6FD8</Color>
+        <Color x:Key="OnPrimary">#FFFFFF</Color>
+        <Color x:Key="SurfaceContainerLowest">#FFFFFF</Color>
+        <Color x:Key="SurfaceContainerHighest">#DEE3EB</Color>
+        <Color x:Key="SurfaceVariant">#DEE3EB</Color>
+        <Color x:Key="OutlineVariant">#C2C6D5</Color>
+        <Color x:Key="OnSurface">#171C22</Color>
+        <Color x:Key="OnSurfaceVariant">#424753</Color>
+        <Color x:Key="Outline">#727784</Color>
+        <Color x:Key="ErrorColor">#BA1A1A</Color>
+        <Color x:Key="ErrorContainer">#FFDAD6</Color>
 
-        <!-- Users List with Modern Cards -->
-        <RefreshView Grid.Row="1"
-                     IsRefreshing="{Binding IsRefreshing}"
-                     Command="{Binding RefreshUsersCommand}"
-                     Margin="0,8,0,0">
-            <CollectionView ItemsSource="{Binding Users}"
-                           SelectionMode="None"
-                           Margin="16,0">
-                <CollectionView.EmptyView>
-                    <VerticalStackLayout Spacing="16" 
-                                        VerticalOptions="Center" 
-                                        HorizontalOptions="Center"
-                                        Padding="40">
-                        <Label Text="📭"
-                               FontSize="80"
-                               HorizontalOptions="Center"
-                               TextColor="{StaticResource Gray400}"/>
-                        <Label Text="No Employees Yet"
-                               Style="{StaticResource SectionTitle}"
-                               HorizontalOptions="Center"
-                               TextColor="{StaticResource Gray600}"/>
-                        <Label Text="Get started by registering your first Employee"
-                               Style="{StaticResource Caption}"
-                               HorizontalOptions="Center"
-                               HorizontalTextAlignment="Center"/>
-                        <Button Text="➕ Register First Employee"
-                                Command="{Binding AddUserCommand}"
-                                Style="{StaticResource PrimaryButton}"
-                                HorizontalOptions="Center"
-                                Margin="0,16,0,0"/>
-                    </VerticalStackLayout>
-                </CollectionView.EmptyView>
+        <!-- ─── User card ─── -->
+        <Style x:Key="UserCard" TargetType="Border">
+            <Setter Property="BackgroundColor" Value="{StaticResource SurfaceContainerLowest}"/>
+            <Setter Property="StrokeShape" Value="RoundRectangle 20"/>
+            <Setter Property="Stroke" Value="#33C2C6D5"/>
+            <Setter Property="StrokeThickness" Value="1"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Shadow">
+                <Setter.Value>
+                    <Shadow Brush="#000000" Offset="0,2" Radius="8" Opacity="0.05"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ─── Action icon button (edit) ─── -->
+        <Style x:Key="EditIconBtn" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+            <Setter Property="TextColor" Value="{StaticResource OnSurfaceVariant}"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="HeightRequest" Value="36"/>
+            <Setter Property="WidthRequest" Value="36"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="BorderColor" Value="Transparent"/>
+        </Style>
+
+        <!-- ─── Action icon button (delete) ─── -->
+        <Style x:Key="DeleteIconBtn" TargetType="Button">
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+            <Setter Property="TextColor" Value="{StaticResource ErrorColor}"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="HeightRequest" Value="36"/>
+            <Setter Property="WidthRequest" Value="36"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="BorderColor" Value="Transparent"/>
+        </Style>
+
+    </ContentPage.Resources>
+
+    <!-- Ensure the page's Content is set explicitly to a single root element -->
+    <ContentPage.Content>
+
+        <!-- Root grid: TopBar | Body -->
+        <Grid RowDefinitions="Auto,*">
+
+            <Border Grid.Row="0"
+                    BackgroundColor="{StaticResource SurfaceContainerLowest}"
+                    StrokeShape="Rectangle"
+                    Stroke="Transparent"
+                    Padding="16,12">
+                <Border.Shadow>
+                    <Shadow Brush="#000000" Offset="0,1" Radius="4" Opacity="0.06"/>
+                </Border.Shadow>
                 
-                <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="16"/>
-                </CollectionView.ItemsLayout>
+                <Grid ColumnDefinitions="*,Auto" RowSpacing="16">
+                    <!-- Title Section -->
+                    <VerticalStackLayout Grid.Column="0" Spacing="6">
+                        <HorizontalStackLayout Spacing="12">
+                            <Label Text="👥"
+                                   FontSize="32"
+                                   VerticalOptions="Center"/>
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="Registered Users"
+                                       FontAttributes="Bold"
+                                       FontSize="20"    
+                                       TextColor="{StaticResource Primary}"
+                                       HorizontalOptions="Center"/>
+                                <Label Text="Manage organizational access and biometric profiles."
+                                       FontFamily="Inter"
+                                       FontSize="13"
+                                       TextColor="{StaticResource OnSurfaceVariant}"
+                                       HorizontalOptions="Center"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
 
-				<CollectionView.ItemTemplate>
-					<DataTemplate x:DataType="models:UserRegistration">
-						<!-- Modern User Card without SwipeView for Android stability -->
-						<Border Style="{StaticResource CardFrame}"
-								Padding="0"
-								Margin="0,4">
-							<Grid ColumnDefinitions="Auto,*" Padding="16" ColumnSpacing="16">
+                            <!-- ── SYSTEM ANALYTICS CARD ── -->
+                            <Border BackgroundColor="{StaticResource SurfaceContainerLowest}"
+                                    StrokeShape="RoundRectangle 20"
+                                    Stroke="#33C2C6D5"
+                                    StrokeThickness="1"
+                                    Padding="20,18">
+                                <Border.Shadow>
+                                    <Shadow Brush="#000000" Offset="0,2" Radius="8" Opacity="0.05"/>
+                                </Border.Shadow>
+                                <VerticalStackLayout Spacing="14">
+                                    <!-- Section overline -->
+                                    <Label Text="SYSTEM ANALYTICS"
+                                           FontFamily="Inter"
+                                           FontAttributes="Bold"
+                                           FontSize="10"
+                                           CharacterSpacing="3"
+                                           TextColor="{StaticResource OnSurfaceVariant}"/>
+                                    <!-- Stat row -->
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                            <Label Text="Total Users"
+                                                   FontFamily="Inter"
+                                                   FontSize="13"
+                                                   TextColor="{StaticResource OnSurfaceVariant}"/>
+                                            <Label Text="{Binding TotalUsers}"
+                                                   FontFamily="Inter"
+                                                   FontAttributes="Bold"
+                                                   FontSize="36"
+                                                   TextColor="{StaticResource Primary}"/>
+                                        </VerticalStackLayout>
+                                        <!-- Group icon circle -->
+                                        <Border Grid.Column="1"
+                                                BackgroundColor="#1A2E6FD8"
+                                                StrokeShape="RoundRectangle 24"
+                                                Stroke="Transparent"
+                                                WidthRequest="48"
+                                                HeightRequest="48"
+                                                VerticalOptions="Center">
+                                            <Image Source="icon_users1.png"
+                                                   HeightRequest="30"
+                                                   WidthRequest="30"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"/>
+                                        </Border>
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </Border>
 
-								<!-- User Avatar -->
-								<Border Grid.Column="0"
-									   StrokeThickness="3"
-									   StrokeShape="RoundRectangle 50"
-									   HeightRequest="100"
-									   WidthRequest="100"
-									   VerticalOptions="Center">
-									<Border.Stroke>
-										<LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-											<GradientStop Color="{StaticResource Primary}" Offset="0.0"/>
-											<GradientStop Color="{StaticResource Secondary}" Offset="1.0"/>
-										</LinearGradientBrush>
-									</Border.Stroke>
-									<Border.Shadow>
-										<OnPlatform x:TypeArguments="x:Object">
-											<On Platform="Android"><x:Null/></On>
-											<On Platform="Default">
-												<Shadow Brush="{StaticResource Primary}"
-														Offset="0,4"
-														Radius="8"
-														Opacity="0.2"/>
-											</On>
-										</OnPlatform>
-									</Border.Shadow>
+                            <!-- ── ADD USER / REFRESH BUTTONS ── -->
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                                <!-- Add User -->
+                                <Button Grid.Column="0"
+                                        Text="＋  Add User"
+                                        Command="{Binding AddUserCommand}"
+                                        BackgroundColor="{StaticResource Primary}"
+                                        TextColor="{StaticResource OnPrimary}"
+                                        FontFamily="Inter"
+                                        FontAttributes="Bold"
+                                        FontSize="14"
+                                        CornerRadius="12"
+                                        HeightRequest="52">
+                                    <Button.Shadow>
+                                        <Shadow Brush="#2E6FD8" Offset="0,4" Radius="10" Opacity="0.22"/>
+                                    </Button.Shadow>
+                                </Button>
+                                <!-- Refresh -->
+                                <Button Grid.Column="1"
+                                        Text="↺  Refresh"
+                                        Command="{Binding RefreshUsersCommand}"
+                                        BackgroundColor="{StaticResource SurfaceContainerHighest}"
+                                        TextColor="{StaticResource OnSurface}"
+                                        FontFamily="Inter"
+                                        FontAttributes="Bold"
+                                        FontSize="14"
+                                        CornerRadius="12"
+                                        HeightRequest="52"
+                                        BorderColor="#33C2C6D5"
+                                        BorderWidth="1"/>
+                            </Grid>
 
-									<Grid>
-										<!-- Photo -->
-										<Image Source="{Binding Photo1, Converter={StaticResource ByteArrayToImageConverter}}"
-											   Aspect="AspectFill"
-											   IsVisible="{Binding Photo1, Converter={StaticResource IsNotNullConverter}}"/>
-										<!-- Placeholder -->
-										<Border BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}"
-												IsVisible="{Binding Photo1, Converter={StaticResource IsNullConverter}}">
-											<Label Text="👤"
-												   FontSize="48"
-												   HorizontalOptions="Center"
-												   VerticalOptions="Center"
-												   TextColor="{StaticResource Gray400}"/>
-										</Border>
-									</Grid>
-								</Border>
+                            <!-- ── USER DIRECTORY ── -->
+                            <VerticalStackLayout Spacing="10">
 
-								<!-- User Details -->
-								<VerticalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
-									<!-- Name & ID -->
-									<VerticalStackLayout Spacing="2">
-										<Label Text="{Binding Name}"
-											   FontSize="20"
-											   FontAttributes="Bold"
-											   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
-										<Border StrokeShape="RoundRectangle 8"
-												BackgroundColor="{StaticResource PrimaryLight}"
-												Padding="8,4"
-												HorizontalOptions="Start">
-											<Label Text="{Binding UserId, StringFormat='ID: {0}'}"
-												   FontSize="12"
-												   FontAttributes="Bold"
-												   TextColor="White"/>
-										</Border>
-									</VerticalStackLayout>
+                                <!-- Section overline -->
+                                <Label Text="USER DIRECTORY"
+                                       FontFamily="Inter"
+                                       FontAttributes="Bold"
+                                       FontSize="10"
+                                       CharacterSpacing="3"
+                                       TextColor="{StaticResource OnSurfaceVariant}"
+                                       Margin="4,0"/>
 
-									<!-- Info Grid -->
-									<Grid ColumnDefinitions="Auto,*,Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="4">
-										<!-- Age -->
-										<Label Grid.Row="0" Grid.Column="0"
-											   Text="🎂"
-											   FontSize="16"
-											   VerticalOptions="Center"/>
-										<Label Grid.Row="0" Grid.Column="1"
-											   Text="{Binding Age, StringFormat='{0} years'}"
-											   FontSize="14"
-											   TextColor="{StaticResource Gray600}"
-											   VerticalOptions="Center"/>
+                                <!-- Users List with Modern Cards -->
+                                <RefreshView Grid.Row="1"
+                                             IsRefreshing="{Binding IsRefreshing}"
+                                             Command="{Binding RefreshUsersCommand}"
+                                             Margin="0,8,0,0">
+                                    <CollectionView ItemsSource="{Binding Users}"
+                                                   SelectionMode="None"
+                                                   Margin="16,0">
+                                        <CollectionView.EmptyView>
+                                            <VerticalStackLayout Spacing="16" 
+                                                                VerticalOptions="Center" 
+                                                                HorizontalOptions="Center"
+                                                                Padding="40">
+                                                <Label Text="📭"
+                                                       FontSize="80"
+                                                       HorizontalOptions="Center"
+                                                       TextColor="{StaticResource Gray400}"/>
+                                                <Label Text="No Users Yet"
+                                                       Style="{StaticResource SectionTitle}"
+                                                       HorizontalOptions="Center"
+                                                       TextColor="{StaticResource Gray600}"/>
+                                                <Label Text="Get started by registering your first user"
+                                                       Style="{StaticResource Caption}"
+                                                       HorizontalOptions="Center"
+                                                       HorizontalTextAlignment="Center"/>
+                                                <Button Text="➕ Register First User"
+                                                        Command="{Binding AddUserCommand}"
+                                                        Style="{StaticResource PrimaryButton}"
+                                                        HorizontalOptions="Center"
+                                                        Margin="0,16,0,0"/>
+                                            </VerticalStackLayout>
+                                        </CollectionView.EmptyView>
+                                        
+                                        <CollectionView.ItemsLayout>
+                                            <LinearItemsLayout Orientation="Vertical" ItemSpacing="16"/>
+                                        </CollectionView.ItemsLayout>
 
-										<!-- Photos -->
-										<Label Grid.Row="0" Grid.Column="2"
-											   Text="📸"
-											   FontSize="16"
-											   VerticalOptions="Center"/>
-										<Label Grid.Row="0" Grid.Column="3"
-											   Text="{Binding PhotoCount, StringFormat='{0}/3 photos'}"
-											   FontSize="14"
-											   TextColor="{StaticResource Gray600}"
-											   VerticalOptions="Center"/>
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate x:DataType="models:UserRegistration">
+                                                <Border Style="{StaticResource UserCard}" Margin="0,2">
+                                                    <Grid ColumnDefinitions="Auto,*,Auto"
+                                                          Padding="14,14,10,14"
+                                                          ColumnSpacing="14">
 
-										<!-- Date -->
-										<Label Grid.Row="1" Grid.Column="0"
-											   Text="📅"
-											   FontSize="16"
-											   VerticalOptions="Center"/>
-										<Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"
-											   Text="{Binding RegisteredDate, StringFormat='Enrolled: {0:MMM dd, yyyy}'}"
-											   FontSize="12"
-											   TextColor="{StaticResource Gray500}"
-											   VerticalOptions="Center"/>
-									</Grid>
+                                                        <!-- ── AVATAR ── -->
+                                                        <Border Grid.Column="0"
+                                                                StrokeShape="RoundRectangle 14"
+                                                                Stroke="#1AC2C6D5"
+                                                                StrokeThickness="1"
+                                                                WidthRequest="56"
+                                                                HeightRequest="56"
+                                                                VerticalOptions="Center"
+                                                                Padding="0">
+                                                            <Grid>
+                                                                <!-- Photo -->
+                                                                <Image Source="{Binding Photo1, Converter={StaticResource ByteArrayToImageConverter}}"
+                                                                       Aspect="AspectFill"
+                                                                       IsVisible="{Binding Photo1, Converter={StaticResource IsNotNullConverter}}"/>
+                                                                <!-- Placeholder -->
+                                                                <Border BackgroundColor="{StaticResource SurfaceContainerHighest}"
+                                                                        IsVisible="{Binding Photo1, Converter={StaticResource IsNullConverter}}">
+                                                                    <Label Text="👤"
+                                                                           FontSize="28"
+                                                                           HorizontalOptions="Center"
+                                                                           VerticalOptions="Center"/>
+                                                                </Border>
+                                                            </Grid>
+                                                        </Border>
 
-									<!-- Action Buttons -->
-									<Grid ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,8,0,0">
-										<Button Grid.Column="0"
-											   Text="📝 Edit"
-											   Command="{Binding BindingContext.EditUserCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-											   CommandParameter="{Binding .}"
-											   Style="{StaticResource SecondaryButton}"
-											   HeightRequest="40"
-											   FontSize="14"/>
-										<Button Grid.Column="1"
-											   Text="🗑️ Delete"
-											   Command="{Binding BindingContext.DeleteUserCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-											   CommandParameter="{Binding .}"
-											   Style="{StaticResource DangerButton}"
-											   HeightRequest="40"
-											   FontSize="14"/>
-									</Grid>
-										</VerticalStackLayout>
-									</Grid>
-								</Border>
-					</DataTemplate>
-				</CollectionView.ItemTemplate>
-            </CollectionView>
-        </RefreshView>
+                                                        <!-- ── USER DETAILS ── -->
+                                                        <VerticalStackLayout Grid.Column="1"
+                                                                             Spacing="4"
+                                                                             VerticalOptions="Center">
+                                                            <!-- Name -->
+                                                            <Label Text="{Binding Name}"
+                                                                   FontFamily="Inter"
+                                                                   FontAttributes="Bold"
+                                                                   FontSize="15"
+                                                                   TextColor="{StaticResource Primary}"
+                                                                   LineBreakMode="TailTruncation"/>
+                                                            <!-- ID / Age / Date rows -->
+                                                            <Label Text="{Binding UserId, StringFormat='ID: {0}'}"
+                                                                   FontFamily="Inter"
+                                                                   FontAttributes="Bold"
+                                                                   FontSize="10"
+                                                                   CharacterSpacing="1"
+                                                                   TextColor="{StaticResource OnSurfaceVariant}"/>
+                                                            <Label Text="{Binding Age, StringFormat='Age: {0}'}"
+                                                                   FontFamily="Inter"
+                                                                   FontAttributes="Bold"
+                                                                   FontSize="10"
+                                                                   CharacterSpacing="1"
+                                                                   TextColor="{StaticResource OnSurfaceVariant}"/>
+                                                            <Label Text="{Binding RegisteredDate, StringFormat='Enrolled: {0:MMM dd, yyyy}'}"
+                                                                   FontFamily="Inter"
+                                                                   FontAttributes="Bold"
+                                                                   FontSize="10"
+                                                                   CharacterSpacing="1"
+                                                                   TextColor="{StaticResource OnSurfaceVariant}"/>
+                                                        </VerticalStackLayout>
 
-        <!-- Loading Overlay -->
-        <Border Grid.Row="1"
-                IsVisible="{Binding IsLoading}"
-                BackgroundColor="#CC000000"
-                HorizontalOptions="Fill"
-                VerticalOptions="Fill">
-            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="16">
-                <ActivityIndicator IsRunning="{Binding IsLoading}"
-                                   Color="White"
-                                   WidthRequest="48"
-                                   HeightRequest="48"/>
-                <Label Text="{Binding StatusMessage}"
-                       FontSize="16"
-                       FontAttributes="Bold"
-                       TextColor="White"
-                       HorizontalTextAlignment="Center"/>
-            </VerticalStackLayout>
-        </Border>
-    </Grid>
+                                                        <!-- ── EDIT / DELETE ICON BUTTONS ── -->
+                                                        <VerticalStackLayout Grid.Column="2"
+                                                                             Spacing="4"
+                                                                             VerticalOptions="Center">
+                                                            <!-- Edit -->
+                                                            <Border BackgroundColor="Transparent"
+                                                                    StrokeShape="RoundRectangle 8"
+                                                                    Stroke="Transparent"
+                                                                    WidthRequest="36"
+                                                                    HeightRequest="36">
+
+                                                                <ImageButton Source="icon_edit.png"
+                                                                             BackgroundColor="Transparent"
+                                                                             WidthRequest="20"
+                                                                             HeightRequest="20"
+                                                                             Command="{Binding BindingContext.DeleteUserCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                                             CommandParameter="{Binding .}"/>
+                                                            </Border>
+                                                            <!-- Delete -->
+                                                            <Border BackgroundColor="Transparent"
+                                                                    StrokeShape="RoundRectangle 8"
+                                                                    Stroke="Transparent"
+                                                                    WidthRequest="36"
+                                                                    HeightRequest="36">
+
+                                                                <ImageButton Source="icon_delete.png"
+                                                                             BackgroundColor="Transparent"
+                                                                             WidthRequest="20"
+                                                                             HeightRequest="20"
+                                                                             Command="{Binding BindingContext.DeleteUserCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                                             CommandParameter="{Binding .}"/>
+                                                            </Border>
+                                                        </VerticalStackLayout>
+
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+
+                                    </CollectionView>
+                                </RefreshView>
+
+                            </VerticalStackLayout>
+
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Grid>
+
+            </Border>
+
+            <!-- ── LOADING OVERLAY ── -->
+            <Border IsVisible="{Binding IsLoading}"
+                    BackgroundColor="#CC000000"
+                    StrokeShape="Rectangle"
+                    Stroke="Transparent"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill">
+                <VerticalStackLayout VerticalOptions="Center"
+                                     HorizontalOptions="Center"
+                                     Spacing="16">
+                    <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                       Color="White"
+                                       WidthRequest="44"
+                                       HeightRequest="44"/>
+                    <Label Text="{Binding StatusMessage}"
+                           FontFamily="Inter"
+                           FontAttributes="Bold"
+                           FontSize="15"
+                           TextColor="White"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+            </Border>
+
+        </Grid>
+
+    </ContentPage.Content>
 
 </ContentPage>

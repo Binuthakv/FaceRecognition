@@ -60,7 +60,6 @@ public static class MauiProgram
 		services.AddTransient<UsersListViewModel>();
 
 		// Pages
-		services.AddTransient<AdminLoginPage>();
 		services.AddTransient<FaceVerificationPage>();
 		services.AddTransient<UserRegistrationPage>();
 		services.AddTransient<UsersListPage>();

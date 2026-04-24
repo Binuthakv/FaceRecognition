@@ -59,6 +59,18 @@
 
     <TabBar>
         <ShellContent
+            Title="Home"
+            Route="LandingPage"
+            ContentTemplate="{DataTemplate views:LandingPage}">
+            <ShellContent.Icon>
+                <FontImageSource
+                    Glyph="🏠"
+                    FontFamily="OpenSansRegular"
+                    Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}"/>
+            </ShellContent.Icon>
+        </ShellContent>
+        
+        <ShellContent
             Title="Register"
             ContentTemplate="{DataTemplate views:UserRegistrationPage}"
             Route="registration">
@@ -85,7 +97,7 @@
         <ShellContent
             Title="Employees"
             ContentTemplate="{DataTemplate views:UsersListPage}"
-            Route="UsersPage">
+            Route="UsersListPage">
             <ShellContent.Icon>
                 <FontImageSource 
                     Glyph="👥" 
