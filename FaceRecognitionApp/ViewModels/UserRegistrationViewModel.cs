@@ -424,16 +424,16 @@ public partial class UserRegistrationViewModel : ObservableObject
                 await _databaseService.SaveUserAsync(user);
                 StatusMessage = $"✅ User '{Name}' registered! (DB ID: {user.Id})";
                 StatusColor = Colors.Green;
-                AppLogger.Success($"User registered: {user.Name} ({user.UserId}), ID: {user.Id}");
+                AppLogger.Success($"Employee registered: {user.Name} ({user.UserId}), ID: {user.Id}");
 
                 await Shell.Current.DisplayAlertAsync(
                     "Registration Successful",
-                    $"User '{Name}' saved!\n\nUser ID: {UserId}\nDatabase ID: {user.Id}",
+                    $"Employee '{Name}' saved!\n\nUser ID: {UserId}\nDatabase ID: {user.Id}",
                     "OK");
 
                 bool registerAnother = await Shell.Current.DisplayAlertAsync(
-                    "Register Another User?",
-                    "Would you like to register another user?",
+                    "Register Another Employee?",
+                    "Would you like to register another Employee?",
                     "Yes", "No");
 
                 if (registerAnother)
@@ -447,7 +447,7 @@ public partial class UserRegistrationViewModel : ObservableObject
             AppLogger.Error($"{(IsEditMode ? "Update" : "Registration")} error", ex);
             await Shell.Current.DisplayAlertAsync(
                 $"{(IsEditMode ? "Update" : "Registration")} Failed",
-                $"Unable to {(IsEditMode ? "update" : "save")} user:\n{ex.Message}",
+                $"Unable to {(IsEditMode ? "update" : "save")} Employee:\n{ex.Message}",
                 "OK");
         }
         finally
@@ -474,7 +474,7 @@ public partial class UserRegistrationViewModel : ObservableObject
         EditingUserId = 0;
         IsCameraPreviewVisible = false;
         ActivePhotoSlot = 0;
-        StatusMessage = "Enter user details to register";
+        StatusMessage = "Enter Employee details to register";
         StatusColor = Colors.Gray;
         AppLogger.Info("Registration form reset");
     }
@@ -483,7 +483,7 @@ public partial class UserRegistrationViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(UserId))
         {
-            StatusMessage = "Please enter a User ID";
+            StatusMessage = "Please enter an Employee ID";
             StatusColor = Colors.Orange;
             return false;
         }

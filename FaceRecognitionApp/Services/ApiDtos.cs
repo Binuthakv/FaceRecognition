@@ -44,3 +44,14 @@ public sealed record EmbeddingSearchResult(
     string UserName,
     int PhotoNumber,
     float Similarity);
+
+// ── Admin Login DTOs ──────────────────────────────────────────────────────────
+
+internal sealed record AdminLoginRequest(string Username, string Password, bool RememberMe);
+
+public sealed record AdminLoginResponse(
+    int Id,
+    string Username,
+    string Email,
+    string Role,
+    bool IsActive);

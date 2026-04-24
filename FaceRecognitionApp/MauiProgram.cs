@@ -41,6 +41,9 @@ public static class MauiProgram
 		services.AddHttpClient<IUserDatabaseService, ApiUserDatabaseService>(client =>
 			client.BaseAddress = new Uri(AppConstants.ApiBaseUrl));
 
+		services.AddHttpClient<ApiUserDatabaseService>(client =>
+			client.BaseAddress = new Uri(AppConstants.ApiBaseUrl));
+
 		services.AddHttpClient<IFaceRecognitionService, ApiFaceRecognitionService>(client =>
 			  client.BaseAddress = new Uri(AppConstants.ApiBaseUrl));
 
@@ -51,11 +54,13 @@ public static class MauiProgram
 		//services.AddTransient<IUserDatabaseService, ApiUserDatabaseService>();
 
 		// ViewModels
+		services.AddTransient<AdminLoginViewModel>();
 		services.AddTransient<FaceVerificationViewModel>();
 		services.AddTransient<UserRegistrationViewModel>();
 		services.AddTransient<UsersListViewModel>();
 
 		// Pages
+		services.AddTransient<AdminLoginPage>();
 		services.AddTransient<FaceVerificationPage>();
 		services.AddTransient<UserRegistrationPage>();
 		services.AddTransient<UsersListPage>();

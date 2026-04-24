@@ -30,15 +30,38 @@
                        TextColor="White"
                        Opacity="0.9"
                        HorizontalTextAlignment="Center"/>
+                <Label x:Name="AdminNameLabel"
+                       FontSize="12"
+                       TextColor="White"
+                       HorizontalTextAlignment="Center"
+                       Margin="0,12,0,0"
+                       Opacity="0.8"/>
             </VerticalStackLayout>
         </Border>
     </Shell.FlyoutHeader>
+
+    <Shell.FlyoutFooter>
+        <Button x:Name="LogoutButton"
+                Text="➜] Logout"
+                Clicked="OnLogoutClicked"
+                BackgroundColor="#FF6B6B"
+                TextColor="White"
+                FontAttributes="Bold"
+                Padding="16"
+                CornerRadius="8"
+                Margin="16,0,16,16"/>
+    </Shell.FlyoutFooter>
+
+    <ShellContent
+        Title="Admin Login"
+        ContentTemplate="{DataTemplate views:AdminLoginPage}"
+        Route="login"/>
 
     <TabBar>
         <ShellContent
             Title="Register"
             ContentTemplate="{DataTemplate views:UserRegistrationPage}"
-            Route="RegistrationPage">
+            Route="registration">
             <ShellContent.Icon>
                 <FontImageSource 
                     Glyph="➕" 
@@ -60,7 +83,7 @@
         </ShellContent>
 
         <ShellContent
-            Title="Users"
+            Title="Employees"
             ContentTemplate="{DataTemplate views:UsersListPage}"
             Route="UsersPage">
             <ShellContent.Icon>
@@ -71,17 +94,7 @@
             </ShellContent.Icon>
         </ShellContent>
 
-        <!--<ShellContent
-            Title="Attendance"
-            ContentTemplate="{DataTemplate views:AttendanceListPage}"
-            Route="AttendanceListPage">
-            <ShellContent.Icon>
-                <FontImageSource 
-                    Glyph="📋" 
-                    FontFamily="OpenSansRegular"
-                    Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}"/>
-            </ShellContent.Icon>
-        </ShellContent>-->
     </TabBar>
 
 </Shell>
+
