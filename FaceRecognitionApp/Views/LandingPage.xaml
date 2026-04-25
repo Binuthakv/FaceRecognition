@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    LandingPage.xaml
+    All inline color tokens removed — resolved from AppStyles.xaml.
+-->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FaceRecognitionApp.Views.LandingPage"
+             Title="LandingPage"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- ── TOP APP BAR ── -->
+        <Grid Grid.Row="0"
+              BackgroundColor="{StaticResource Surface}"
+              Padding="26,18,26,10">
+            <Label Text="AVIVANEXT"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource PrimaryContainer}"
+                   CharacterSpacing="0.4"
+                   HorizontalOptions="Start"
+                   VerticalOptions="Center"/>
+
+            <!-- Logout pill -->
+            <Border Grid.Column="1"
+                    BackgroundColor="{StaticResource SurfaceContainerLow}"
+                    StrokeShape="RoundRectangle 20"
+                    Stroke="{StaticResource OutlineVariant}"
+                    StrokeThickness="1"
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    HorizontalOptions="End"
+                    VerticalOptions="Center">
+                <Image Source="icon_logout.png"
+                       WidthRequest="18" HeightRequest="18"
+                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnLogoutTapped"/>
+                </Border.GestureRecognizers>
+            </Border>
+        </Grid>
+
+        <!-- ── BODY ── -->
+        <ScrollView Grid.Row="1" BackgroundColor="Transparent">
+            <VerticalStackLayout Padding="24,8,24,40" Spacing="0">
+
+                <!-- Clock section -->
+                <VerticalStackLayout HorizontalOptions="Center"
+                                     Spacing="2"
+                                     Margin="0,34,0,34">
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="0">
+                        <Label x:Name="TimeLabel"
+                               Text="08:49"
+                               FontSize="72"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}"
+                               LineBreakMode="NoWrap"
+                               VerticalOptions="Center"/>
+                        <Label x:Name="AmPmLabel"
+                               Text="PM"
+                               FontSize="24"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}"
+                               Opacity="0.62"
+                               VerticalOptions="Center"
+                               Margin="8,0,0,10"/>
+                    </HorizontalStackLayout>
+                    <Label x:Name="DateLabel"
+                           Text="WEDNESDAY, APRIL 8, 2026"
+                           FontSize="10"
+                           TextColor="{StaticResource Outline}"
+                           CharacterSpacing="3.2"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,4,0,0"/>
+                </VerticalStackLayout>
+
+                <!-- ── ACTION CARDS ── -->
+                <VerticalStackLayout Spacing="14" MaximumWidthRequest="520">
+
+                    <!-- Register -->
+                    <Border Style="{StaticResource LandingCardStyle}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="22"/>
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnRegisterTapped"/>
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="14">
+                            <Border Grid.Column="0"
+                                    Style="{StaticResource LandingIconCircleStyle}">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="22"/>
+                                </Border.StrokeShape>
+                                <Image Source="icon_register1.png"
+                                       WidthRequest="22" HeightRequest="22"
+                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
+                                <Label Text="Register"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Primary}"/>
+                                <Label Text="HR Approval Required"
+                                       FontSize="13"
+                                       TextColor="{StaticResource OnSurfaceVariant}"/>
+                            </VerticalStackLayout>
+                            <Image Grid.Column="2"
+                                   Source="chevron_right.svg"
+                                   WidthRequest="20" HeightRequest="20"
+                                   Opacity="0.3" VerticalOptions="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Verify (gradient hero card) -->
+                    <Border StrokeThickness="0"
+                            Padding="14"
+                            MinimumHeightRequest="104">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="22"/>
+                        </Border.StrokeShape>
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="{StaticResource PrimaryContainer}" Offset="0.0"/>
+                                <GradientStop Color="{StaticResource Primary}"          Offset="1.0"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Border.Shadow>
+                            <Shadow Brush="#330056BB" Offset="0,16" Radius="30" Opacity="1"/>
+                        </Border.Shadow>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnVerifyTapped"/>
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="14">
+                            <Border Grid.Column="0"
+                                    BackgroundColor="#33FFFFFF"
+                                    StrokeThickness="0"
+                                    WidthRequest="48" HeightRequest="48"
+                                    HorizontalOptions="Center" VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="24"/>
+                                </Border.StrokeShape>
+                                <Image Source="icon_verify1.png"
+                                       WidthRequest="24" HeightRequest="24"
+                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
+                                <Label Text="Verify"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource OnPrimary}"/>
+                                <Label Text="Facial Recognition Scan"
+                                       FontSize="13"
+                                       TextColor="#CDE1FF"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+
+                    <!-- Users -->
+                    <Border Style="{StaticResource LandingCardStyle}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="22"/>
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnUsersTapped"/>
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="50,*,Auto" ColumnSpacing="14">
+                            <Border Grid.Column="0"
+                                    Style="{StaticResource LandingIconCircleStyle}">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="22"/>
+                                </Border.StrokeShape>
+                                <Image Source="icon_users1.png"
+                                       WidthRequest="22" HeightRequest="22"
+                                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                            </Border>
+                            <VerticalStackLayout Grid.Column="1" Spacing="1" VerticalOptions="Center">
+                                <Label Text="Users"
+                                       FontSize="18"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource Primary}"/>
+                                <Label Text="Directory &amp; Status"
+                                       FontSize="13"
+                                       TextColor="{StaticResource OnSurfaceVariant}"/>
+                            </VerticalStackLayout>
+                            <Image Grid.Column="2"
+                                   Source="chevron_right.svg"
+                                   WidthRequest="20" HeightRequest="20"
+                                   Opacity="0.3" VerticalOptions="Center"/>
+                        </Grid>
+                    </Border>
+
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+    </Grid>
+
+</ContentPage>

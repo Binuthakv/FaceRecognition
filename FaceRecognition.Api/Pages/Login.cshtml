@@ -1,337 +1,288 @@
 @page
 @model FaceRecognitionApp.Api.Pages.LoginModel
 @{
-    ViewData["Title"] = "Admin Login";
+    ViewData["Title"] = "AVIVANEXT | Login";
 }
 
 <!DOCTYPE html>
-<html lang="en">
+<html class="h-full" lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Face Recognition API</title>
+    <title>@ViewData["Title"]</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@@100..700,0..1&display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+        darkMode: "class",
+        theme: {
+        extend: {
+        "colors": {
+        "surface-bright": "#faf8ff",
+        "tertiary-container": "#5e667a",
+        "surface-container-low": "#f2f3ff",
+        "outline-variant": "#c3c5d9",
+        "inverse-primary": "#b7c4ff",
+        "on-background": "#131b2e",
+        "surface-dim": "#d2d9f4",
+        "on-tertiary-fixed-variant": "#3f4759",
+        "secondary-fixed-dim": "#4cd6ff",
+        "surface-container-highest": "#dae2fd",
+        "surface-container-high": "#e2e7ff",
+        "surface-tint": "#004ced",
+        "secondary": "#00677f",
+        "surface-variant": "#dae2fd",
+        "on-error": "#ffffff",
+        "tertiary-fixed-dim": "#bfc6dd",
+        "surface": "#faf8ff",
+        "on-secondary-fixed-variant": "#004e60",
+        "on-primary-fixed-variant": "#0038b6",
+        "tertiary": "#474e61",
+        "surface-container-lowest": "#ffffff",
+        "primary-fixed": "#dde1ff",
+        "on-tertiary-container": "#dde4fc",
+        "on-primary-fixed": "#001452",
+        "on-primary": "#ffffff",
+        "background": "#faf8ff",
+        "outline": "#737688",
+        "on-secondary-fixed": "#001f28",
+        "on-secondary-container": "#005266",
+        "inverse-on-surface": "#eef0ff",
+        "on-primary-container": "#dfe3ff",
+        "inverse-surface": "#283044",
+        "primary-fixed-dim": "#b7c4ff",
+        "on-tertiary-fixed": "#141b2c",
+        "primary": "#003ec7",
+        "on-secondary": "#ffffff",
+        "secondary-fixed": "#b7eaff",
+        "on-tertiary": "#ffffff",
+        "error": "#ba1a1a",
+        "on-surface-variant": "#434656",
+        "on-surface": "#131b2e",
+        "surface-container": "#eaedff",
+        "error-container": "#ffdad6",
+        "tertiary-fixed": "#dbe2fa",
+        "secondary-container": "#00ccf9",
+        "on-error-container": "#93000a",
+        "primary-container": "#0052ff"
+        },
+        "borderRadius": {
+        "DEFAULT": "0.25rem",
+        "lg": "0.5rem",
+        "xl": "0.75rem",
+        "full": "9999px"
+        },
+        "spacing": {
+        "margin": "32px",
+        "sm": "12px",
+        "gutter": "24px",
+        "xs": "4px",
+        "lg": "48px",
+        "base": "8px",
+        "md": "24px",
+        "xl": "80px"
+        },
+        "fontFamily": {
+        "headline-md": ["Inter"],
+        "body-md": ["Inter"],
+        "label-sm": ["Inter"],
+        "headline-lg": ["Inter"],
+        "body-lg": ["Inter"],
+        "code": ["Inter"],
+        "headline-xl": ["Inter"]
+        },
+        "fontSize": {
+        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+        "label-sm": ["14px", {"lineHeight": "1", "letterSpacing": "0.01em", "fontWeight": "500"}],
+        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+        "code": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+        "headline-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+        }
+        },
+        },
+        }
+    </script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+        font-family: 'Inter', sans-serif;
+        background-color: #faf8ff;
+        min-height: max(884px, 100dvh);
         }
 
-        .login-container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 400px;
-            padding: 40px;
-        }
-
-        .login-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .login-header h1 {
-            font-size: 28px;
-            color: #333;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .login-header p {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            color: #555;
-            font-weight: 500;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            gap: 8px;
-        }
-
-        .remember-me input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-
-        .remember-me label {
-            margin: 0;
-            cursor: pointer;
-            color: #666;
-            font-size: 14px;
-            font-weight: 400;
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 12px;
-            background-color: #667eea;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-login:hover {
-            background-color: #5568d3;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-login:active {
-            transform: translateY(0);
-        }
-
-        .alert {
-            padding: 12px 16px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            border-left: 4px solid;
-            font-size: 14px;
-        }
-
-        .alert-danger {
-            background-color: #f8d7da;
-            border-color: #dc3545;
-            color: #721c24;
-        }
-
-        .alert-success {
-            background-color: #d4edda;
-            border-color: #28a745;
-            color: #155724;
-        }
-
-        .divider {
-            text-align: center;
-            margin: 25px 0;
-            position: relative;
-        }
-
-        .divider::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: #ddd;
-        }
-
-        .divider span {
-            background: white;
-            padding: 0 10px;
-            color: #999;
-            font-size: 12px;
-            position: relative;
-            display: inline-block;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #999;
-            font-size: 12px;
-        }
-
-        .footer a {
-            color: #667eea;
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            color: #667eea;
-            margin-top: 10px;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 3px solid rgba(102, 126, 234, 0.2);
-            border-top-color: #667eea;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+        .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
 
         @@keyframes spin {
-            to { transform: rotate(360deg); }
+        to {
+        transform: rotate(360deg);
+        }
+        }
+
+        .spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 3px solid rgba(255, 255, 255, 0.4);
+        border-top-color: #ffffff;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        vertical-align: middle;
+        margin-right: 6px;
         }
     </style>
 </head>
-<body>
-    <div class="login-container">
-        <!-- Header -->
-        <div class="login-header">
-            <h1>👤Login</h1>
-            <p>Face Recognition System</p>
+<body class="h-full flex flex-col overflow-hidden bg-background">
+
+    <!-- Main Content Area-->
+    <main class="flex-grow flex items-center justify-center px-gutter">
+        <div class="w-full max-w-[400px] bg-surface-container-lowest p-md rounded-xl border border-outline-variant shadow-sm">
+
+            <!-- Brand Header -->
+            <div class="flex flex-col items-center mb-md">
+                <span class="material-symbols-outlined text-[48px] text-primary mb-2">face_6</span>
+                <h1 class="font-headline-md text-headline-md text-primary mb-xs tracking-tight">AVIVANEXT</h1>
+                <p class="font-label-sm text-label-sm text-outline">Face Recognition API</p>
+            </div>
+
+            <!-- Error Message -->
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="flex items-start gap-2 px-4 py-3 mb-sm rounded-lg bg-error-container border border-error/30 text-on-error-container font-label-sm text-label-sm">
+                    <span class="material-symbols-outlined text-[18px] mt-px shrink-0">error</span>
+                    <span>@Model.ErrorMessage</span>
+                </div>
+            }
+
+            <!-- Model Validation Errors -->
+            @if (!ModelState.IsValid)
+            {
+                <div class="flex items-start gap-2 px-4 py-3 mb-sm rounded-lg bg-error-container border border-error/30 text-on-error-container font-label-sm text-label-sm">
+                    <span class="material-symbols-outlined text-[18px] mt-px shrink-0">error</span>
+                    <ul class="list-disc list-inside space-y-1">
+                        @foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <!-- Success Message -->
+            @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+            {
+                <div class="flex items-start gap-2 px-4 py-3 mb-sm rounded-lg bg-[#d4edda] border border-[#28a745]/30 text-[#155724] font-label-sm text-label-sm">
+                    <span class="material-symbols-outlined text-[18px] mt-px shrink-0">check_circle</span>
+                    <span>@Model.SuccessMessage</span>
+                </div>
+            }
+
+            <!-- Login Form -->
+            <form method="post" asp-page="Login" id="loginForm" class="space-y-sm">
+                @Html.AntiForgeryToken()
+
+                <!-- Username / Email Input -->
+                <div class="flex flex-col gap-xs">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant ml-1" for="username">
+                        Username or Email
+                    </label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">mail</span>
+                        <input class="w-full pl-10 pr-4 py-3 bg-surface-bright border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                               type="text"
+                               id="username"
+                               name="Username"
+                               placeholder="Enter your username or email"
+                               value="@Model.Username"
+                               required
+                               autofocus />
+                    </div>
+                </div>
+
+                <!-- Password Input -->
+                <div class="flex flex-col gap-xs">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant ml-1" for="password">
+                        Password
+                    </label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">lock</span>
+                        <input class="w-full pl-10 pr-4 py-3 bg-surface-bright border border-outline-variant rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                               type="password"
+                               id="password"
+                               name="Password"
+                               placeholder="••••••••"
+                               required />
+                    </div>
+                </div>
+
+                <!-- Remember Me -->
+                <div class="flex items-center gap-xs py-xs">
+                    <input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary focus:ring-offset-0 bg-surface-bright"
+                           type="checkbox"
+                           id="rememberMe"
+                           name="RememberMe" />
+                    <label class="font-label-sm text-label-sm text-on-surface-variant cursor-pointer" for="rememberMe">
+                        Remember Me
+                    </label>
+                </div>
+
+                <!-- Sign In Button -->
+                <button type="submit"
+                        class="w-full py-3 bg-primary text-on-primary font-label-sm text-label-sm font-semibold rounded-lg shadow-sm border border-primary active:scale-[0.98] transition-transform flex items-center justify-center"
+                        id="loginBtn">
+                    Sign In
+                </button>
+
+                <!-- Loading State (hidden by default, shown on submit) -->
+                <div class="hidden text-center font-label-sm text-label-sm text-outline pt-xs" id="loading">
+                    <span class="spinner"></span> Signing in…
+                </div>
+
+                <!-- Registration Link -->
+                <div class="pt-sm text-center">
+                    <span class="font-label-sm text-label-sm text-on-surface-variant">Don't have an account? </span>
+                    <a class="font-label-sm text-label-sm text-primary font-semibold hover:underline" href="/Setup">
+                        Register here
+                    </a>
+                </div>
+            </form>
+
         </div>
+    </main>
 
-        <!-- Error Message -->
-        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
-        {
-            <div class="alert alert-danger">
-                ❌ @Model.ErrorMessage
-            </div>
-        }
-
-        <!-- Model Validation Errors -->
-        @if (!ModelState.IsValid)
-        {
-            <div class="alert alert-danger">
-                <strong>Form Validation Errors:</strong>
-                <ul style="margin: 10px 0; padding-left: 20px;">
-                    @foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                    {
-                        <li>@error.ErrorMessage</li>
-                    }
-                </ul>
-            </div>
-        }
-
-        <!-- Success Message -->
-        @if (!string.IsNullOrEmpty(Model.SuccessMessage))
-        {
-            <div class="alert alert-success">
-                ✅ @Model.SuccessMessage
-            </div>
-        }
-
-        <!-- Login Form -->
-        <form method="post" asp-page="Login" id="loginForm">
-            @Html.AntiForgeryToken()
-            <!-- Username/Email -->
-            <div class="form-group">
-                <label for="username">Username or Email</label>
-                <input type="text" 
-                       id="username" 
-                       name="Username" 
-                       placeholder="Enter your username or email"
-                       value="@Model.Username"
-                       required 
-                       autofocus />
-            </div>
-
-            <!-- Password -->
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" 
-                       id="password" 
-                       name="Password" 
-                       placeholder="Enter your password"
-                       required />
-            </div>
-
-            <!-- Remember Me -->
-            <div class="remember-me">
-                <input type="checkbox" id="rememberMe" name="RememberMe" />
-                <label for="rememberMe">Remember me</label>
-                
-            </div>
-           
-            <!-- Submit Button -->
-            <button type="submit" class="btn-login" id="loginBtn">
-                Sign In
-            </button>
-
-            <!-- Loading Spinner -->
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <p>Signing in...</p>
-            </div>
-        </form>
-        <!-- Register Link -->
-        <div style="text-align: center; margin-top: 20px;">
-            <span style="color: #666; font-size: 14px;">
-                Don't have an account?
-            </span>
-            <a href="/Setup"
-               style="color: #667eea; text-decoration: none; font-weight: 600; margin-left: 5px;">
-                Register here
-            </a>
+    <!-- Footer -->
+    <footer class="fixed bottom-0 w-full border-t border-slate-200/50 bg-slate-50/50 backdrop-blur-md flex items-center justify-center px-8 py-4">
+        <div class="font-inter text-xs tracking-wide text-slate-500 text-center">
+            © 2026 AvivaNext. All rights reserved.
         </div>
-        <!-- Footer -->
-        <div class="footer">
-            <p>© 2026 AvivaNext. All rights reserved.</p>
-        </div>
+    </footer>
+
+    <!-- Decorative Background -->
+    <div class="fixed inset-0 -z-10 opacity-10 pointer-events-none">
+        <img alt=""
+             class="w-full h-full object-cover"
+             src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYqNeOoTg3ETqrQ3t4up_NINPyZC44sr4BxUh_IgRmET-H9T4g0El8XtQ1Th4tJTECdwopY9DxIDwhN98zd61jyQVrI5niahInMeB2cr8nlN8dI2TVzaReWz9_U_Alck2W3IfAqgoXqLvY63QXMR-a4X729f8UmvNSCK0UnryovvTlTU5QWVU6WcVJXNhuKePks5JDkCNxqOVok-0VWGsk_7mryIvKg_PfM-i4RTEyXcT395DRYbEybxJIA0MoGzr5M4odBURq4AA8" />
     </div>
 
     <script>
-        // Debug form submission
-        console.log('Script loaded, setting up form listener...');
-
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM Content Loaded');
-            var form = document.getElementById('loginForm');
-            console.log('Form element found:', form);
-
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    console.log('Form submit event triggered');
-                    // Allow form to submit - don't prevent default
-                    var btn = document.getElementById('loginBtn');
-                    var loading = document.getElementById('loading');
-                    console.log('Button element:', btn);
-                    console.log('Loading element:', loading);
-
-                    if (btn && loading) {
-                        btn.style.display = 'none';
-                        loading.style.display = 'block';
-                    }
-                });
-            }
+        document.addEventListener('DOMContentLoaded', function () {
+        var form = document.getElementById('loginForm');
+        if (form) {
+        form.addEventListener('submit', function () {
+        var btn = document.getElementById('loginBtn');
+        var loading = document.getElementById('loading');
+        if (btn && loading) {
+        btn.style.display = 'none';
+        loading.classList.remove('hidden');
+        loading.style.display = 'block';
+        }
+        });
+        }
         });
     </script>
+
 </body>
 </html>

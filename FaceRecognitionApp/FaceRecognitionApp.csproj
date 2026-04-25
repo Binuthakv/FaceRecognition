@@ -96,6 +96,9 @@
     <!-- iOS -->
   </ItemGroup>
   <ItemGroup>
+    <MauiXaml Update="Resources\Styles\AppStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Views\AdminLoginPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
@@ -106,6 +109,9 @@
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Views\FaceVerificationPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Views\LandingPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Views\UserRegistrationPage.xaml">

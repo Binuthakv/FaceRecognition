@@ -20,4 +20,8 @@ public partial class UsersListPage : ContentPage
         await _viewModel.LoadUsersCommand.ExecuteAsync(null);
 
     }
+    private async void OnBackClicked(object? sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync($"//{nameof(LandingPage)}");
+    }
 }

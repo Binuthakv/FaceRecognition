@@ -1,0 +1,475 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    ╔══════════════════════════════════════════════════════════════╗
+    ║                   AppStyles.xaml                            ║
+    ║   Central design-system resource dictionary for             ║
+    ║   FaceRecognitionApp (AVIVANEXT)                            ║
+    ║                                                             ║
+    ║   Usage – merge into App.xaml ResourceDictionary:           ║
+    ║   <ResourceDictionary.MergedDictionaries>                   ║
+    ║       <ResourceDictionary Source="Resources/AppStyles.xaml"/>║
+    ║   </ResourceDictionary.MergedDictionaries>                  ║
+    ╚══════════════════════════════════════════════════════════════╝
+-->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- ═══════════════════════════════════════════════════════════
+         §1  COLOR TOKENS
+         Single source of truth for every color used in the app.
+         Pages reference these keys only — never raw hex strings.
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- Brand / Primary -->
+    <Color x:Key="Primary">#0056BB</Color>
+    <Color x:Key="PrimaryContainer">#2E6FD8</Color>
+    <Color x:Key="OnPrimary">#FFFFFF</Color>
+
+    <!-- Surface scale -->
+    <Color x:Key="Surface">#F7F9FF</Color>
+    <Color x:Key="SurfaceContainerLowest">#FFFFFF</Color>
+    <Color x:Key="SurfaceContainerLow">#F0F4FC</Color>
+    <Color x:Key="SurfaceContainer">#EAEEF6</Color>
+    <Color x:Key="SurfaceContainerHigh">#DEE3EB</Color>
+    <Color x:Key="SurfaceContainerHighest">#DEE3EB</Color>
+    <Color x:Key="SurfaceVariant">#DEE3EB</Color>
+
+    <!-- Content on surfaces -->
+    <Color x:Key="OnSurface">#171C22</Color>
+    <Color x:Key="OnSurfaceVariant">#424753</Color>
+
+    <!-- Borders / separators -->
+    <Color x:Key="Outline">#727784</Color>
+    <Color x:Key="OutlineVariant">#C2C6D5</Color>
+
+    <!-- Semantic: Error -->
+    <Color x:Key="ErrorColor">#BA1A1A</Color>
+    <Color x:Key="ErrorContainer">#FFDAD6</Color>
+    <Color x:Key="ErrorBannerBg">#FEF2F2</Color>
+    <Color x:Key="ErrorBannerStroke">#FECACA</Color>
+    <Color x:Key="ErrorBannerText">#991B1B</Color>
+
+    <!-- Semantic: Success -->
+    <Color x:Key="SuccessGreen">#16A34A</Color>
+    <Color x:Key="SuccessGreenDark">#2E7D32</Color>
+    <Color x:Key="SuccessContainer">#E8F5E9</Color>
+    <Color x:Key="SuccessGreenBg">#F0FDF4</Color>
+    <Color x:Key="SuccessGreenBorder">#BBF7D0</Color>
+    <Color x:Key="SuccessBannerText">#166534</Color>
+
+    <!-- Semantic: Warning -->
+    <Color x:Key="WarningAmber">#F59E0B</Color>
+
+    <!-- Flyout / Shell accent -->
+    <Color x:Key="FlyoutSelectedBg">#EBF2FF</Color>
+    <Color x:Key="FlyoutLabelColor">#424753</Color>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         §2  TYPOGRAPHY STYLES
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- Page title (large hero) -->
+    <Style x:Key="PageTitleStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="Inter"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="TextColor" Value="{StaticResource Primary}"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Page subtitle -->
+    <Style x:Key="PageSubtitleStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="Inter"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="TextColor" Value="{StaticResource OnSurfaceVariant}"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Section overline — UPPERCASE monospace caps -->
+    <Style x:Key="OverlineLabelStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="Monospace"/>
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="CharacterSpacing" Value="3"/>
+        <Setter Property="TextColor" Value="{StaticResource Outline}"/>
+        <Setter Property="FontAttributes" Value="None"/>
+        <Setter Property="Margin" Value="4,0"/>
+    </Style>
+
+    <!-- Section overline (bold variant, used in cards) -->
+    <Style x:Key="OverlineLabelBoldStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="Inter"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="CharacterSpacing" Value="3"/>
+        <Setter Property="TextColor" Value="{StaticResource OnSurfaceVariant}"/>
+    </Style>
+
+    <!-- Photo slot label -->
+    <Style x:Key="SlotLabelStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="Monospace"/>
+        <Setter Property="FontSize" Value="10"/>
+        <Setter Property="CharacterSpacing" Value="3"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="TextColor" Value="{StaticResource Primary}"/>
+    </Style>
+
+    <!-- Brand wordmark in TopBar -->
+    <Style x:Key="BrandWordmarkStyle" TargetType="Label">
+        <Setter Property="FontFamily" Value="Inter"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="CharacterSpacing" Value="2"/>
+        <Setter Property="TextColor" Value="{StaticResource Primary}"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="Margin" Value="12,0,0,0"/>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         §3  LAYOUT / CONTAINER STYLES
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- Top app-bar border (white bar with subtle shadow) -->
+    <Style x:Key="TopAppBarStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceContainerLowest}"/>
+        <Setter Property="StrokeShape" Value="Rectangle"/>
+        <Setter Property="Stroke" Value="Transparent"/>
+        <Setter Property="Padding" Value="16,12"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#000000" Offset="0,1" Radius="4" Opacity="0.06"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Back-button pill in TopBar -->
+    <Style x:Key="BackButtonPillStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceContainerHighest}"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 20"/>
+        <Setter Property="Stroke" Value="Transparent"/>
+        <Setter Property="WidthRequest" Value="40"/>
+        <Setter Property="HeightRequest" Value="40"/>
+        <Setter Property="HorizontalOptions" Value="Start"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <!-- Main content card (white rounded card with blue shadow) -->
+    <Style x:Key="MainCardStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceContainerLowest}"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 32"/>
+        <Setter Property="Stroke" Value="Transparent"/>
+        <Setter Property="Padding" Value="20,24"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#0056BB" Offset="0,20" Radius="40" Opacity="0.06"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Photo slot wrapper card -->
+    <Style x:Key="PhotoCardStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceContainerLowest}"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 20"/>
+        <Setter Property="Stroke" Value="{StaticResource SurfaceVariant}"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#0A0056BB" Offset="0,4" Radius="16" Opacity="0.08"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- User list card -->
+    <Style x:Key="UserCardStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceContainerLowest}"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 20"/>
+        <Setter Property="Stroke" Value="#33C2C6D5"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#000000" Offset="0,2" Radius="8" Opacity="0.05"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Analytics / stat card -->
+    <Style x:Key="StatCardStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceContainerLowest}"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 20"/>
+        <Setter Property="Stroke" Value="#33C2C6D5"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Padding" Value="20,18"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#000000" Offset="0,2" Radius="8" Opacity="0.05"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Info footer tile (subtle grey background) -->
+    <Style x:Key="InfoTileStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceContainerLow}"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 14"/>
+        <Setter Property="Stroke" Value="Transparent"/>
+        <Setter Property="Padding" Value="14,12"/>
+    </Style>
+
+    <!-- Landing action card (white, outline stroke) -->
+    <Style x:Key="LandingCardStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceContainerLowest}"/>
+        <Setter Property="Stroke" Value="#12C2C6D5"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="Padding" Value="14"/>
+        <Setter Property="MinimumHeightRequest" Value="90"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#0F0056BB" Offset="0,12" Radius="28" Opacity="1"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Landing icon circle (light-tinted background) -->
+    <Style x:Key="LandingIconCircleStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceContainerLow}"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="WidthRequest" Value="44"/>
+        <Setter Property="HeightRequest" Value="44"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         §4  FORM INPUT STYLES
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- Input field border wrapper -->
+    <Style x:Key="InputBorderStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceContainerLow}"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 12"/>
+        <Setter Property="Stroke" Value="Transparent"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="MinimumHeightRequest" Value="56"/>
+        <Setter Property="Padding" Value="4,0"/>
+    </Style>
+
+    <!-- Text entry inside InputBorderStyle -->
+    <Style x:Key="FormEntryStyle" TargetType="Entry">
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontFamily" Value="Inter"/>
+        <Setter Property="TextColor" Value="{StaticResource OnSurface}"/>
+        <Setter Property="PlaceholderColor" Value="{StaticResource OutlineVariant}"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="MinimumHeightRequest" Value="56"/>
+        <Setter Property="Margin" Value="8,0"/>
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal"/>
+                    <VisualState x:Name="Focused"/>
+                    <VisualState x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor" Value="{StaticResource OnSurface}"/>
+                            <Setter Property="BackgroundColor" Value="Transparent"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         §5  BUTTON STYLES
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- Primary action button (solid blue) -->
+    <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
+        <Setter Property="TextColor" Value="{StaticResource OnPrimary}"/>
+        <Setter Property="FontFamily" Value="Inter"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="CornerRadius" Value="32"/>
+        <Setter Property="HeightRequest" Value="60"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#0056BB" Offset="0,8" Radius="24" Opacity="0.28"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Secondary / ghost button (transparent with border) -->
+    <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TextColor" Value="{StaticResource OnSurfaceVariant}"/>
+        <Setter Property="FontFamily" Value="Inter"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="CornerRadius" Value="32"/>
+        <Setter Property="HeightRequest" Value="48"/>
+        <Setter Property="BorderColor" Value="{StaticResource OutlineVariant}"/>
+        <Setter Property="BorderWidth" Value="1"/>
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+    </Style>
+
+    <!-- Capture button (small solid blue, used in photo cards) -->
+    <Style x:Key="CaptureButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
+        <Setter Property="TextColor" Value="{StaticResource OnPrimary}"/>
+        <Setter Property="FontFamily" Value="Inter"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="CharacterSpacing" Value="1"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="44"/>
+        <Setter Property="Padding" Value="0"/>
+    </Style>
+
+    <!-- Select button (outline, used beside Capture) -->
+    <Style x:Key="SelectButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceContainerLowest}"/>
+        <Setter Property="TextColor" Value="{StaticResource OnSurface}"/>
+        <Setter Property="FontFamily" Value="Inter"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="CharacterSpacing" Value="1"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="HeightRequest" Value="44"/>
+        <Setter Property="BorderColor" Value="{StaticResource OutlineVariant}"/>
+        <Setter Property="BorderWidth" Value="1"/>
+        <Setter Property="Padding" Value="0"/>
+    </Style>
+
+    <!-- Start button (camera start, medium primary) -->
+    <Style x:Key="StartButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource PrimaryContainer}"/>
+        <Setter Property="TextColor" Value="{StaticResource OnPrimary}"/>
+        <Setter Property="FontFamily" Value="Inter"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="CornerRadius" Value="16"/>
+        <Setter Property="HeightRequest" Value="56"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#2E6FD8" Offset="0,4" Radius="12" Opacity="0.25"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Stop button (neutral surface) -->
+    <Style x:Key="StopButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource SurfaceContainerHighest}"/>
+        <Setter Property="TextColor" Value="{StaticResource OnSurface}"/>
+        <Setter Property="FontFamily" Value="Inter"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="CornerRadius" Value="16"/>
+        <Setter Property="HeightRequest" Value="56"/>
+    </Style>
+
+    <!-- Edit icon button (transparent, neutral) -->
+    <Style x:Key="EditIconButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TextColor" Value="{StaticResource OnSurfaceVariant}"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="WidthRequest" Value="36"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="BorderColor" Value="Transparent"/>
+    </Style>
+
+    <!-- Delete icon button (transparent, error-red) -->
+    <Style x:Key="DeleteIconButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="TextColor" Value="{StaticResource ErrorColor}"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="HeightRequest" Value="36"/>
+        <Setter Property="WidthRequest" Value="36"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="BorderColor" Value="Transparent"/>
+    </Style>
+
+    <!-- Sign-out / logout button (light red background) -->
+    <Style x:Key="LogoutButtonStyle" TargetType="Button">
+        <Setter Property="BackgroundColor" Value="{StaticResource ErrorBannerBg}"/>
+        <Setter Property="TextColor" Value="{StaticResource ErrorColor}"/>
+        <Setter Property="BorderColor" Value="{StaticResource ErrorBannerStroke}"/>
+        <Setter Property="BorderWidth" Value="1"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="HeightRequest" Value="52"/>
+        <Setter Property="CornerRadius" Value="14"/>
+        <Setter Property="Margin" Value="16,12,16,28"/>
+    </Style>
+
+    <!-- Login button (gradient applied in page since MAUI styles cannot set Brush) -->
+    <Style x:Key="LoginButtonStyle" TargetType="Button">
+        <Setter Property="TextColor" Value="{StaticResource OnPrimary}"/>
+        <Setter Property="FontSize" Value="17"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="HeightRequest" Value="64"/>
+        <Setter Property="CornerRadius" Value="32"/>
+        <Setter Property="Shadow">
+            <Setter.Value>
+                <Shadow Brush="#0056BB" Offset="0,10" Radius="30" Opacity="0.30"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         §6  STATUS / FEEDBACK BANNER STYLES
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- Error banner (red) -->
+    <Style x:Key="ErrorBannerStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource ErrorBannerBg}"/>
+        <Setter Property="Stroke" Value="{StaticResource ErrorBannerStroke}"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 14"/>
+        <Setter Property="Padding" Value="16,12"/>
+    </Style>
+
+    <!-- Success banner (green) -->
+    <Style x:Key="SuccessBannerStyle" TargetType="Border">
+        <Setter Property="BackgroundColor" Value="{StaticResource SuccessGreenBg}"/>
+        <Setter Property="Stroke" Value="{StaticResource SuccessGreenBorder}"/>
+        <Setter Property="StrokeThickness" Value="1"/>
+        <Setter Property="StrokeShape" Value="RoundRectangle 14"/>
+        <Setter Property="Padding" Value="16,12"/>
+    </Style>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         §7  SHELL / FLYOUT STYLES
+    ═══════════════════════════════════════════════════════════════ -->
+
+    <Style TargetType="Grid" x:Key="FlyoutItemLayoutStyle" ApplyToDerivedTypes="True">
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="Transparent"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Selected">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{StaticResource FlyoutSelectedBg}"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+
+    <Style TargetType="Label" x:Key="FlyoutItemLabelStyle">
+        <Setter Property="TextColor" Value="{StaticResource FlyoutLabelColor}"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontAttributes" Value="Bold"/>
+    </Style>
+
+</ResourceDictionary>
