@@ -60,4 +60,9 @@ public partial class LandingPage : ContentPage
         await Shell.Current.GoToAsync("///UsersListPage");
     }
 
+    private async void OnLogoutTapped(object? sender, TappedEventArgs e)
+    {
+        await Shell.Current.GoToAsync("///AdminLoginPage");
+    }
+
 }

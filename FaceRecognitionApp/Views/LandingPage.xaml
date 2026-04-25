@@ -23,6 +23,24 @@
                    CharacterSpacing="0.4"
                    HorizontalOptions="Start"
                    VerticalOptions="Center"/>
+
+            <!-- Logout pill -->
+            <Border Grid.Column="1"
+                    BackgroundColor="{StaticResource SurfaceContainerLow}"
+                    StrokeShape="RoundRectangle 20"
+                    Stroke="{StaticResource OutlineVariant}"
+                    StrokeThickness="1"
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    HorizontalOptions="End"
+                    VerticalOptions="Center">
+                <Image Source="icon_logout.png"
+                       WidthRequest="18" HeightRequest="18"
+                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnLogoutTapped"/>
+                </Border.GestureRecognizers>
+            </Border>
         </Grid>
 
         <!-- ── BODY ── -->

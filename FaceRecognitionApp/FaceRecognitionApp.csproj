@@ -96,6 +96,9 @@
     <!-- iOS -->
   </ItemGroup>
   <ItemGroup>
+    <MauiXaml Update="Resources\Styles\AppStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Views\AdminLoginPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>

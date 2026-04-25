@@ -6,20 +6,9 @@
              x:Class="FaceRecognitionApp.Views.UserRegistrationPage"
              x:DataType="viewmodels:UserRegistrationViewModel"
              Title="Register User"
-             BackgroundColor="{StaticResource Surface}"
-            Shell.NavBarIsVisible="False"
-            Shell.TabBarIsVisible="False">
-    <!--
-        All color tokens and reusable styles removed from this page.
-        They now live in AppStyles.xaml (merged at App.xaml level).
-        Key renames for clarity:
-          FieldBorder  → InputBorderStyle
-          OverlineLabel → OverlineLabelStyle
-          PhotoCard     → PhotoCardStyle
-          SlotLabel     → SlotLabelStyle
-          CaptureBtn    → CaptureButtonStyle
-          SelectBtn     → SelectButtonStyle
-    -->
+             BackgroundColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False">
 
     <Grid>
 

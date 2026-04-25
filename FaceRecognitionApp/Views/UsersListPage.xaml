@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!--
-    UsersListPage.xaml
-    All local color tokens and style definitions removed — resolved from AppStyles.xaml.
-    UserCard, EditIconBtn, DeleteIconBtn keys now come from AppStyles.
--->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:FaceRecognitionApp.ViewModels"
@@ -18,9 +13,23 @@
     <Grid RowDefinitions="Auto,*">
 
         <!-- ── TOP APP BAR ── -->
-        <Border Grid.Row="0" Style="{StaticResource TopAppBarStyle}">
+        <Border Grid.Row="0"
+                BackgroundColor="{StaticResource SurfaceContainerLowest}"
+                StrokeShape="Rectangle"
+                Stroke="Transparent"
+                Padding="16,12">
+            <Border.Shadow>
+                <Shadow Brush="#000000" Offset="0,1" Radius="4" Opacity="0.06"/>
+            </Border.Shadow>
             <Grid ColumnDefinitions="Auto,*">
-                <Border Grid.Column="0" Style="{StaticResource BackButtonPillStyle}">
+                <Border Grid.Column="0"
+                        BackgroundColor="{StaticResource SurfaceContainerHighest}"
+                        StrokeShape="RoundRectangle 20"
+                        Stroke="Transparent"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center">
                     <Image Source="arrow_back.png"
                            HeightRequest="18" WidthRequest="18"
                            HorizontalOptions="Center" VerticalOptions="Center">
@@ -31,7 +40,13 @@
                 </Border>
                 <Label Grid.Column="1"
                        Text="AVIVANEXT"
-                       Style="{StaticResource BrandWordmarkStyle}"/>
+                       FontFamily="Inter"
+                       FontAttributes="Bold"
+                       FontSize="16"
+                       CharacterSpacing="2"
+                       TextColor="{StaticResource Primary}"
+                       VerticalOptions="Center"
+                       Margin="12,0,0,0"/>
             </Grid>
         </Border>
 
@@ -46,17 +61,35 @@
                         <!-- Page heading -->
                         <VerticalStackLayout Spacing="4" HorizontalOptions="Center" Margin="0,4,0,0">
                             <Label Text="Registered Users"
-                                   Style="{StaticResource PageTitleStyle}"
-                                   FontSize="20"/>
+                                   FontFamily="Inter"
+                                   FontAttributes="Bold"
+                                   FontSize="20"
+                                   TextColor="{StaticResource Primary}"
+                                   HorizontalOptions="Center"/>
                             <Label Text="Manage organizational access and biometric profiles."
-                                   Style="{StaticResource PageSubtitleStyle}"/>
+                                   FontFamily="Inter"
+                                   FontSize="13"
+                                   TextColor="{StaticResource OnSurfaceVariant}"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"/>
                         </VerticalStackLayout>
 
                         <!-- System analytics card -->
-                        <Border Style="{StaticResource StatCardStyle}">
+                        <Border BackgroundColor="{StaticResource SurfaceContainerLowest}"
+                                StrokeShape="RoundRectangle 20"
+                                Stroke="#33C2C6D5"
+                                StrokeThickness="1"
+                                Padding="20,18">
+                            <Border.Shadow>
+                                <Shadow Brush="#000000" Offset="0,2" Radius="8" Opacity="0.05"/>
+                            </Border.Shadow>
                             <VerticalStackLayout Spacing="14">
                                 <Label Text="SYSTEM ANALYTICS"
-                                       Style="{StaticResource OverlineLabelBoldStyle}"/>
+                                       FontFamily="Inter"
+                                       FontAttributes="Bold"
+                                       FontSize="10"
+                                       CharacterSpacing="3"
+                                       TextColor="{StaticResource OnSurfaceVariant}"/>
                                 <Grid ColumnDefinitions="*,Auto">
                                     <VerticalStackLayout Grid.Column="0" Spacing="2">
                                         <Label Text="Total Users"
@@ -96,7 +129,7 @@
                                     CornerRadius="12"
                                     HeightRequest="52">
                                 <Button.Shadow>
-                                    <Shadow Brush="{StaticResource PrimaryContainer}" Offset="0,4" Radius="10" Opacity="0.22"/>
+                                    <Shadow Brush="#2E6FD8" Offset="0,4" Radius="10" Opacity="0.22"/>
                                 </Button.Shadow>
                             </Button>
                             <Button Grid.Column="1"
@@ -116,7 +149,11 @@
                         <!-- User directory -->
                         <VerticalStackLayout Spacing="10">
                             <Label Text="USER DIRECTORY"
-                                   Style="{StaticResource OverlineLabelBoldStyle}"
+                                   FontFamily="Inter"
+                                   FontAttributes="Bold"
+                                   FontSize="10"
+                                   CharacterSpacing="3"
+                                   TextColor="{StaticResource OnSurfaceVariant}"
                                    Margin="4,0"/>
 
                             <CollectionView ItemsSource="{Binding Users}"
@@ -162,7 +199,16 @@
 
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate x:DataType="models:UserRegistration">
-                                        <Border Style="{StaticResource UserCardStyle}" Margin="0,2">
+                                        <!-- User card — Shadow inlined; cannot use StaticResource style with Setter.Value in DataTemplate -->
+                                        <Border BackgroundColor="{StaticResource SurfaceContainerLowest}"
+                                                StrokeShape="RoundRectangle 20"
+                                                Stroke="#33C2C6D5"
+                                                StrokeThickness="1"
+                                                Padding="0"
+                                                Margin="0,2">
+                                            <Border.Shadow>
+                                                <Shadow Brush="#000000" Offset="0,2" Radius="8" Opacity="0.05"/>
+                                            </Border.Shadow>
                                             <Grid ColumnDefinitions="Auto,*,Auto"
                                                   Padding="14,14,10,14"
                                                   ColumnSpacing="14">

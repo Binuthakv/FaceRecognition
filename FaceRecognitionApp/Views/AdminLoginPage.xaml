@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<!--
-    AdminLoginPage.xaml
-    All color tokens and style definitions removed — resolved from AppStyles.xaml.
--->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:FaceRecognitionApp.ViewModels"
@@ -20,52 +16,103 @@
             <VerticalStackLayout Spacing="0">
 
                 <!-- ── TOP APP BAR ── -->
-                <Border Style="{StaticResource TopAppBarStyle}">
+                <Border BackgroundColor="{StaticResource SurfaceContainerLowest}"
+                        StrokeShape="Rectangle"
+                        Stroke="Transparent"
+                        Padding="16,12">
+                    <Border.Shadow>
+                        <Shadow Brush="#000000" Offset="0,1" Radius="4" Opacity="0.06"/>
+                    </Border.Shadow>
                     <Label Text="AVIVANEXT"
-                           Style="{StaticResource BrandWordmarkStyle}"
-                           Margin="0"/>
+                           FontFamily="Inter"
+                           FontAttributes="Bold"
+                           FontSize="16"
+                           CharacterSpacing="2"
+                           TextColor="{StaticResource Primary}"
+                           VerticalOptions="Center"/>
                 </Border>
 
                 <!-- ── PAGE HEADING ── -->
                 <VerticalStackLayout Padding="24,65,24,4" Spacing="4" HorizontalOptions="Center">
                     <Label Text="Admin Login"
-                           Style="{StaticResource PageTitleStyle}"
-                           FontSize="22"/>
+                           FontFamily="Inter"
+                           FontAttributes="Bold"
+                           FontSize="22"
+                           TextColor="{StaticResource Primary}"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"/>
                     <Label Text="Only authorized administrators can access this system"
-                           Style="{StaticResource PageSubtitleStyle}"/>
+                           FontFamily="Inter"
+                           FontSize="13"
+                           TextColor="{StaticResource OnSurfaceVariant}"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"/>
                 </VerticalStackLayout>
 
                 <!-- ── LOGIN FORM CARD ── -->
-                <Border Style="{StaticResource MainCardStyle}"
+                <Border BackgroundColor="{StaticResource SurfaceContainerLowest}"
                         StrokeShape="RoundRectangle 40"
+                        Stroke="Transparent"
                         Margin="12,16,12,24"
                         Padding="24,28">
+                    <Border.Shadow>
+                        <Shadow Brush="#0056BB" Offset="0,20" Radius="40" Opacity="0.06"/>
+                    </Border.Shadow>
 
                     <VerticalStackLayout Spacing="28">
 
-                        <!-- Fields -->
                         <VerticalStackLayout Spacing="14">
 
                             <!-- Username -->
                             <VerticalStackLayout Spacing="6">
                                 <Label Text="USERNAME OR EMAIL"
-                                       Style="{StaticResource OverlineLabelStyle}"/>
-                                <Border Style="{StaticResource InputBorderStyle}">
-                                    <Entry Style="{StaticResource FormEntryStyle}"
-                                           Placeholder="Enter username or email"
-                                           Text="{Binding Username}"/>
+                                       FontFamily="Monospace"
+                                       FontSize="10"
+                                       CharacterSpacing="3"
+                                       TextColor="{StaticResource Outline}"
+                                       Margin="4,0"/>
+                                <Border BackgroundColor="{StaticResource SurfaceContainerLow}"
+                                        StrokeShape="RoundRectangle 12"
+                                        Stroke="Transparent"
+                                        StrokeThickness="0"
+                                        MinimumHeightRequest="56"
+                                        Padding="4,0">
+                                    <Entry Placeholder="Enter username or email"
+                                           Text="{Binding Username}"
+                                           FontSize="15"
+                                           FontFamily="Inter"
+                                           TextColor="{StaticResource OnSurface}"
+                                           PlaceholderColor="{StaticResource OutlineVariant}"
+                                           BackgroundColor="Transparent"
+                                           MinimumHeightRequest="56"
+                                           Margin="8,0"/>
                                 </Border>
                             </VerticalStackLayout>
 
                             <!-- Password -->
                             <VerticalStackLayout Spacing="6">
                                 <Label Text="PASSWORD"
-                                       Style="{StaticResource OverlineLabelStyle}"/>
-                                <Border Style="{StaticResource InputBorderStyle}">
-                                    <Entry Style="{StaticResource FormEntryStyle}"
-                                           Placeholder="Enter password"
+                                       FontFamily="Monospace"
+                                       FontSize="10"
+                                       CharacterSpacing="3"
+                                       TextColor="{StaticResource Outline}"
+                                       Margin="4,0"/>
+                                <Border BackgroundColor="{StaticResource SurfaceContainerLow}"
+                                        StrokeShape="RoundRectangle 12"
+                                        Stroke="Transparent"
+                                        StrokeThickness="0"
+                                        MinimumHeightRequest="56"
+                                        Padding="4,0">
+                                    <Entry Placeholder="Enter password"
                                            Text="{Binding Password}"
-                                           IsPassword="True"/>
+                                           IsPassword="True"
+                                           FontSize="15"
+                                           FontFamily="Inter"
+                                           TextColor="{StaticResource OnSurface}"
+                                           PlaceholderColor="{StaticResource OutlineVariant}"
+                                           BackgroundColor="Transparent"
+                                           MinimumHeightRequest="56"
+                                           Margin="8,0"/>
                                 </Border>
                             </VerticalStackLayout>
 
@@ -84,29 +131,36 @@
 
                         </VerticalStackLayout>
 
-                        <BoxView HeightRequest="1"
-                                 Color="{StaticResource SurfaceVariant}"/>
+                        <BoxView HeightRequest="1" Color="{StaticResource SurfaceVariant}"/>
 
                         <!-- Error banner -->
-                        <Border Style="{StaticResource ErrorBannerStyle}"
+                        <Border BackgroundColor="#FEF2F2"
+                                Stroke="#FECACA"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 14"
+                                Padding="16,12"
                                 IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullConverter}}">
                             <HorizontalStackLayout Spacing="10">
                                 <Label Text="⚠️" FontSize="16" VerticalOptions="Center"/>
                                 <Label Text="{Binding ErrorMessage}"
                                        FontSize="13"
-                                       TextColor="{StaticResource ErrorBannerText}"
+                                       TextColor="#991B1B"
                                        VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Border>
 
                         <!-- Success banner -->
-                        <Border Style="{StaticResource SuccessBannerStyle}"
+                        <Border BackgroundColor="#F0FFF4"
+                                Stroke="#BBF7D0"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 14"
+                                Padding="16,12"
                                 IsVisible="{Binding SuccessMessage, Converter={StaticResource IsNotNullConverter}}">
                             <HorizontalStackLayout Spacing="10">
                                 <Label Text="✅" FontSize="16" VerticalOptions="Center"/>
                                 <Label Text="{Binding SuccessMessage}"
                                        FontSize="13"
-                                       TextColor="{StaticResource SuccessBannerText}"
+                                       TextColor="#166534"
                                        VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Border>
@@ -114,7 +168,11 @@
                         <!-- Login button + spinner -->
                         <VerticalStackLayout Spacing="12">
                             <Button Text="Login"
-                                    Style="{StaticResource LoginButtonStyle}"
+                                    TextColor="{StaticResource OnPrimary}"
+                                    FontSize="17"
+                                    FontAttributes="Bold"
+                                    HeightRequest="64"
+                                    CornerRadius="32"
                                     Command="{Binding LoginCommand}"
                                     IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
                                 <Button.Background>
@@ -123,6 +181,9 @@
                                         <GradientStop Color="{StaticResource Primary}"          Offset="1.0"/>
                                     </LinearGradientBrush>
                                 </Button.Background>
+                                <Button.Shadow>
+                                    <Shadow Brush="#0056BB" Offset="0,10" Radius="30" Opacity="0.30"/>
+                                </Button.Shadow>
                             </Button>
 
                             <ActivityIndicator IsRunning="{Binding IsLoading}"
@@ -133,8 +194,11 @@
                                                HorizontalOptions="Center"/>
                         </VerticalStackLayout>
 
-                        <!-- Info footer -->
-                        <Border Style="{StaticResource InfoTileStyle}">
+                        <!-- Info tile -->
+                        <Border BackgroundColor="{StaticResource SurfaceContainerLow}"
+                                StrokeShape="RoundRectangle 14"
+                                Stroke="Transparent"
+                                Padding="14,12">
                             <Label Text="ℹ️  Ensure you are on a secure and trusted network before logging in"
                                    FontSize="12"
                                    TextColor="{StaticResource OnSurfaceVariant}"

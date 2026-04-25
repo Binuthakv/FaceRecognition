@@ -1,12 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!--
-    AppShell.xaml
-    All local style definitions removed — they now live in AppStyles.xaml.
-    The FlyoutItemLayoutStyle and FlyoutItemLabelStyle keys are still declared
-    here because Shell requires them to exist in Shell.Resources specifically,
-    but their values are forwarded via DynamicResource so they stay in sync
-    with the central palette.
--->
 <Shell
     x:Class="FaceRecognitionApp.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -29,7 +21,6 @@
 
             <VerticalStackLayout Spacing="10">
 
-                <!-- Avatar circle -->
                 <Border BackgroundColor="#33FFFFFF"
                         StrokeShape="Ellipse"
                         Stroke="#44FFFFFF"
@@ -38,10 +29,8 @@
                         HeightRequest="64"
                         HorizontalOptions="Center">
                     <Image Source="icon_lock.png"
-                           HeightRequest="32"
-                           WidthRequest="32"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"/>
+                           HeightRequest="32" WidthRequest="32"
+                           HorizontalOptions="Center" VerticalOptions="Center"/>
                 </Border>
 
                 <Label Text="AVIVANEXT"
@@ -66,7 +55,13 @@
                            FontSize="8"
                            TextColor="#66FF99"
                            VerticalOptions="Center"/>
-                    <Label x:Name="AdminNameLabel"
+                    <!--
+                        x:Name is intentionally omitted here.
+                        Shell.FlyoutHeader is compiled as a separate DataTemplate,
+                        so named children are not visible to the AppShell partial class.
+                        Use this.FindByName<Label>("AdminNameLabel") in code-behind instead.
+                    -->
+                    <Label AutomationId="AdminNameLabel"
                            FontSize="12"
                            TextColor="#E0EFFF"
                            HorizontalTextAlignment="Center"
@@ -77,13 +72,8 @@
         </Border>
     </Shell.FlyoutHeader>
 
-    <!-- ── SHELL RESOURCES (Shell-scope overrides only) ── -->
+    <!-- ── SHELL RESOURCES ── -->
     <Shell.Resources>
-        <!--
-            Shell requires FlyoutItemLayoutStyle and FlyoutItemLabelStyle to be
-            present in Shell.Resources. We re-declare them here pulling values
-            from the app-level palette so there is no duplication of magic values.
-        -->
         <Style TargetType="Grid" x:Key="FlyoutItemLayoutStyle" ApplyToDerivedTypes="True">
             <Setter Property="VisualStateManager.VisualStateGroups">
                 <VisualStateGroupList>
@@ -95,7 +85,7 @@
                         </VisualState>
                         <VisualState x:Name="Selected">
                             <VisualState.Setters>
-                                <Setter Property="BackgroundColor" Value="{StaticResource FlyoutSelectedBg}"/>
+                                <Setter Property="BackgroundColor" Value="#EBF2FF"/>
                             </VisualState.Setters>
                         </VisualState>
                     </VisualStateGroup>
@@ -104,8 +94,8 @@
         </Style>
 
         <Style TargetType="Label" x:Key="FlyoutItemLabelStyle">
-            <Setter Property="TextColor"     Value="{StaticResource FlyoutLabelColor}"/>
-            <Setter Property="FontSize"      Value="14"/>
+            <Setter Property="TextColor"      Value="#424753"/>
+            <Setter Property="FontSize"       Value="14"/>
             <Setter Property="FontAttributes" Value="Bold"/>
         </Style>
     </Shell.Resources>
@@ -119,7 +109,15 @@
             <Button x:Name="LogoutButton"
                     Text="Sign Out"
                     Clicked="OnLogoutClicked"
-                    Style="{StaticResource LogoutButtonStyle}"/>
+                    BackgroundColor="#FEF2F2"
+                    TextColor="#BA1A1A"
+                    BorderColor="#FECACA"
+                    BorderWidth="1"
+                    FontAttributes="Bold"
+                    FontSize="14"
+                    HeightRequest="52"
+                    CornerRadius="14"
+                    Margin="16,12,16,28"/>
         </VerticalStackLayout>
     </Shell.FlyoutFooter>
 
@@ -130,6 +128,10 @@
         Route="login"/>
 
     <TabBar>
+        <ShellContent
+            Title="Login"
+            Route="AdminLoginPage"
+            ContentTemplate="{DataTemplate views:AdminLoginPage}"/>
         <ShellContent
             Title="Home"
             Route="LandingPage"
