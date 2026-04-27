@@ -174,4 +174,9 @@ public partial class FaceVerificationPage : ContentPage
         if (_viewModel.IsCameraActive)
             cameraView.StopCameraPreview();
     }
+
+    private async void OnBackClicked(object? sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync($"//{nameof(LandingPage)}");
+    }
 }

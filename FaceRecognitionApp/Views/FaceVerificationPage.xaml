@@ -1,226 +1,246 @@
 <?xml version="1.0" encoding="utf-8" ?>
+<!--
+    FaceVerificationPage.xaml
+    All local color tokens and styles removed — resolved from AppStyles.xaml.
+-->
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:camera="clr-namespace:CommunityToolkit.Maui.Views;assembly=CommunityToolkit.Maui.Camera"
              xmlns:viewmodels="clr-namespace:FaceRecognitionApp.ViewModels"
              x:Class="FaceRecognitionApp.Views.FaceVerificationPage"
              x:DataType="viewmodels:FaceVerificationViewModel"
-             Title="Face Verification">
+             Title="Face Verification"
+             BackgroundColor="{StaticResource Surface}"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False">
 
-    <Grid RowDefinitions="*,Auto">
+    <Grid RowDefinitions="Auto,*">
 
-        <!-- ================= CAMERA AREA ================= -->
+        <!-- ── TOP APP BAR ── -->
+        <Border Grid.Row="0" Style="{StaticResource TopAppBarStyle}">
+            <Grid ColumnDefinitions="Auto,*">
+                <Border Grid.Column="0" Style="{StaticResource BackButtonPillStyle}">
+                    <Image Source="arrow_back.png"
+                           HeightRequest="18" WidthRequest="18"
+                           HorizontalOptions="Center" VerticalOptions="Center">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnBackClicked"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+                </Border>
+                <Label Grid.Column="1"
+                       Text="AVIVANEXT"
+                       Style="{StaticResource BrandWordmarkStyle}"/>
+            </Grid>
+        </Border>
 
-        <Grid Grid.Row="0">
+        <!-- ── SCROLLABLE BODY ── -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Padding="16,16,16,32" Spacing="24">
 
-            <!-- Camera Preview -->
-            <camera:CameraView x:Name="cameraView"
-                               IsVisible="{Binding IsCameraActive}"
-                               HorizontalOptions="Fill"
-                               VerticalOptions="Fill" />
-
-            <!-- Camera Placeholder -->
-            <Grid IsVisible="{Binding IsCameraActive, Converter={StaticResource InvertedBoolConverter}}"
-                  BackgroundColor="Black">
-
-                <VerticalStackLayout
-                    VerticalOptions="Center"
-                    HorizontalOptions="Center"
-                    Spacing="12">
-
-                    <Label Text="📷"
-                           FontSize="80"
-                           HorizontalOptions="Center"
-                           TextColor="Gray"/>
-
-                    <Label Text="Camera Preview"
-                           FontSize="20"
-                           TextColor="White"
-                           HorizontalOptions="Center"/>
-
-                    <Label Text="Press Start to begin verification"
-                           FontSize="14"
-                           TextColor="Gray"
-                           HorizontalOptions="Center"/>
-
+                <!-- Page heading -->
+                <VerticalStackLayout Spacing="4" HorizontalOptions="Center" Margin="0,4,0,0">
+                    <Label Text="Authenticating Identity"
+                           Style="{StaticResource PageTitleStyle}"/>
+                    <Label Text="Verify identity using facial recognition"
+                           Style="{StaticResource PageSubtitleStyle}"/>
                 </VerticalStackLayout>
 
-            </Grid>
-
-            <!-- ================= CAMERA OVERLAY ================= -->
-
-            <Grid IsVisible="{Binding IsCameraActive}"
-                  Padding="16">
-
-                <!-- Top Status -->
-                <Border
-                    VerticalOptions="Start"
-                    HorizontalOptions="Fill"
-                    BackgroundColor="#99000000"
-                    Padding="12"
-                    StrokeShape="RoundRectangle 12">
-
-                    <HorizontalStackLayout Spacing="10">
-
-                        <BoxView WidthRequest="10"
-                                 HeightRequest="10"
-                                 CornerRadius="5"
-                                 BackgroundColor="{Binding StatusColor}" />
-
-                        <Label Text="{Binding RealtimeStatus}"
-                               TextColor="White"
-                               FontAttributes="Bold"
-                               VerticalOptions="Center" />
-
-                    </HorizontalStackLayout>
-
-                </Border>
-
-                <!-- Face Detection Indicator -->
-                <Border
-                    HorizontalOptions="End"
-                    VerticalOptions="Start"
-                    Margin="0,60,0,0"
-                    WidthRequest="70"
-                    HeightRequest="70"
-                    Stroke="White"
-                    StrokeThickness="3"
-                    StrokeShape="RoundRectangle 35"
-                    BackgroundColor="{Binding StatusColor}"
-                    IsVisible="{Binding FaceDetectedInFrame}">
-
-                    <Label Text="{Binding IsVerified, Converter={StaticResource BoolToTextConverter}}"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"
-                           FontSize="30"
-                           TextColor="White"/>
-
-                </Border>
-
-                <!-- Confidence Panel -->
-                <Border
-                    VerticalOptions="End"
-                    HorizontalOptions="Center"
-                    Margin="0,0,0,80"
-                    BackgroundColor="#CC000000"
-                    Padding="16"
-                    StrokeShape="RoundRectangle 12"
-                    IsVisible="{Binding IsVerified}">
-
-                    <VerticalStackLayout Spacing="6">
-
-                        <Label Text="Confidence"
-                               TextColor="Gray"
-                               FontSize="12"
-                               HorizontalTextAlignment="Center"/>
-
-                        <Label Text="{Binding Confidence, StringFormat='{0:F1}%'}"
-                               TextColor="White"
-                               FontSize="28"
-                               FontAttributes="Bold"
-                               HorizontalTextAlignment="Center"/>
-
-                        <ProgressBar
-                            Progress="{Binding Confidence, Converter={StaticResource PercentToDecimalConverter}}"
-                            ProgressColor="{Binding StatusColor}"
-                            WidthRequest="180"/>
-
-                    </VerticalStackLayout>
-
-                </Border>
-
-                <!-- Verified User -->
-                <Border
-                    VerticalOptions="End"
-                    HorizontalOptions="Center"
-                    Margin="0,0,0,150"
-                    BackgroundColor="#DD10B981"
-                    Padding="14"
-                    StrokeShape="RoundRectangle 12"
-                    IsVisible="{Binding IsVerified}">
-
-                    <HorizontalStackLayout Spacing="10">
-
-                        <Label Text="✅"
-                               FontSize="22"
-                               VerticalOptions="Center"/>
-
-                        <VerticalStackLayout>
-
-                            <Label Text="{Binding MatchedUserName}"
-                                   FontSize="16"
-                                   FontAttributes="Bold"
-                                   TextColor="White"/>
-
-                            <Label Text="{Binding MatchedUserId, StringFormat='ID: {0}'}"
-                                   FontSize="12"
-                                   TextColor="White"/>
-
-                        </VerticalStackLayout>
-
-                    </HorizontalStackLayout>
-
-                </Border>
-
-                <!-- Flip Camera Button -->
-                <Button Text="🔄"
-                        Command="{Binding ToggleCameraFacingCommand}"
-                        WidthRequest="60"
-                        HeightRequest="50"
-                        CornerRadius="25"
-                        FontSize="22"
-                        BackgroundColor="Transparent"
-                        TextColor="White"
-                        HorizontalOptions="End"
-                        VerticalOptions="End"/>
-
-            </Grid>
-
-        </Grid>
-
-        <!-- ================= CONTROL PANEL ================= -->
-
-        <Border Grid.Row="1"
-                BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
-                Padding="16">
-
-            <VerticalStackLayout Spacing="12">
-
-                <!-- Camera Controls -->
-                <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-
-                    <Button
-                        Grid.Column="0"
-                        Text="▶ Start"
-                        Style="{StaticResource SuccessButton}"
-                        Command="{Binding StartRealtimeCameraCommand}"
-                        IsEnabled="{Binding IsCameraActive, Converter={StaticResource InvertedBoolConverter}}"/>
-
-                    <Button
-                        Grid.Column="1"
-                        Text="⏹ Stop"
-                        Style="{StaticResource DangerButton}"
-                        Command="{Binding StopRealtimeCameraCommand}"
-                        IsEnabled="{Binding IsCameraActive}"/>
-
+                <!-- Start / Stop buttons -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                    <Button Grid.Column="0"
+                            Text="▶  Start"
+                            Style="{StaticResource StartButtonStyle}"
+                            Command="{Binding StartRealtimeCameraCommand}"
+                            IsEnabled="{Binding IsCameraActive, Converter={StaticResource InvertedBoolConverter}}"/>
+                    <Button Grid.Column="1"
+                            Text="■  Stop"
+                            Style="{StaticResource StopButtonStyle}"
+                            Command="{Binding StopRealtimeCameraCommand}"
+                            IsEnabled="{Binding IsCameraActive}"/>
                 </Grid>
 
-                <!-- Status -->
-                <Label
-                    Text="{Binding StatusMessage}"
-                    HorizontalTextAlignment="Center"
-                    FontSize="13"
-                    TextColor="{Binding StatusColor}"/>
+                <!-- Camera / preview box -->
+                <Border StrokeShape="RoundRectangle 36"
+                        Stroke="{StaticResource OutlineVariant}"
+                        StrokeThickness="2"
+                        BackgroundColor="{StaticResource SurfaceContainerLow}"
+                        HeightRequest="380"
+                        Padding="0">
+                    <Grid>
 
-                <!-- Reset -->
-                <!--<Button
-                    Text="Reset Verification"
-                    Command="{Binding ResetCommand}"
-                    IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>-->
+                        <!-- Live feed -->
+                        <camera:CameraView x:Name="cameraView"
+                                           IsVisible="{Binding IsCameraActive}"
+                                           HorizontalOptions="Fill"
+                                           VerticalOptions="Fill"/>
+
+                        <!-- Idle placeholder -->
+                        <VerticalStackLayout
+                            IsVisible="{Binding IsCameraActive, Converter={StaticResource InvertedBoolConverter}}"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center"
+                            Spacing="16">
+                            <Border BackgroundColor="{StaticResource SurfaceContainerHighest}"
+                                    StrokeShape="RoundRectangle 40"
+                                    Stroke="Transparent"
+                                    WidthRequest="80" HeightRequest="80"
+                                    HorizontalOptions="Center">
+                                <Image Source="icon_person.png"
+                                       HeightRequest="52" WidthRequest="52"
+                                       HorizontalOptions="Center"/>
+                            </Border>
+                            <Label Text="Camera Preview"
+                                   FontFamily="Inter"
+                                   FontAttributes="Bold"
+                                   FontSize="18"
+                                   TextColor="{StaticResource OnSurface}"
+                                   HorizontalOptions="Center"/>
+                            <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                                <Label Text="{Binding StatusMessage}"
+                                       FontFamily="Inter"
+                                       FontSize="13"
+                                       TextColor="{StaticResource OnSurfaceVariant}"
+                                       HorizontalOptions="Center"
+                                       HorizontalTextAlignment="Center"/>
+                                <Label Text="System will search registered users"
+                                       FontFamily="Inter"
+                                       FontSize="12"
+                                       FontAttributes="Italic"
+                                       TextColor="{StaticResource Outline}"
+                                       HorizontalOptions="Center"
+                                       HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+
+                        <!-- Active-camera overlays -->
+                        <Grid IsVisible="{Binding IsCameraActive}" Padding="14">
+
+                            <!-- Top status pill -->
+                            <Border VerticalOptions="Start"
+                                    HorizontalOptions="Fill"
+                                    BackgroundColor="#B3000000"
+                                    StrokeShape="RoundRectangle 12"
+                                    Stroke="Transparent"
+                                    Padding="12,8">
+                                <HorizontalStackLayout Spacing="10" HorizontalOptions="Start">
+                                    <BoxView WidthRequest="10" HeightRequest="10"
+                                             CornerRadius="5"
+                                             VerticalOptions="Center"
+                                             BackgroundColor="{Binding StatusColor}"/>
+                                    <Label Text="{Binding RealtimeStatus}"
+                                           FontFamily="Inter"
+                                           FontAttributes="Bold"
+                                           FontSize="13"
+                                           TextColor="White"
+                                           VerticalOptions="Center"/>
+                                </HorizontalStackLayout>
+                            </Border>
+
+                            <!-- Face-detected badge (top-right) -->
+                            <Border HorizontalOptions="End"
+                                    VerticalOptions="Start"
+                                    Margin="0,56,0,0"
+                                    WidthRequest="64" HeightRequest="64"
+                                    Stroke="White" StrokeThickness="2.5"
+                                    StrokeShape="RoundRectangle 32"
+                                    BackgroundColor="{Binding StatusColor}"
+                                    IsVisible="{Binding FaceDetectedInFrame}">
+                                <Label Text="{Binding IsVerified, Converter={StaticResource BoolToTextConverter}}"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       FontSize="26"
+                                       TextColor="White"/>
+                            </Border>
+
+                            <!-- Verified user banner -->
+                            <Border VerticalOptions="End"
+                                    HorizontalOptions="Center"
+                                    Margin="0,0,0,72"
+                                    BackgroundColor="#DD10B981"
+                                    StrokeShape="RoundRectangle 14"
+                                    Stroke="Transparent"
+                                    Padding="14,10"
+                                    IsVisible="{Binding IsVerified}">
+                                <HorizontalStackLayout Spacing="10">
+                                    <Label Text="✅" FontSize="20" VerticalOptions="Center"/>
+                                    <VerticalStackLayout Spacing="2">
+                                        <Label Text="{Binding MatchedUserName}"
+                                               FontFamily="Inter"
+                                               FontAttributes="Bold"
+                                               FontSize="15"
+                                               TextColor="White"/>
+                                        <Label Text="{Binding MatchedUserId, StringFormat='ID: {0}'}"
+                                               FontFamily="Inter"
+                                               FontSize="12"
+                                               TextColor="White"/>
+                                    </VerticalStackLayout>
+                                </HorizontalStackLayout>
+                            </Border>
+
+                            <!-- Confidence panel -->
+                            <Border VerticalOptions="End"
+                                    HorizontalOptions="Center"
+                                    Margin="0,0,0,8"
+                                    BackgroundColor="#CC000000"
+                                    StrokeShape="RoundRectangle 14"
+                                    Stroke="Transparent"
+                                    Padding="18,12"
+                                    IsVisible="{Binding IsVerified}">
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Text="Confidence"
+                                           FontFamily="Inter"
+                                           FontSize="11"
+                                           TextColor="#AAFFFFFF"
+                                           HorizontalTextAlignment="Center"/>
+                                    <Label Text="{Binding Confidence, StringFormat='{0:F1}%'}"
+                                           FontFamily="Inter"
+                                           FontAttributes="Bold"
+                                           FontSize="26"
+                                           TextColor="White"
+                                           HorizontalTextAlignment="Center"/>
+                                    <ProgressBar Progress="{Binding Confidence, Converter={StaticResource PercentToDecimalConverter}}"
+                                                 ProgressColor="{Binding StatusColor}"
+                                                 WidthRequest="160"
+                                                 HorizontalOptions="Center"/>
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- Flip camera (bottom-right) -->
+                            <Border HorizontalOptions="End"
+                                    VerticalOptions="End"
+                                    BackgroundColor="#44FFFFFF"
+                                    StrokeShape="RoundRectangle 22"
+                                    Stroke="Transparent"
+                                    WidthRequest="44" HeightRequest="44">
+                                <Button Text="🔄"
+                                        Command="{Binding ToggleCameraFacingCommand}"
+                                        BackgroundColor="Transparent"
+                                        TextColor="White"
+                                        FontSize="18"
+                                        WidthRequest="44" HeightRequest="44"
+                                        Padding="0"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"/>
+                            </Border>
+
+                        </Grid>
+
+                    </Grid>
+                </Border>
+
+                <!-- Bottom status label -->
+                <Label Text="{Binding StatusMessage}"
+                       FontFamily="Inter"
+                       FontSize="13"
+                       FontAttributes="Bold"
+                       TextColor="{Binding StatusColor}"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"
+                       IsVisible="{Binding IsCameraActive}"/>
 
             </VerticalStackLayout>
-
-        </Border>
+        </ScrollView>
 
     </Grid>
 

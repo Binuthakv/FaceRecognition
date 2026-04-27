@@ -5,350 +5,690 @@
              xmlns:viewmodels="clr-namespace:FaceRecognitionApp.ViewModels"
              x:Class="FaceRecognitionApp.Views.UserRegistrationPage"
              x:DataType="viewmodels:UserRegistrationViewModel"
-             Title="Register Employee"
-             BackgroundColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}">
-
-    <ContentPage.Resources>
-        <Style x:Key="FormEntryStyle" TargetType="Entry">
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
-            <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"/>
-            <Setter Property="BackgroundColor" Value="Transparent"/>
-            <Setter Property="MinimumHeightRequest" Value="44"/>
-            <Setter Property="VisualStateManager.VisualStateGroups">
-                <VisualStateGroupList>
-                    <VisualStateGroup x:Name="CommonStates">
-                        <VisualState x:Name="Normal"/>
-                        <VisualState x:Name="Focused"/>
-                        <VisualState x:Name="Disabled">
-                            <VisualState.Setters>
-                                <Setter Property="TextColor"
-                                        Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}"/>
-                                <Setter Property="BackgroundColor" Value="Transparent"/>
-                            </VisualState.Setters>
-                        </VisualState>
-                    </VisualStateGroup>
-                </VisualStateGroupList>
-            </Setter>
-        </Style>
-    </ContentPage.Resources>
+             Title="Register User"
+             BackgroundColor="{AppThemeBinding Light={StaticResource PageBackground}, Dark={StaticResource PageBackgroundDark}}"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False">
 
     <Grid>
 
-        <!-- ① Scrollable form content -->
-        <ScrollView IsVisible="{Binding IsCameraPreviewVisible, Converter={StaticResource InvertedBoolConverter}}">
-            <VerticalStackLayout Padding="16" Spacing="16">
+        <Grid RowDefinitions="Auto,*"
+              IsVisible="{Binding IsCameraPreviewVisible, Converter={StaticResource InvertedBoolConverter}}">
 
-                <!-- User ID -->
-                <Border StrokeShape="RoundRectangle 8" Stroke="#E0E0E0" StrokeThickness="1">
-                    <Entry x:Name="userIdEntry"
-                           Style="{StaticResource FormEntryStyle}"
-                           Text="{Binding UserId}"
-                           IsReadOnly="{Binding IsUserIdReadOnly}"
-                           Placeholder="Employee ID"
-                           Margin="8,0" />
-                </Border>
+            <!-- ── TOP APP BAR ── -->
+            <Border Grid.Row="0"
+                    BackgroundColor="{StaticResource SurfaceContainerLowest}"
+                    StrokeShape="Rectangle"
+                    Stroke="Transparent"
+                    Padding="16,12">
+                <Border.Shadow>
+                    <Shadow Brush="#000000" Offset="0,1" Radius="4" Opacity="0.06"/>
+                </Border.Shadow>
+                <Grid ColumnDefinitions="Auto,*">
+                    <!-- Back button -->
+                    <Border Grid.Column="0"
+                            BackgroundColor="{StaticResource SurfaceVariant}"
+                            StrokeShape="RoundRectangle 20"
+                            Stroke="Transparent"
+                            WidthRequest="40"
+                            HeightRequest="40"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Center">
+                        <Image Source="arrow_back.png"
+                               HeightRequest="18"
+                               WidthRequest="18"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center">
 
-                <!-- Full Name -->
-                <Border StrokeShape="RoundRectangle 8" Stroke="#E0E0E0" StrokeThickness="1">
-                    <Entry Style="{StaticResource FormEntryStyle}"
-                           Text="{Binding Name}"
-                           Placeholder="Full Name"
-                           Margin="8,0" />
-                </Border>
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnBackClicked"/>
+                            </Image.GestureRecognizers>
 
-                <!-- Date of Birth -->
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Date of Birth *"
-                           FontAttributes="Bold"
-                           FontSize="14"
-                           TextColor="{StaticResource Primary}"/>
-                    <Border Style="{StaticResource InputContainer}">
-                        <DatePicker Date="{Binding DateOfBirth}"
-                                    MinimumDate="01/01/1900"
-                                    FontSize="16"/>
+                        </Image>
                     </Border>
-                </VerticalStackLayout>
-
-                <!-- Sex/Gender -->
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Sex *"
+                    <!-- Brand wordmark -->
+                    <Label Grid.Column="1"
+                           Text="AVIVANEXT"
+                           FontFamily="Inter"
                            FontAttributes="Bold"
-                           FontSize="14"
-                           TextColor="{StaticResource Primary}"/>
-                    <Border Style="{StaticResource InputContainer}">
-                        <Picker ItemsSource="{Binding SexOptions}"
-                                SelectedItem="{Binding Sex}"
-                                Title="Select Sex"
-                                FontSize="16"/>
-                    </Border>
-                </VerticalStackLayout>
-
-                <!-- Photo Section Header — standalone, no large wrapping card -->
-                <HorizontalStackLayout HorizontalOptions="Center" Spacing="12" Margin="0,8,0,0">
-                    <Label Text="📸" FontSize="32" VerticalOptions="Center"/>
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="Face Recognition Photos"
-                               Style="{StaticResource SectionTitle}"
-                               Margin="0"/>
-                        <Border Style="{StaticResource Badge}">
-                            <Label Text="{Binding PhotoCount, StringFormat='{0}/3 photos captured'}"
-                                   FontSize="12"
-                                   FontAttributes="Bold"
-                                   TextColor="{StaticResource White}"/>
-                        </Border>
-                    </VerticalStackLayout>
-                </HorizontalStackLayout>
-
-                <!-- Photo 1 - Front Face -->
-                <Border BackgroundColor="{AppThemeBinding Light={StaticResource Gray50}, Dark={StaticResource Gray800}}"
-                        StrokeShape="RoundRectangle 12"
-                        Shadow="{x:Null}"
-                        Padding="16">
-                    <VerticalStackLayout Spacing="12">
-                        <HorizontalStackLayout Spacing="8">
-                            <Label Text="1️⃣" FontSize="20" VerticalOptions="Center"/>
-                            <Label Text="Front Face" FontSize="16" FontAttributes="Bold" VerticalOptions="Center"/>
-                        </HorizontalStackLayout>
-                        <Border Style="{StaticResource PhotoFrame}"
-                                Stroke="{StaticResource Secondary}"
-                                IsVisible="{Binding Photo1, Converter={StaticResource IsNotNullConverter}}">
-                            <Image Source="{Binding Photo1}" Aspect="AspectFill">
-                                <Image.Rotation>
-                                    <OnPlatform x:TypeArguments="x:Double">
-                                        <On Platform="iOS" Value="0"/>
-                                        <On Platform="Android" Value="0"/>
-                                        <On Platform="WinUI" Value="0"/>
-                                    </OnPlatform>
-                                </Image.Rotation>
-                            </Image>
-                        </Border>
-                        <Border Style="{StaticResource PhotoFrame}"
-                                Stroke="{StaticResource Gray300}"
-                                IsVisible="{Binding Photo1, Converter={StaticResource IsNullConverter}}">
-                            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="8">
-                                <Label Text="📷" FontSize="56" HorizontalOptions="Center" TextColor="{StaticResource Gray400}"/>
-                                <Label Text="No photo captured" Style="{StaticResource Caption}" HorizontalOptions="Center"/>
-                            </VerticalStackLayout>
-                        </Border>
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                            <Button Grid.Column="0" Text="📷 Capture"
-                                    Command="{Binding StartCapturePhoto1Command}"
-                                    Style="{StaticResource IconButton}"/>
-                            <Button Grid.Column="1" Text="🖼️ Pick"
-                                    Command="{Binding PickPhoto1Command}"
-                                    Style="{StaticResource IconButton}"/>
-                        </Grid>
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Photo 2 - Left Profile -->
-                <Border BackgroundColor="{AppThemeBinding Light={StaticResource Gray50}, Dark={StaticResource Gray800}}"
-                        StrokeShape="RoundRectangle 12"
-                        Shadow="{x:Null}"
-                        Padding="16">
-                    <VerticalStackLayout Spacing="12">
-                        <HorizontalStackLayout Spacing="8">
-                            <Label Text="2️⃣" FontSize="20" VerticalOptions="Center"/>
-                            <Label Text="Left Profile" FontSize="16" FontAttributes="Bold" VerticalOptions="Center"/>
-                        </HorizontalStackLayout>
-                        <Border Style="{StaticResource PhotoFrame}"
-                                Stroke="{StaticResource Secondary}"
-                                IsVisible="{Binding Photo2, Converter={StaticResource IsNotNullConverter}}">
-                            <Image Source="{Binding Photo2}" Aspect="AspectFill">
-                                <Image.Rotation>
-                                    <OnPlatform x:TypeArguments="x:Double">
-                                        <On Platform="iOS" Value="0"/>
-                                        <On Platform="Android" Value="0"/>
-                                        <On Platform="WinUI" Value="0"/>
-                                    </OnPlatform>
-                                </Image.Rotation>
-                            </Image>
-                        </Border>
-                        <Border Style="{StaticResource PhotoFrame}"
-                                Stroke="{StaticResource Gray300}"
-                                IsVisible="{Binding Photo2, Converter={StaticResource IsNullConverter}}">
-                            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="8">
-                                <Label Text="📷" FontSize="56" HorizontalOptions="Center" TextColor="{StaticResource Gray400}"/>
-                                <Label Text="No photo captured" Style="{StaticResource Caption}" HorizontalOptions="Center"/>
-                            </VerticalStackLayout>
-                        </Border>
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                            <Button Grid.Column="0" Text="📷 Capture"
-                                    Command="{Binding StartCapturePhoto2Command}"
-                                    Style="{StaticResource IconButton}"/>
-                            <Button Grid.Column="1" Text="🖼️ Pick"
-                                    Command="{Binding PickPhoto2Command}"
-                                    Style="{StaticResource IconButton}"/>
-                        </Grid>
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Photo 3 - Right Profile -->
-                <Border BackgroundColor="{AppThemeBinding Light={StaticResource Gray50}, Dark={StaticResource Gray800}}"
-                        StrokeShape="RoundRectangle 12"
-                        Shadow="{x:Null}"
-                        Padding="16">
-                    <VerticalStackLayout Spacing="12">
-                        <HorizontalStackLayout Spacing="8">
-                            <Label Text="3️⃣" FontSize="20" VerticalOptions="Center"/>
-                            <Label Text="Right Profile" FontSize="16" FontAttributes="Bold" VerticalOptions="Center"/>
-                        </HorizontalStackLayout>
-                        <Border Style="{StaticResource PhotoFrame}"
-                                Stroke="{StaticResource Secondary}"
-                                IsVisible="{Binding Photo3, Converter={StaticResource IsNotNullConverter}}">
-                            <Image Source="{Binding Photo3}" Aspect="AspectFill">
-                                <Image.Rotation>
-                                    <OnPlatform x:TypeArguments="x:Double">
-                                        <On Platform="iOS" Value="0"/>
-                                        <On Platform="Android" Value="0"/>
-                                        <On Platform="WinUI" Value="0"/>
-                                    </OnPlatform>
-                                </Image.Rotation>
-                            </Image>
-                        </Border>
-                        <Border Style="{StaticResource PhotoFrame}"
-                                Stroke="{StaticResource Gray300}"
-                                IsVisible="{Binding Photo3, Converter={StaticResource IsNullConverter}}">
-                            <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="8">
-                                <Label Text="📷" FontSize="56" HorizontalOptions="Center" TextColor="{StaticResource Gray400}"/>
-                                <Label Text="No photo captured" Style="{StaticResource Caption}" HorizontalOptions="Center"/>
-                            </VerticalStackLayout>
-                        </Border>
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
-                            <Button Grid.Column="0" Text="📷 Capture"
-                                    Command="{Binding StartCapturePhoto3Command}"
-                                    Style="{StaticResource IconButton}"/>
-                            <Button Grid.Column="1" Text="🖼️ Pick"
-                                    Command="{Binding PickPhoto3Command}"
-                                    Style="{StaticResource IconButton}"/>
-                        </Grid>
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Status Card -->
-                <Border Style="{StaticResource StatusCard}"
-                        Shadow="{x:Null}"
-                        Stroke="{Binding StatusColor}"
-                        BackgroundColor="{Binding StatusColor, Converter={StaticResource ColorToLightColorConverter}}"
-                        IsVisible="{Binding StatusMessage, Converter={StaticResource IsNotNullConverter}}">
-                    <VerticalStackLayout Spacing="12">
-                        <ActivityIndicator IsRunning="{Binding IsLoading}"
-                                           IsVisible="{Binding IsLoading}"
-                                           Color="{Binding StatusColor}"
-                                           HeightRequest="32"
-                                           WidthRequest="32"
-                                           HorizontalOptions="Center"/>
-                        <Label Text="{Binding StatusMessage}"
-                               FontSize="14"
-                               HorizontalTextAlignment="Center"
-                               TextColor="{Binding StatusColor}"
-                               FontAttributes="Bold"/>
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Action Buttons -->
-                <Grid ColumnDefinitions="*,*" ColumnSpacing="16" Margin="0,8,0,20">
-                    <Button Grid.Column="0"
-                            Text="{Binding IsEditMode, Converter={StaticResource BoolToObjectConverter}, ConverterParameter='💾 Update User|✅ Register User'}"
-                            Command="{Binding RegisterUserCommand}"
-                            Style="{StaticResource SuccessButton}"
-                            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
-                    <Button Grid.Column="1"
-                            Text="{Binding IsEditMode, Converter={StaticResource BoolToObjectConverter}, ConverterParameter='❌ Cancel|🔄 Reset'}"
-                            Command="{Binding ResetFormCommand}"
-                            Style="{StaticResource ResetButton}"
-                            IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"/>
+                           FontSize="16"
+                           CharacterSpacing="2"
+                           TextColor="{StaticResource Primary}"
+                           VerticalOptions="Center"
+                           Margin="12,0,0,0"/>
                 </Grid>
+            </Border>
 
-                <!-- Info Footer -->
-                <Border BackgroundColor="{AppThemeBinding Light={StaticResource PrimaryLighter}, Dark={StaticResource Gray800}}"
-                        StrokeShape="RoundRectangle 12"
-                        Stroke="Transparent"
-                        Shadow="{x:Null}"
-                        Padding="16">
-                    <Label Text="ℹ️ All fields and 3 photos are required for successful face recognition"
-                           Style="{StaticResource Caption}"
-                           HorizontalOptions="Center"
-                           HorizontalTextAlignment="Center"
-                           TextColor="{AppThemeBinding Light={StaticResource Gray700}, Dark={StaticResource Gray300}}"/>
-                </Border>
+            <!-- ── SCROLLABLE BODY ── -->
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout Padding="16,16,16,32" Spacing="0">
 
-            </VerticalStackLayout>
-        </ScrollView>
+                    <!-- Page heading -->
+                    <VerticalStackLayout Spacing="4" HorizontalOptions="Center" Margin="0,8,0,20">
+                        <Label Text="Register User"
+                               FontFamily="Inter"
+                               FontAttributes="Bold"
+                               FontSize="20"
+                               TextColor="{StaticResource Primary}"
+                               HorizontalOptions="Center"/>
+                        <Label Text="Enter details for multi-angle biometric enrollment"
+                               FontFamily="Inter"
+                               FontSize="13"
+                               TextColor="{StaticResource OnSurfaceVariant}"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
 
-        <!-- ② Camera preview overlay -->
+                    <Border BackgroundColor="{StaticResource SurfaceContainerLowest}"
+                            StrokeShape="RoundRectangle 32"
+                            Stroke="Transparent"
+                            Padding="20,24">
+                        <Border.Shadow>
+                            <Shadow Brush="#0056BB" Offset="0,20" Radius="40" Opacity="0.06"/>
+                        </Border.Shadow>
+                        <VerticalStackLayout Spacing="28">
+
+                            <!-- ── IDENTIFICATION ENTRY SECTION ── -->
+                            <VerticalStackLayout Spacing="12">
+                                <Label Text="IDENTIFICATION ENTRY"
+                                       Style="{StaticResource OverlineLabelStyle}"
+                                       Margin="4,0"/>
+
+                                <!-- Employee ID -->
+                                <Border Style="{StaticResource InputBorderStyle}">
+                                    <Entry x:Name="userIdEntry"
+                                           Style="{StaticResource FormEntryStyle}"
+                                           Text="{Binding UserId}"
+                                           IsReadOnly="{Binding IsUserIdReadOnly}"
+                                           Placeholder="User ID"
+                                           Margin="12,0"/>
+                                </Border>
+
+                                <!-- Full Name -->
+                                <Border Style="{StaticResource InputBorderStyle}">
+                                    <Entry Style="{StaticResource FormEntryStyle}"
+                                           Text="{Binding Name}"
+                                           Placeholder="Full Name"
+                                           Margin="12,0"/>
+                                </Border>
+
+                                <!-- Date of Birth -->
+                                <Border Style="{StaticResource InputBorderStyle}">
+                                    <DatePicker Date="{Binding DateOfBirth}"
+                                                MinimumDate="01/01/1900"
+                                                FontSize="15"
+                                                TextColor="{StaticResource OnSurface}"
+                                                BackgroundColor="Transparent"
+                                                MinimumHeightRequest="56"
+                                                Margin="12,0"/>
+                                </Border>
+
+                                <!-- Sex / Gender -->
+                                <Border Style="{StaticResource InputBorderStyle}">
+                                    <Picker ItemsSource="{Binding SexOptions}"
+                                            SelectedItem="{Binding Sex}"
+                                            Title="Select Sex"
+                                            FontSize="15"
+                                            TextColor="{StaticResource OnSurface}"
+                                            TitleColor="{StaticResource OutlineVariant}"
+                                            BackgroundColor="Transparent"
+                                            MinimumHeightRequest="56"
+                                            Margin="12,0"/>
+                                </Border>
+                            </VerticalStackLayout>
+
+                            <!-- ── BIOMETRIC CAPTURE SECTION ── -->
+                            <VerticalStackLayout Spacing="20">
+
+                                <!-- Section header with divider -->
+                                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                    <Label Grid.Row="0" Grid.Column="0"
+                                           Text="MULTI-ANGLE BIOMETRIC CAPTURE"
+                                           Style="{StaticResource OverlineLabelStyle}"
+                                           Margin="4,0"/>
+                                    <!-- Photo count badge -->
+                                    <Border Grid.Row="0" Grid.Column="1"
+                                            BackgroundColor="{StaticResource PrimaryContainer}"
+                                            StrokeShape="RoundRectangle 10"
+                                            Stroke="Transparent"
+                                            Padding="10,4">
+                                        <Label Text="{Binding PhotoCount, StringFormat='{0}/3'}"
+                                               FontFamily="Inter"
+                                               FontAttributes="Bold"
+                                               FontSize="11"
+                                               TextColor="{StaticResource OnPrimary}"/>
+                                    </Border>
+                                    <BoxView Grid.Row="1" Grid.ColumnSpan="2"
+                                             HeightRequest="1"
+                                             Color="{StaticResource SurfaceVariant}"
+                                             Margin="0,8,0,0"/>
+                                </Grid>
+
+                                <!-- ── PHOTO 1: FRONT FACE ── -->
+                                <Border Style="{StaticResource PhotoCardStyle}">
+                                    <VerticalStackLayout Spacing="0">
+                                        <!-- Card header -->
+                                        <Grid ColumnDefinitions="*,Auto"
+                                              Padding="16,14,16,10">
+                                            <Label Grid.Column="0"
+                                                   Text="1. FRONT FACE"
+                                                   Style="{StaticResource SlotLabelStyle}"
+                                                   VerticalOptions="Center"/>
+                                            <Label Grid.Column="1"
+                                                   Text="REQUIRED"
+                                                   FontFamily="Monospace"
+                                                   FontSize="9"
+                                                   CharacterSpacing="2"
+                                                   TextColor="{StaticResource Outline}"
+                                                   VerticalOptions="Center"/>
+                                        </Grid>
+
+                                        <!-- Photo frame with corner guides -->
+                                        <Grid HeightRequest="280" Margin="12,0">
+                                            <!-- Placeholder when no photo -->
+                                            <Border BackgroundColor="{StaticResource SurfaceContainerLow}"
+                                                    StrokeShape="RoundRectangle 16"
+                                                    Stroke="{StaticResource SurfaceVariant}"
+                                                    IsVisible="{Binding Photo1, Converter={StaticResource IsNullConverter}}">
+                                                <VerticalStackLayout VerticalOptions="Center"
+                                                                     HorizontalOptions="Center"
+                                                                     Spacing="8">
+                                                    <Image Source="icon_person.png"
+                                                           HeightRequest="52"
+                                                           WidthRequest="52"
+                                                           HorizontalOptions="Center"/>
+                                                    <Label Text="No photo captured"
+                                                           FontFamily="Inter"
+                                                           FontSize="12"
+                                                           TextColor="{StaticResource Outline}"
+                                                           HorizontalOptions="Center"/>
+                                                </VerticalStackLayout>
+                                            </Border>
+
+                                            <!-- Captured photo -->
+                                            <Border BackgroundColor="Black"
+                                                    StrokeShape="RoundRectangle 16"
+                                                    Stroke="{StaticResource PrimaryContainer}"
+                                                    StrokeThickness="2"
+                                                    IsVisible="{Binding Photo1, Converter={StaticResource IsNotNullConverter}}">
+                                                <Image Source="{Binding Photo1}"
+                                                       Aspect="AspectFill">
+                                                    <Image.Rotation>
+                                                        <OnPlatform x:TypeArguments="x:Double">
+                                                            <On Platform="iOS" Value="0"/>
+                                                            <On Platform="Android" Value="0"/>
+                                                            <On Platform="WinUI" Value="0"/>
+                                                        </OnPlatform>
+                                                    </Image.Rotation>
+                                                </Image>
+                                            </Border>
+
+                                            <!-- Corner guide overlay (primary-colored brackets) -->
+                                            <Grid IsVisible="{Binding Photo1, Converter={StaticResource IsNullConverter}}"
+                                                  InputTransparent="True"
+                                                  Margin="8">
+                                                <!-- top-left corner -->
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="2" WidthRequest="20"
+                                                         HorizontalOptions="Start" VerticalOptions="Start" Margin="0,0,0,0"/>
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="20" WidthRequest="2"
+                                                         HorizontalOptions="Start" VerticalOptions="Start" Margin="0,0,0,0"/>
+                                                <!-- top-right corner -->
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="2" WidthRequest="20"
+                                                         HorizontalOptions="End" VerticalOptions="Start" Margin="0,0,0,0"/>
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="20" WidthRequest="2"
+                                                         HorizontalOptions="End" VerticalOptions="Start" Margin="0,0,0,0"/>
+                                                <!-- bottom-left corner -->
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="2" WidthRequest="20"
+                                                         HorizontalOptions="Start" VerticalOptions="End" Margin="0,0,0,0"/>
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="20" WidthRequest="2"
+                                                         HorizontalOptions="Start" VerticalOptions="End" Margin="0,0,0,0"/>
+                                                <!-- bottom-right corner -->
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="2" WidthRequest="20"
+                                                         HorizontalOptions="End" VerticalOptions="End" Margin="0,0,0,0"/>
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="20" WidthRequest="2"
+                                                         HorizontalOptions="End" VerticalOptions="End" Margin="0,0,0,0"/>
+                                            </Grid>
+                                        </Grid>
+
+                                        <!-- Action buttons -->
+                                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Padding="12,10,12,14">
+                                            <!-- Capture -->
+                                            <Button Grid.Column="0"
+                                            Text="CAPTURE"
+                                            ImageSource="icon_camera.png"
+                                            ContentLayout="Left,8"
+                                            Style="{StaticResource CaptureButtonStyle}"
+                                            Command="{Binding StartCapturePhoto1Command}" />
+
+                                            <!-- Select -->
+                                            <Button Grid.Column="1"
+                                            Text="SELECT"
+                                            ImageSource="icon_upload.png"
+                                            ContentLayout="Left,8"
+                                            Style="{StaticResource SelectButtonStyle}"
+                                            Command="{Binding PickPhoto1Command}" />
+
+                                        </Grid>
+                                    </VerticalStackLayout>
+                                </Border>
+
+                                <!-- ── PHOTO 2: LEFT PROFILE ── -->
+                                <Border Style="{StaticResource PhotoCardStyle}">
+                                    <VerticalStackLayout Spacing="0">
+                                        <Grid ColumnDefinitions="*,Auto"
+                                              Padding="16,14,16,10">
+                                            <Label Grid.Column="0"
+                                                   Text="2. LEFT PROFILE"
+                                                   Style="{StaticResource SlotLabelStyle}"
+                                                   VerticalOptions="Center"/>
+                                            <Label Grid.Column="1"
+                                                   Text="REQUIRED"
+                                                   FontFamily="Monospace"
+                                                   FontSize="9"
+                                                   CharacterSpacing="2"
+                                                   TextColor="{StaticResource Outline}"
+                                                   VerticalOptions="Center"/>
+                                        </Grid>
+
+                                        <Grid HeightRequest="280" Margin="12,0">
+                                            <Border BackgroundColor="{StaticResource SurfaceContainerLow}"
+                                                    StrokeShape="RoundRectangle 16"
+                                                    Stroke="{StaticResource SurfaceVariant}"
+                                                    IsVisible="{Binding Photo2, Converter={StaticResource IsNullConverter}}">
+                                                <VerticalStackLayout VerticalOptions="Center"
+                                                                     HorizontalOptions="Center"
+                                                                     Spacing="8">
+                                                    <Image Source="icon_person_profile_left.png"
+                                               HeightRequest="52"
+                                               WidthRequest="52"
+                                               HorizontalOptions="Center"/>
+
+                                                    <Label Text="No photo captured"
+                                                           FontFamily="Inter"
+                                                           FontSize="12"
+                                                           TextColor="{StaticResource Outline}"
+                                                           HorizontalOptions="Center"/>
+                                                </VerticalStackLayout>
+                                            </Border>
+                                            <Border BackgroundColor="Black"
+                                                    StrokeShape="RoundRectangle 16"
+                                                    Stroke="{StaticResource PrimaryContainer}"
+                                                    StrokeThickness="2"
+                                                    IsVisible="{Binding Photo2, Converter={StaticResource IsNotNullConverter}}">
+                                                <Image Source="{Binding Photo2}"
+                                                       Aspect="AspectFill">
+                                                    <Image.Rotation>
+                                                        <OnPlatform x:TypeArguments="x:Double">
+                                                            <On Platform="iOS" Value="0"/>
+                                                            <On Platform="Android" Value="0"/>
+                                                            <On Platform="WinUI" Value="0"/>
+                                                        </OnPlatform>
+                                                    </Image.Rotation>
+                                                </Image>
+                                            </Border>
+                                            <Grid IsVisible="{Binding Photo2, Converter={StaticResource IsNullConverter}}"
+                                                  InputTransparent="True"
+                                                  Margin="8">
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="2" WidthRequest="20"
+                                                         HorizontalOptions="Start" VerticalOptions="Start"/>
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="20" WidthRequest="2"
+                                                         HorizontalOptions="Start" VerticalOptions="Start"/>
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="2" WidthRequest="20"
+                                                         HorizontalOptions="End" VerticalOptions="Start"/>
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="20" WidthRequest="2"
+                                                         HorizontalOptions="End" VerticalOptions="Start"/>
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="2" WidthRequest="20"
+                                                         HorizontalOptions="Start" VerticalOptions="End"/>
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="20" WidthRequest="2"
+                                                         HorizontalOptions="Start" VerticalOptions="End"/>
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="2" WidthRequest="20"
+                                                         HorizontalOptions="End" VerticalOptions="End"/>
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="20" WidthRequest="2"
+                                                         HorizontalOptions="End" VerticalOptions="End"/>
+                                            </Grid>
+                                        </Grid>
+
+                                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Padding="12,10,12,14">
+                                            <!-- Capture -->
+                                            <Button Grid.Column="0"
+                                            Text="CAPTURE"
+                                            ImageSource="icon_camera.png"
+                                            ContentLayout="Left,8"
+                                            Style="{StaticResource CaptureButtonStyle}"
+                                            Command="{Binding StartCapturePhoto1Command}" />
+
+                                            <!-- Select -->
+                                            <Button Grid.Column="1"
+                                            Text="SELECT"
+                                            ImageSource="icon_upload.png"
+                                            ContentLayout="Left,8"
+                                            Style="{StaticResource SelectButtonStyle}"
+                                            Command="{Binding PickPhoto1Command}" />
+
+                                        </Grid>
+                                    </VerticalStackLayout>
+                                </Border>
+
+                                <!-- ── PHOTO 3: RIGHT PROFILE ── -->
+                                <Border Style="{StaticResource PhotoCardStyle}">
+                                    <VerticalStackLayout Spacing="0">
+                                        <Grid ColumnDefinitions="*,Auto"
+                                              Padding="16,14,16,10">
+                                            <Label Grid.Column="0"
+                                                   Text="3. RIGHT PROFILE"
+                                                   Style="{StaticResource SlotLabelStyle}"
+                                                   VerticalOptions="Center"/>
+                                            <Label Grid.Column="1"
+                                                   Text="REQUIRED"
+                                                   FontFamily="Monospace"
+                                                   FontSize="9"
+                                                   CharacterSpacing="2"
+                                                   TextColor="{StaticResource Outline}"
+                                                   VerticalOptions="Center"/>
+                                        </Grid>
+
+                                        <Grid HeightRequest="280" Margin="12,0">
+                                            <Border BackgroundColor="{StaticResource SurfaceContainerLow}"
+                                                    StrokeShape="RoundRectangle 16"
+                                                    Stroke="{StaticResource SurfaceVariant}"
+                                                    IsVisible="{Binding Photo3, Converter={StaticResource IsNullConverter}}">
+                                                <VerticalStackLayout VerticalOptions="Center"
+                                                                     HorizontalOptions="Center"
+                                                                     Spacing="8">
+                                                    <Image Source="icon_person_profile_right.png"
+                                               HeightRequest="52"
+                                               WidthRequest="52"
+                                               HorizontalOptions="Center"/>
+
+                                                    <Label Text="No photo captured"
+                                                           FontFamily="Inter"
+                                                           FontSize="12"
+                                                           TextColor="{StaticResource Outline}"
+                                                           HorizontalOptions="Center"/>
+                                                </VerticalStackLayout>
+                                            </Border>
+                                            <Border BackgroundColor="Black"
+                                                    StrokeShape="RoundRectangle 16"
+                                                    Stroke="{StaticResource PrimaryContainer}"
+                                                    StrokeThickness="2"
+                                                    IsVisible="{Binding Photo3, Converter={StaticResource IsNotNullConverter}}">
+                                                <Image Source="{Binding Photo3}"
+                                                       Aspect="AspectFill">
+                                                    <Image.Rotation>
+                                                        <OnPlatform x:TypeArguments="x:Double">
+                                                            <On Platform="iOS" Value="0"/>
+                                                            <On Platform="Android" Value="0"/>
+                                                            <On Platform="WinUI" Value="0"/>
+                                                        </OnPlatform>
+                                                    </Image.Rotation>
+                                                </Image>
+                                            </Border>
+                                            <Grid IsVisible="{Binding Photo3, Converter={StaticResource IsNullConverter}}"
+                                                  InputTransparent="True"
+                                                  Margin="8">
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="2" WidthRequest="20"
+                                                         HorizontalOptions="Start" VerticalOptions="Start"/>
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="20" WidthRequest="2"
+                                                         HorizontalOptions="Start" VerticalOptions="Start"/>
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="2" WidthRequest="20"
+                                                         HorizontalOptions="End" VerticalOptions="Start"/>
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="20" WidthRequest="2"
+                                                         HorizontalOptions="End" VerticalOptions="Start"/>
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="2" WidthRequest="20"
+                                                         HorizontalOptions="Start" VerticalOptions="End"/>
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="20" WidthRequest="2"
+                                                         HorizontalOptions="Start" VerticalOptions="End"/>
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="2" WidthRequest="20"
+                                                         HorizontalOptions="End" VerticalOptions="End"/>
+                                                <BoxView Color="{StaticResource Primary}" HeightRequest="20" WidthRequest="2"
+                                                         HorizontalOptions="End" VerticalOptions="End"/>
+                                            </Grid>
+                                        </Grid>
+
+                                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Padding="12,10,12,14">
+                                            <!-- Capture -->
+                                            <Button Grid.Column="0"
+                                            Text="CAPTURE"
+                                            ImageSource="icon_camera.png"
+                                            ContentLayout="Left,8"
+                                            Style="{StaticResource CaptureButtonStyle}"
+                                            Command="{Binding StartCapturePhoto1Command}" />
+
+                                            <!-- Select -->
+                                            <Button Grid.Column="1"
+                                            Text="SELECT"
+                                            ImageSource="icon_upload.png"
+                                            ContentLayout="Left,8"
+                                            Style="{StaticResource SelectButtonStyle}"
+                                            Command="{Binding PickPhoto1Command}" />
+
+                                        </Grid>
+                                    </VerticalStackLayout>
+                                </Border>
+
+                            </VerticalStackLayout>
+
+                            <!-- ── STATUS CARD ── -->
+                            <Border BackgroundColor="{Binding StatusColor, Converter={StaticResource ColorToLightColorConverter}}"
+                                    StrokeShape="RoundRectangle 16"
+                                    Stroke="{Binding StatusColor}"
+                                    StrokeThickness="1"
+                                    Padding="16,14"
+                                    IsVisible="{Binding StatusMessage, Converter={StaticResource IsNotNullConverter}}">
+                                <VerticalStackLayout Spacing="10">
+                                    <ActivityIndicator IsRunning="{Binding IsLoading}"
+                                                       IsVisible="{Binding IsLoading}"
+                                                       Color="{Binding StatusColor}"
+                                                       HeightRequest="28"
+                                                       WidthRequest="28"
+                                                       HorizontalOptions="Center"/>
+                                    <Label Text="{Binding StatusMessage}"
+                                           FontFamily="Inter"
+                                           FontAttributes="Bold"
+                                           FontSize="13"
+                                           HorizontalTextAlignment="Center"
+                                           TextColor="{Binding StatusColor}"/>
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <!-- ── ACTION BUTTONS ── -->
+                            <VerticalStackLayout Spacing="12" Margin="0,4,0,0">
+                                <!-- Primary: Register / Update -->
+                                <Button Text="{Binding IsEditMode, Converter={StaticResource BoolToObjectConverter}, ConverterParameter='Update User|Complete Registration'}"
+                                        Command="{Binding RegisterUserCommand}"
+                                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                                        BackgroundColor="{StaticResource Primary}"
+                                        TextColor="{StaticResource OnPrimary}"
+                                        FontFamily="Inter"
+                                        FontAttributes="Bold"
+                                        FontSize="16"
+                                        CornerRadius="32"
+                                        HeightRequest="60"
+                                        HorizontalOptions="Fill">
+                                    <Button.Shadow>
+                                        <Shadow Brush="#0056BB" Offset="0,8" Radius="24" Opacity="0.28"/>
+                                    </Button.Shadow>
+                                </Button>
+
+                                <!-- Secondary: Reset / Cancel -->
+                                <Button Text="{Binding IsEditMode, Converter={StaticResource BoolToObjectConverter}, ConverterParameter='Cancel|Reset Form'}"
+                                        Command="{Binding ResetFormCommand}"
+                                        IsEnabled="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource OnSurfaceVariant}"
+                                        FontFamily="Inter"
+                                        FontSize="14"
+                                        CornerRadius="32"
+                                        HeightRequest="48"
+                                        BorderColor="{StaticResource OutlineVariant}"
+                                        BorderWidth="1"
+                                        HorizontalOptions="Fill"/>
+                            </VerticalStackLayout>
+
+                            <!-- ── INFO FOOTER ── -->
+                            <Border BackgroundColor="{StaticResource SurfaceContainerLow}"
+                                    StrokeShape="RoundRectangle 14"
+                                    Stroke="Transparent"
+                                    Padding="14,12">
+                                <Label Text="ℹ️  All fields and 3 photos are required for successful face recognition"
+                                       FontFamily="Inter"
+                                       FontSize="12"
+                                       TextColor="{StaticResource OnSurfaceVariant}"
+                                       HorizontalOptions="Center"
+                                       HorizontalTextAlignment="Center"/>
+                            </Border>
+
+                        </VerticalStackLayout>
+                    </Border>
+                    <!-- end main card -->
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+        <!-- end form grid -->
+
+        <!-- CAMERA PREVIEW OVERLAY -->
         <Grid IsVisible="{Binding IsCameraPreviewVisible}"
               BackgroundColor="Black">
 
             <camera:CameraView x:Name="cameraView"
-                               HorizontalOptions="Center" 
-                               VerticalOptions="Center"  
-                               WidthRequest="400"
-                               HeightRequest="600"/>
+                               HorizontalOptions="Fill"
+                               VerticalOptions="Fill"/>
+
+            <!-- Face-guide oval: helps user centre their face before capture -->
+            <Grid HorizontalOptions="Fill"
+                  VerticalOptions="Fill"
+                  InputTransparent="True">
+                <!-- Dark vignette mask — four semi-transparent strips around the oval -->
+                <BoxView Color="#99000000"
+                         HorizontalOptions="Fill"
+                         VerticalOptions="Start"
+                         HeightRequest="160"/>
+                <BoxView Color="#99000000"
+                         HorizontalOptions="Fill"
+                         VerticalOptions="End"
+                         HeightRequest="220"/>
+                <BoxView Color="#99000000"
+                         WidthRequest="40"
+                         HorizontalOptions="Start"
+                         VerticalOptions="Fill"/>
+                <BoxView Color="#99000000"
+                         WidthRequest="40"
+                         HorizontalOptions="End"
+                         VerticalOptions="Fill"/>
+
+                <!-- Oval outline -->
+                <Border StrokeShape="Ellipse"
+                        Stroke="White"
+                        StrokeThickness="2.5"
+                        BackgroundColor="Transparent"
+                        WidthRequest="260"
+                        HeightRequest="340"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Margin="0,-20,0,0"/>
+
+                <!-- Corner accent — top-left -->
+                <Border StrokeShape="RoundRectangle 3"
+                        Stroke="{StaticResource Primary}"
+                        StrokeThickness="4"
+                        BackgroundColor="Transparent"
+                        WidthRequest="28" HeightRequest="4"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Margin="-232,-354,0,0"/>
+                <Border StrokeShape="RoundRectangle 3"
+                        Stroke="{StaticResource Primary}"
+                        StrokeThickness="4"
+                        BackgroundColor="Transparent"
+                        WidthRequest="4" HeightRequest="28"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Margin="-218,-340,0,0"/>
+            </Grid>
 
             <!-- Top info bar -->
             <Border BackgroundColor="#CC000000"
+                    StrokeShape="Rectangle"
+                    Stroke="Transparent"
                     VerticalOptions="Start"
-                    Padding="20,48,20,16">
+                    Padding="20,48,20,18">
                 <Grid ColumnDefinitions="48,*,48">
                     <VerticalStackLayout Grid.Column="1" Spacing="6" HorizontalOptions="Center">
-                        <Label Text="{Binding ActivePhotoSlot, StringFormat='📸 Photo {0}'}"
+                        <Label Text="{Binding ActivePhotoSlot, StringFormat='📸  Photo {0}'}"
                                TextColor="White"
-                               FontSize="22"
+                               FontFamily="Inter"
                                FontAttributes="Bold"
+                               FontSize="20"
                                HorizontalOptions="Center"/>
                         <Label Text="Center your face in the frame"
                                TextColor="#CCFFFFFF"
-                               FontSize="14"
+                               FontFamily="Inter"
+                               FontSize="13"
                                HorizontalOptions="Center"/>
                     </VerticalStackLayout>
-                    <Button x:Name="flipCameraButton"
-                            Grid.Column="2"
-                            Text="🔄"
-                            BackgroundColor="Transparent"
-                            TextColor="White"
-                            FontSize="22"
-                            WidthRequest="48"
-                            HeightRequest="48"
-                            Padding="0"
-                            VerticalOptions="Center"
+                    <!-- Flip camera button -->
+                    <Border Grid.Column="2"
+                            BackgroundColor="#33FFFFFF"
+                            StrokeShape="RoundRectangle 24"
+                            Stroke="Transparent"
+                            WidthRequest="44"
+                            HeightRequest="44"
                             HorizontalOptions="Center"
-                            Clicked="OnFlipCameraClicked"/>
+                            VerticalOptions="Center">
+                        <Button x:Name="flipCameraButton"
+                                Text="🔄"
+                                BackgroundColor="Transparent"
+                                TextColor="White"
+                                FontSize="18"
+                                WidthRequest="44"
+                                HeightRequest="44"
+                                Padding="0"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                Clicked="OnFlipCameraClicked"/>
+                    </Border>
                 </Grid>
             </Border>
 
-            <VerticalStackLayout VerticalOptions="End"
-                                 Padding="24,0,24,52"
-                                 Spacing="20"
-                                 BackgroundColor="#CC000000">
-                <Border StrokeShape="Ellipse"
-                        Stroke="White"
-                        StrokeThickness="3"
-                        BackgroundColor="Transparent"
-                        WidthRequest="88"
-                        HeightRequest="88"
-                        HorizontalOptions="Center">
-                    <Button x:Name="shutterButton"
-                            BackgroundColor="White"
-                            CornerRadius="36"
-                            WidthRequest="72"
-                            HeightRequest="72"
-                            HorizontalOptions="Center"
-                            VerticalOptions="Center"
-                            Clicked="OnCaptureClicked"/>
-                </Border>
-                <Button Text="✕  Cancel"
-                        Command="{Binding CancelCameraPreviewCommand}"
-                        BackgroundColor="Transparent"
-                        TextColor="White"
-                        BorderColor="Transparent"
-                        FontSize="16"
-                        HorizontalOptions="Center"/>
-            </VerticalStackLayout>
+            <!-- Bottom shutter bar -->
+            <Border BackgroundColor="#CC000000"
+                    StrokeShape="Rectangle"
+                    Stroke="Transparent"
+                    VerticalOptions="End"
+                    Padding="24,20,24,48">
+                <VerticalStackLayout Spacing="16">
+                    <!-- Shutter ring + button -->
+                    <Border StrokeShape="Ellipse"
+                            Stroke="White"
+                            StrokeThickness="3"
+                            BackgroundColor="Transparent"
+                            WidthRequest="84"
+                            HeightRequest="84"
+                            HorizontalOptions="Center">
+                        <Button x:Name="shutterButton"
+                                BackgroundColor="White"
+                                CornerRadius="34"
+                                WidthRequest="68"
+                                HeightRequest="68"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                Clicked="OnCaptureClicked"/>
+                    </Border>
+                    <!-- Cancel -->
+                    <Button Text="✕   Cancel"
+                            Command="{Binding CancelCameraPreviewCommand}"
+                            BackgroundColor="Transparent"
+                            TextColor="White"
+                            BorderColor="Transparent"
+                            FontFamily="Inter"
+                            FontSize="15"
+                            HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </Border>
 
         </Grid>
+        <!-- end camera overlay -->
 
     </Grid>
-
 </ContentPage>

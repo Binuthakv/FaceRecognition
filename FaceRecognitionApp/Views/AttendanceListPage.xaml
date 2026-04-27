@@ -28,30 +28,34 @@
             </Grid.RowDefinitions>
 
             <!-- Column Headers -->
-            <Grid Grid.Row="0" Padding="12" ColumnDefinitions="1.2*,2*,2.5*,1.5*" ColumnSpacing="8" 
-                  BackgroundColor="{AppThemeBinding Light=#E8E8E8, Dark=#3D3D3D}" 
-                  BorderStrokeThickness="1" 
-                  BorderStroke="{AppThemeBinding Light=#CCCCCC, Dark=#555555}">
-                <Label Text="User ID" FontAttributes="Bold" FontSize="13" VerticalOptions="Center"/>
-                <Label Grid.Column="1" Text="Name" FontAttributes="Bold" FontSize="13" VerticalOptions="Center"/>
-                <Label Grid.Column="2" Text="Scan Time" FontAttributes="Bold" FontSize="13" VerticalOptions="Center"/>
-                <Label Grid.Column="3" Text="Processed" FontAttributes="Bold" FontSize="13" VerticalOptions="Center" HorizontalTextAlignment="Center"/>
-            </Grid>
+            <Border Grid.Row="0"
+                    Padding="12"
+                    BackgroundColor="{AppThemeBinding Light=#E8E8E8, Dark=#3D3D3D}"
+                    Stroke="{AppThemeBinding Light=#CCCCCC, Dark=#555555}"
+                    StrokeThickness="1">
+                <Grid ColumnDefinitions="1.2*,2*,2.5*,1.5*" ColumnSpacing="8">
+                    <Label Text="User ID" FontAttributes="Bold" FontSize="13" VerticalOptions="Center"/>
+                    <Label Grid.Column="1" Text="Name" FontAttributes="Bold" FontSize="13" VerticalOptions="Center"/>
+                    <Label Grid.Column="2" Text="Scan Time" FontAttributes="Bold" FontSize="13" VerticalOptions="Center"/>
+                    <Label Grid.Column="3" Text="Processed" FontAttributes="Bold" FontSize="13" VerticalOptions="Center" HorizontalTextAlignment="Center"/>
+                </Grid>
+            </Border>
 
             <!-- Data Rows using CollectionView -->
             <CollectionView Grid.Row="1" ItemsSource="{Binding AttendanceRecords}" SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Padding="12" ColumnDefinitions="1.2*,2*,2.5*,1.5*" ColumnSpacing="8"
-                              BorderStrokeThickness="0,0,0,1" 
-                              BorderStroke="{AppThemeBinding Light=#EEEEEE, Dark=#404040}"
-                              BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#252525}">
-                            <Label Text="{Binding UserId}" FontSize="12" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
-                            <Label Grid.Column="1" Text="{Binding Name}" FontSize="12" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
-                            <Label Grid.Column="2" Text="{Binding ScanTimeFormatted}" FontSize="12" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
-                            <Label Grid.Column="3" Text="{Binding ProcessedStatus}" FontSize="12" VerticalOptions="Center" HorizontalTextAlignment="Center"
-                                   TextColor="{Binding Processed, Converter={StaticResource ProcessedStatusColorConverter}}"/>
-                        </Grid>
+                        <StackLayout Spacing="0">
+                            <Grid Padding="12" ColumnDefinitions="1.2*,2*,2.5*,1.5*" ColumnSpacing="8"
+                                  BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#252525}">
+                                <Label Text="{Binding UserId}" FontSize="12" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                                <Label Grid.Column="1" Text="{Binding Name}" FontSize="12" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                                <Label Grid.Column="2" Text="{Binding ScanTimeFormatted}" FontSize="12" VerticalOptions="Center" LineBreakMode="TailTruncation"/>
+                                <Label Grid.Column="3" Text="{Binding ProcessedStatus}" FontSize="12" VerticalOptions="Center" HorizontalTextAlignment="Center"
+                                       TextColor="{Binding Processed, Converter={StaticResource ProcessedStatusColorConverter}}"/>
+                            </Grid>
+                            <BoxView HeightRequest="1" BackgroundColor="{AppThemeBinding Light=#EEEEEE, Dark=#404040}" HorizontalOptions="Fill"/>
+                        </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
                 <CollectionView.EmptyView>
