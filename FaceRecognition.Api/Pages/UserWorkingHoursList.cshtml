@@ -4,7 +4,7 @@
     ViewData["Title"] = "AVIVANEXT | Working Hours";
     ViewData["PageLabel"] = "User Working Hours";
     ViewData["ActiveNav"] = "analysis";
-    ViewData["LogoutPage"] = "UserWorkingHoursList";
+    ViewData["LogoutPage"] = "/Dashboard";
     Layout = "~/Pages/Shared/_AppLayout.cshtml";
 }
 
@@ -93,23 +93,6 @@
         </div>
     </form>
 </div>
-
-<!-- Filter Status Message -->
-@if (Model.StartDate.HasValue || Model.EndDate.HasValue || !string.IsNullOrWhiteSpace(Model.FilterUserId))
-{
-    <div class="alert-info-yellow mb-6 flex items-center gap-3 px-4 py-3 rounded-xl">
-        <span class="material-symbols-outlined" style="font-size:20px; font-variation-settings:'FILL' 1;">info</span>
-        <span class="text-sm font-medium">Active filters applied: Viewing filtered records.</span>
-    </div>
-}
-else
-{
-    <div class="alert-info-blue mb-6 flex items-center gap-3 px-4 py-3 rounded-xl">
-        <span class="material-symbols-outlined" style="font-size:20px; font-variation-settings:'FILL' 1;">info</span>
-        <span class="text-sm font-medium">Active filters applied: Currently viewing records from current month.</span>
-    </div>
-}
-
 <!-- View Type Selection -->
 <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
     <div>
