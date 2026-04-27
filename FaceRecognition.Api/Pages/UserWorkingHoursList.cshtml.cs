@@ -1,5 +1,6 @@
 using FaceRecognitionApp.Api.Models;
 using FaceRecognitionApp.Api.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -28,7 +29,7 @@ public class UserWorkingHoursListModel : PageModel
     public List<DailyWorkingHoursViewModel> DailyWorkingHours { get; set; } = new();
     public List<WeeklyWorkingHoursViewModel> WeeklyWorkingHours { get; set; } = new();
     public List<MonthlyWorkingHoursViewModel> MonthlyWorkingHours { get; set; } = new();
-    public List<UserDropdownItem> Users { get; set; }
+    public List<UserDropdownItem> Users { get; set; } = new();
     public List<string> UniqueUserIds { get; set; } = new();
     public Dictionary<string, string> UserIdToNameMap { get; set; } = new();
     public string? StatusMessage { get; set; }
@@ -338,6 +339,12 @@ public class UserWorkingHoursListModel : PageModel
         }
 
         _logger.LogInformation("User working hours records retrieved. Count: {Count}, ViewType: {ViewType}", TotalRecords, ViewType);
+    }
+    public async Task<IActionResult> OnPostAsync()
+    {
+        _logger.LogInformation("User {User} logging out", User.Identity?.Name);
+        await HttpContext.SignOutAsync("AdminCookie");
+        return RedirectToPage("/Login");
     }
 }
 public class UserDropdownItem

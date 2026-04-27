@@ -1,5 +1,7 @@
 using FaceRecognitionApp.Api.Models;
 using FaceRecognitionApp.Api.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FaceRecognitionApp.Api.Pages;
@@ -55,6 +57,12 @@ public class AttendanceListModel : PageModel
             ErrorMessage = $"Error loading attendance records: {ex.Message}";
             _logger.LogError(ex, "Error retrieving attendance records");
         }
+    }
+    public async Task<IActionResult> OnPostAsync()
+    {
+        _logger.LogInformation("User {User} logging out", User.Identity?.Name);
+        await HttpContext.SignOutAsync("AdminCookie");
+        return RedirectToPage("/Login");
     }
 }
 
