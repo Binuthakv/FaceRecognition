@@ -1,0 +1,520 @@
+﻿/* ==========================================================================
+   AvivaNext — site.css
+   Shared stylesheet for all pages
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   CSS Custom Properties (responsive tokens)
+   -------------------------------------------------------------------------- */
+:root {
+    --sidebar-width: 256px;
+    --header-height: 64px;
+    --mobile-nav-height: 64px;
+    --content-max-width: 1200px;
+    --page-px: clamp(12px, 3vw, 24px);
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #faf8ff;
+    color: #131b2e;
+    min-height: 100dvh;
+    overflow-x: hidden;
+}
+
+/* Prevent content from going under iOS notch */
+body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+}
+
+/* --------------------------------------------------------------------------
+   Material Symbols
+   -------------------------------------------------------------------------- */
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    vertical-align: middle;
+}
+
+/* --------------------------------------------------------------------------
+   Skeleton / Shimmer loader
+   -------------------------------------------------------------------------- */
+.skeleton {
+    background: linear-gradient(90deg, #e2e7ff 25%, #eef0ff 50%, #e2e7ff 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 6px;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Spinner (login loading state)
+   -------------------------------------------------------------------------- */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 3px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   Glass card (used in AttendanceList, UserWorkingHoursList)
+   -------------------------------------------------------------------------- */
+.glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(218, 226, 253, 0.5);
+}
+
+/* --------------------------------------------------------------------------
+   Dashboard card
+   -------------------------------------------------------------------------- */
+.dashboard-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(218, 226, 253, 0.5);
+    border-radius: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Ensure cards don't overflow on small screens */
+    width: 100%;
+    min-width: 0;
+}
+
+    .dashboard-card:hover {
+        box-shadow: 0 10px 30px -5px rgba(0, 82, 255, 0.08);
+        transform: translateY(-2px);
+    }
+
+/* --------------------------------------------------------------------------
+   Sidebar / Header / Nav — shared layout
+   -------------------------------------------------------------------------- */
+
+/* Sticky glass header */
+.app-header {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(195, 197, 217, 0.3);
+}
+
+/* Sidebar */
+.sidebar {
+    width: var(--sidebar-width);
+    transition: transform 0.25s ease;
+}
+
+/* Sidebar brand */
+.sidebar-brand-name {
+    color: #003ec7;
+    letter-spacing: -0.05em;
+}
+
+.sidebar-brand-sub {
+    color: #737688;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    margin-top: -2px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+/* Sidebar nav link — active state */
+.nav-link-active {
+    background: #eff6ff;
+    color: #003ec7 !important;
+}
+
+/* Sidebar nav link — default */
+.nav-link {
+    color: #475569;
+    transition: background 200ms, color 200ms;
+}
+
+    .nav-link:hover {
+        background: #f8fafc;
+    }
+
+/* Top-bar page label */
+.topbar-label {
+    font-size: clamp(9px, 2vw, 11px);
+    letter-spacing: 0.2em;
+    color: #737688;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Avatar initials circle */
+.avatar-circle {
+    background: linear-gradient(135deg, #003ec7, #60a5fa);
+}
+
+/* Logout button */
+.btn-logout {
+    background: linear-gradient(135deg, #003ec7, #60a5fa);
+    color: #fff;
+    white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   Table shared styles
+   -------------------------------------------------------------------------- */
+.table-header-row {
+    background: rgba(226, 231, 255, 0.5);
+    color: #737688;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.table-row {
+    border-bottom: 1px solid rgba(195, 197, 217, 0.3);
+    transition: background 150ms;
+}
+
+    .table-row:hover {
+        background: #eff6ff;
+    }
+
+.table-controls-bar {
+    background: #f2f3ff;
+    border-color: #c3c5d9;
+}
+
+.table-footer-bar {
+    background: #f2f3ff;
+    border-color: #c3c5d9;
+}
+
+/* Responsive table wrapper — horizontal scroll on small screens */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 0.5rem;
+}
+
+    .table-responsive table {
+        min-width: 480px; /* prevent columns from collapsing */
+    }
+
+/* --------------------------------------------------------------------------
+   Status badges
+   -------------------------------------------------------------------------- */
+.badge-processed {
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+.badge-unprocessed {
+    background: #fffbeb;
+    color: #92400e;
+}
+
+.badge-primary {
+    background: #eaedff;
+    color: #003ec7;
+}
+
+/* --------------------------------------------------------------------------
+   Form inputs — shared focus ring
+   -------------------------------------------------------------------------- */
+.form-input {
+    border: 1px solid #c3c5d9;
+    background: #fff;
+    color: #131b2e;
+    outline: none;
+    transition: border-color 150ms, box-shadow 150ms;
+    /* Full-width on all viewports */
+    width: 100%;
+    max-width: 100%;
+}
+
+    .form-input:focus {
+        border-color: #003ec7;
+        box-shadow: 0 0 0 2px rgba(0, 62, 199, 0.15);
+    }
+
+/* --------------------------------------------------------------------------
+   Alert / Banner components
+   -------------------------------------------------------------------------- */
+.alert-error {
+    background: #ffdad6;
+    border: 1px solid rgba(186, 26, 26, 0.3);
+    color: #93000a;
+}
+
+.alert-success {
+    background: #d4edda;
+    border: 1px solid rgba(40, 167, 69, 0.3);
+    color: #155724;
+}
+
+.alert-info-blue {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1d4ed8;
+}
+
+.alert-info-yellow {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+}
+
+.alert-status-green {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #15803d;
+}
+
+.alert-status-red {
+    background: #fff1f2;
+    border: 1px solid #fecdd3;
+    color: #be123c;
+}
+
+/* --------------------------------------------------------------------------
+   Bottom Mobile Navigation
+   -------------------------------------------------------------------------- */
+.mobile-nav {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(195, 197, 217, 0.2);
+    /* Account for iPhone home indicator */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    height: calc(var(--mobile-nav-height) + env(safe-area-inset-bottom, 0px));
+}
+
+.mobile-nav-link {
+    color: #94a3b8;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: 500;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    transition: color 150ms, background 150ms;
+    min-width: 56px;
+    text-align: center;
+}
+
+.mobile-nav-link-active {
+    color: #003ec7;
+    transform: scale(1.05);
+}
+
+/* --------------------------------------------------------------------------
+   Login page specifics
+   -------------------------------------------------------------------------- */
+.login-card {
+    background: #ffffff;
+    border: 1px solid #c3c5d9;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   Footer (login page)
+   -------------------------------------------------------------------------- */
+.site-footer {
+    background: rgba(248, 250, 252, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive grid helpers
+   -------------------------------------------------------------------------- */
+
+/* Auto-responsive card grid: 1 col → 2 col → 3+ col */
+.card-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive breakpoints
+   -------------------------------------------------------------------------- */
+
+/* ── Extra-small (phones < 375px) ── */
+@media (max-width: 374px) {
+    .topbar-label {
+        display: none; /* hide label on tiny screens to save space */
+    }
+
+    .login-card {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        box-shadow: none;
+    }
+
+    .mobile-nav-link {
+        font-size: 9px;
+        min-width: 48px;
+        padding: 4px 4px;
+    }
+}
+
+/* ── Small — phones (375px – 639px) ── */
+@media (min-width: 375px) and (max-width: 639px) {
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── Medium — tablets (640px – 767px) ── */
+@media (min-width: 640px) and (max-width: 767px) {
+    .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .login-card {
+        max-width: 420px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* ── Tablet landscape / small desktop (768px – 1023px) ── */
+@media (min-width: 768px) {
+    .md-hidden {
+        display: none !important;
+    }
+
+    .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ── Desktop (1024px+) ── */
+@media (min-width: 1024px) {
+    .card-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ── Wide desktop (1280px+) ── */
+@media (min-width: 1280px) {
+    .card-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* ── Mobile-specific overrides (max-width 767px) ── */
+@media (max-width: 767px) {
+    /* Extra bottom padding so content clears the floating nav */
+    main {
+        padding-bottom: calc(var(--mobile-nav-height) + env(safe-area-inset-bottom, 0px) + 16px) !important;
+    }
+
+    /* Hero text scaling */
+    .hero h1 {
+        font-size: clamp(24px, 8vw, 36px);
+    }
+
+    .hero p {
+        font-size: clamp(14px, 4vw, 18px);
+    }
+
+    /* Tighter table cells on mobile */
+    .table-header-row th,
+    .table-row td {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    /* Stack table controls vertically */
+    .table-controls-bar {
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch !important;
+    }
+
+        /* Full-width search inputs */
+        .table-controls-bar input[type="search"],
+        .table-controls-bar input[type="text"] {
+            width: 100%;
+        }
+}
+
+/* ── Landscape phone (height < 500px, width > 480px) ── */
+@media (max-height: 500px) and (orientation: landscape) {
+    .app-header {
+        height: 52px;
+    }
+
+    .mobile-nav {
+        height: calc(52px + env(safe-area-inset-bottom, 0px));
+    }
+
+    main {
+        padding-bottom: calc(52px + env(safe-area-inset-bottom, 0px) + 8px) !important;
+    }
+
+    .login-card {
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+}
+
+/* ── Print ── */
+@media print {
+    .app-header,
+    .sidebar,
+    .mobile-nav,
+    .btn-logout {
+        display: none !important;
+    }
+
+    main {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+}

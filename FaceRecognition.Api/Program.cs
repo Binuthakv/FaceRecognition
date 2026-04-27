@@ -26,6 +26,8 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+app.UseStaticFiles();
+
 // Initialize the database on startup
 using (var scope = app.Services.CreateScope())
 {
