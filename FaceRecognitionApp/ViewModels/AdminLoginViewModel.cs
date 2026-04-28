@@ -32,6 +32,9 @@ public partial class AdminLoginViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void ToggleRememberMe() => RememberMe = !RememberMe;
+
+    [RelayCommand]
     private async Task LoginAsync()
     {
         if (string.IsNullOrWhiteSpace(Username) || string.IsNullOrWhiteSpace(Password))
