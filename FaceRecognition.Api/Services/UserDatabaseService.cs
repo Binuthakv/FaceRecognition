@@ -885,6 +885,47 @@ public class UserDatabaseService : IUserDatabaseService, IDisposable
         }
     }
 
+    public async Task<List<AdminUser>> GetAllAdminUsersAsync()
+    {
+        _logger.LogDebug("Getting all admin users");
+        await EnsureInitializedAsync();
+
+        try
+        {
+            await using var cmd = _connection!.CreateCommand();
+            cmd.CommandText = """
+                SELECT Id, Username, Email, PasswordHash, Role, IsActive, CreatedDate, LastLoginDate
+                FROM AdminUsers
+                ORDER BY Username;
+                """;
+
+            var adminUsers = new List<AdminUser>();
+            using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                adminUsers.Add(new AdminUser
+                {
+                    Id = reader.GetInt32(0),
+                    Username = reader.GetString(1),
+                    Email = reader.GetString(2),
+                    PasswordHash = reader.GetString(3),
+                    Role = reader.GetString(4),
+                    IsActive = reader.GetInt32(5) == 1,
+                    CreatedDate = DateTime.Parse(reader.GetString(6)),
+                    LastLoginDate = reader.IsDBNull(7) ? null : DateTime.Parse(reader.GetString(7))
+                });
+            }
+
+            _logger.LogInformation("Retrieved {Count} admin users", adminUsers.Count);
+            return adminUsers;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to get all admin users");
+            throw;
+        }
+    }
+
     public void Dispose()
     {
         _logger.LogDebug("Disposing UserDatabaseService...");

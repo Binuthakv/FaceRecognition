@@ -61,6 +61,7 @@ public interface IUserDatabaseService
     // Admin User operations
     Task<AdminUser?> GetAdminUserByUsernameAsync(string username);
     Task<AdminUser?> GetAdminUserByEmailAsync(string email);
+    Task<List<AdminUser>> GetAllAdminUsersAsync();
     Task<int> SaveAdminUserAsync(AdminUser adminUser);
     Task<int> UpdateAdminUserLastLoginAsync(int adminUserId);
 }
