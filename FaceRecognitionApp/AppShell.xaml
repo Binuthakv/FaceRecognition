@@ -21,10 +21,10 @@
 
             <VerticalStackLayout Spacing="10">
 
-                <Border BackgroundColor="#33FFFFFF"
+                <Border BackgroundColor="#0056BB"
                         StrokeShape="Ellipse"
-                        Stroke="#44FFFFFF"
-                        StrokeThickness="1"
+                        Stroke="White"
+                        StrokeThickness="2"
                         WidthRequest="64"
                         HeightRequest="64"
                         HorizontalOptions="Center">
@@ -46,27 +46,24 @@
                        HorizontalTextAlignment="Center"
                        CharacterSpacing="1"/>
 
-                <BoxView HeightRequest="1"
+                <!--<BoxView HeightRequest="1"
                          Color="#33FFFFFF"
                          Margin="0,8,0,0"/>
 
                 <HorizontalStackLayout HorizontalOptions="Center" Spacing="6">
                     <Label Text="●"
                            FontSize="8"
-                           TextColor="#66FF99"
+                           TextColor="#FFFFFF"
                            VerticalOptions="Center"/>
-                    <!--
-                        x:Name is intentionally omitted here.
-                        Shell.FlyoutHeader is compiled as a separate DataTemplate,
-                        so named children are not visible to the AppShell partial class.
+                    --><!--
                         Use this.FindByName<Label>("AdminNameLabel") in code-behind instead.
-                    -->
+                    --><!--
                     <Label AutomationId="AdminNameLabel"
                            FontSize="12"
                            TextColor="#E0EFFF"
                            HorizontalTextAlignment="Center"
                            VerticalOptions="Center"/>
-                </HorizontalStackLayout>
+                </HorizontalStackLayout>-->
 
             </VerticalStackLayout>
         </Border>
@@ -109,9 +106,9 @@
             <Button x:Name="LogoutButton"
                     Text="Sign Out"
                     Clicked="OnLogoutClicked"
-                    BackgroundColor="#FEF2F2"
-                    TextColor="#BA1A1A"
-                    BorderColor="#FECACA"
+                    BackgroundColor="#EEF4FF"
+                    TextColor="#0056BB"
+                    BorderColor="#C2D6F5"
                     BorderWidth="1"
                     FontAttributes="Bold"
                     FontSize="14"
