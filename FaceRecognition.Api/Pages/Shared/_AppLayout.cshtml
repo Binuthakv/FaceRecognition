@@ -4,7 +4,7 @@
    Required ViewData keys the consuming page must set:
      ViewData["Title"]          — window title
      ViewData["PageLabel"]      — top-bar uppercase label (e.g. "System Dashboard")
-     ViewData["ActiveNav"]      — "dashboard" | "attendance" | "analysis"
+     ViewData["ActiveNav"]      — "dashboard" | "attendance" | "analysis" | "users"
      ViewData["ActiveNavMobile"]— same values (can be same variable)
      ViewData["LogoutPage"]     — asp-page value for the logout POST form
 
@@ -123,6 +123,10 @@
                     <span class="material-symbols-outlined">dashboard</span>
                     Dashboard
                 </a>
+                <a class="@NavCls("users")" href="/UsersList">
+                    <span class="material-symbols-outlined">people</span>
+                    Employees
+                </a>
                 <a class="@NavCls("attendance")" href="/AttendanceList">
                     <span class="material-symbols-outlined">event_available</span>
                     Attendance
@@ -130,6 +134,10 @@
                 <a class="@NavCls("analysis")" href="/UserWorkingHoursList">
                     <span class="material-symbols-outlined">query_stats</span>
                     Analysis
+                </a>
+                <a class="@NavCls("users")" href="/AdminUsersList">
+                    <span class="material-symbols-outlined">people</span>
+                    Users
                 </a>
             </nav>
         </div>
@@ -145,13 +153,17 @@
     </main>
 
     <!-- ══════════════════════════════════════════
-         Bottom Mobile Navigation
-         ══════════════════════════════════════════ -->
+          Bottom Mobile Navigation
+          ══════════════════════════════════════════ -->
     <nav class="mobile-nav md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 safe-bottom px-2 rounded-t-2xl shadow-lg"
          style="padding-bottom: env(safe-area-inset-bottom, 0px);">
         <a class="@MobileNavCls("dashboard")" href="/Dashboard">
             <span class="material-symbols-outlined" style="font-size:22px;">home</span>
             <span>Home</span>
+        </a>
+        <a class="@MobileNavCls("users")" href="/UsersList">
+            <span class="material-symbols-outlined" style="font-size:22px;">people</span>
+            <span>Users</span>
         </a>
         <a class="@MobileNavCls("attendance")" href="/AttendanceList">
             <span class="material-symbols-outlined" style="font-size:22px;">event_available</span>

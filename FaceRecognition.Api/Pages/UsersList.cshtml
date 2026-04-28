@@ -1,0 +1,202 @@
+@page
+@model FaceRecognitionApp.Api.Pages.UsersListModel
+@{
+    ViewData["Title"] = "AVIVANEXT | Employees";
+    ViewData["PageLabel"] = "Manage Employees";
+    ViewData["ActiveNav"] = "Employees";
+    ViewData["LogoutPage"] = "/Dashboard";
+    Layout = "~/Pages/Shared/_AppLayout.cshtml";
+}
+
+<!-- Page Header -->
+<div class="mb-12 flex flex-col gap-1">
+    <h1 class="font-semibold" style="font-size:32px; line-height:1.2; letter-spacing:-0.01em; color:#131b2e;">Manage Employees</h1>
+    <p style="color:#737688;">View and manage all registered Employees in the system</p>
+</div>
+
+<!-- Alert Messages -->
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <div class="alert-status-green mb-6 flex items-center gap-3 px-4 py-3 rounded-xl">
+        <span class="material-symbols-outlined" style="font-size:20px;">check_circle</span>
+        <span class="text-sm font-medium">@Model.StatusMessage</span>
+    </div>
+}
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert-status-red mb-6 flex items-center gap-3 px-4 py-3 rounded-xl">
+        <span class="material-symbols-outlined" style="font-size:20px;">error</span>
+        <span class="text-sm font-medium">@Model.ErrorMessage</span>
+    </div>
+}
+
+<!-- Statistics Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+    <!-- Total Users -->
+    <div class="glass-card p-6 rounded-xl" style="box-shadow:0 4px 20px 0 rgba(0,82,255,0.05); border-top:2px solid #00ccf9;">
+        <div class="flex items-center justify-between mb-3">
+            <span class="material-symbols-outlined" style="color:#003ec7;">people</span>
+            <span class="text-xs font-medium px-2 py-1 rounded-full badge-primary">Overall</span>
+        </div>
+        <div class="flex flex-col">
+            <span class="text-2xl font-semibold" style="color:#003ec7;">@Model.TotalUsers</span>
+            <span class="text-sm" style="color:#737688;">Total Employees</span>
+        </div>
+    </div>
+    <!-- Complete Registration -->
+    <div class="glass-card p-6 rounded-xl" style="box-shadow:0 4px 20px 0 rgba(0,82,255,0.05); border-top:2px solid #003ec7;">
+        <div class="flex items-center justify-between mb-3">
+            <span class="material-symbols-outlined" style="color:#00677f;">check_circle</span>
+            <span class="text-xs font-medium px-2 py-1 rounded-full badge-primary">Complete</span>
+        </div>
+        <div class="flex flex-col">
+            <span class="text-2xl font-semibold" style="color:#00677f;">@Model.UsersWithCompletePhotos</span>
+            <span class="text-sm" style="color:#737688;">With All Photos</span>
+        </div>
+    </div>
+    <!-- Incomplete Registration -->
+    <div class="glass-card p-6 rounded-xl" style="box-shadow:0 4px 20px 0 rgba(0,82,255,0.05); border-top:2px solid #ba1a1a;">
+        <div class="flex items-center justify-between mb-3">
+            <span class="material-symbols-outlined" style="color:#ba1a1a;">warning</span>
+            <span class="text-xs font-medium px-2 py-1 rounded-full badge-primary">Incomplete</span>
+        </div>
+        <div class="flex flex-col">
+            <span class="text-2xl font-semibold" style="color:#ba1a1a;">@(Model.TotalUsers - Model.UsersWithCompletePhotos)</span>
+            <span class="text-sm" style="color:#737688;">Incomplete Registration</span>
+        </div>
+    </div>
+</div>
+
+<!-- Search and Filter Card -->
+<div class="glass-card rounded-xl p-6 mb-8" style="box-shadow:0 4px 20px 0 rgba(0,82,255,0.05);">
+    <div class="flex items-center gap-2 mb-6">
+        <span class="material-symbols-outlined" style="color:#003ec7;">filter_list</span>
+        <h2 class="font-semibold" style="color:#131b2e; font-size:18px;">Search & Filter</h2>
+    </div>
+    <form method="get" asp-page="UsersList" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Search Input -->
+            <div>
+                <label for="searchQuery" class="block text-xs font-semibold uppercase tracking-wider mb-2" style="color:#737688;">Search</label>
+                <input type="text" id="searchQuery" name="searchQuery" 
+                       placeholder="Search by name or Employee ID..."
+                       value="@Model.SearchQuery"
+                       class="w-full form-input px-4 py-3 rounded-lg text-sm" />
+            </div>
+            <!-- Sort By -->
+            <div>
+                <label for="sortBy" class="block text-xs font-semibold uppercase tracking-wider mb-2" style="color:#737688;">Sort By</label>
+                <select id="sortBy" name="sortBy" class="w-full form-input px-4 py-3 rounded-lg text-sm">
+                    <option value="name" selected="@(Model.SortBy == "name")">Name (A-Z)</option>
+                    <option value="userid" selected="@(Model.SortBy == "userid")">Employees ID</option>
+                    <option value="age" selected="@(Model.SortBy == "age")">Age (Oldest First)</option>
+                    <option value="registered" selected="@(Model.SortBy == "registered")">Recently Registered</option>
+                </select>
+            </div>
+            <!-- Buttons -->
+            <div class="flex items-end gap-3">
+                <button type="submit" 
+                        class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold"
+                        style="background:#003ec7; color:#fff;">
+                    <span class="material-symbols-outlined" style="font-size:18px;">search</span>
+                    Search
+                </button>
+                <a href="/UsersList" 
+                   class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold"
+                   style="border:1px solid #c3c5d9; color:#434656; background:#fff;">
+                    <span class="material-symbols-outlined" style="font-size:18px;">close</span>
+                    Clear
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Users Table Card -->
+<div class="glass-card rounded-xl overflow-hidden" style="box-shadow:0 4px 20px 0 rgba(0,82,255,0.05);">
+    <!-- Table Header / Controls -->
+    <div class="table-controls-bar px-6 py-4 border-b flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined" style="color:#003ec7;">list</span>
+            <h3 class="font-semibold" style="color:#131b2e; font-size:18px;">Registered Employees</h3>
+        </div>
+        <span class="text-xs font-medium" style="color:#737688;">
+            Total: @Model.Users.Count
+        </span>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto">
+        @if (Model.Users.Any())
+        {
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="table-header-row">
+                        <th class="px-6 py-4 font-medium">Employee ID</th>
+                        <th class="px-6 py-4 font-medium">Name</th>
+                        <th class="px-6 py-4 font-medium">Gender</th>
+                        <th class="px-6 py-4 font-medium">Age</th>
+                        <th class="px-6 py-4 font-medium">Date of Birth</th>
+                        <th class="px-6 py-4 font-medium">Photos</th>
+                        <th class="px-6 py-4 font-medium">Registered</th>
+                        <th class="px-6 py-4 font-medium">Actions</th>
+                    </tr>
+                </thead>
+                <tbody style="border-top:1px solid rgba(195,197,217,0.3);">
+                    @foreach (var user in Model.Users)
+                    {
+                        <tr class="table-row">
+                            <td class="px-6 py-4 font-medium" style="color:#003ec7;">@user.UserId</td>
+                            <td class="px-6 py-4" style="color:#131b2e;">@user.Name</td>
+                            <td class="px-6 py-4 text-sm" style="color:#434656;">@(string.IsNullOrEmpty(user.Sex) ? "N/A" : user.Sex)</td>
+                            <td class="px-6 py-4 text-sm" style="color:#434656;">@user.Age years</td>
+                            <td class="px-6 py-4 text-sm" style="color:#434656;">@user.DateOfBirth.ToString("MMM dd, yyyy")</td>
+                            <td class="px-6 py-4">
+                                @if (user.HasAllPhotos)
+                                {
+                                    <span class="badge-processed inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium">
+                                        <span class="material-symbols-outlined" style="font-size:14px;">check</span>
+                                        All 3 Photos
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge-unprocessed inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium">
+                                        <span class="w-1.5 h-1.5 rounded-full inline-block" style="background:#f59e0b;"></span>
+                                        @user.PhotoCount of 3
+                                    </span>
+                                }
+                            </td>
+                            <td class="px-6 py-4 text-sm" style="color:#434656;">@user.RegisteredDate.ToString("MMM dd, yyyy")</td>
+                            <td class="px-6 py-4">
+                                <div class="flex gap-2">
+                                   
+                                    <a href="@Url.Page("UsersList", "Delete", new { userId = user.Id })" 
+                                       onclick="return confirm('Are you sure you want to delete user @user.Name? This action cannot be undone.');"
+                                       class="p-2 rounded-lg hover:bg-gray-100" style="color:#ba1a1a;" title="Delete User">
+                                        <span class="material-symbols-outlined" style="font-size:18px;">delete</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="text-center py-16" style="color:#737688;">
+                <span class="material-symbols-outlined" style="font-size:48px; color:#c3c5d9; display:block; margin-bottom:12px;">people_outline</span>
+                <h3 class="font-semibold mb-1" style="color:#434656;">No Employees Found</h3>
+                <p class="text-sm">@(string.IsNullOrWhiteSpace(Model.SearchQuery) ? "No Employees have been registered yet." : "No Employees match your search criteria.")</p>
+            </div>
+        }
+    </div>
+
+    <!-- Table Footer -->
+    <div class="table-footer-bar px-6 py-4 border-t flex justify-between items-center">
+        <span class="text-xs font-medium" style="color:#737688;">
+            Showing @Model.Users.Count of @Model.TotalUsers Employees
+        </span>
+    </div>
+</div>
