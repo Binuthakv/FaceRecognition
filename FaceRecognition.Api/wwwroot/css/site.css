@@ -288,7 +288,7 @@ body {
 }
 
 .avatar-circle {
-    background: linear-gradient(135deg, #003ec7, #60a5fa);
+    background: #003ec7;
     width: 2rem;
     height: 2rem;
 }
@@ -301,7 +301,7 @@ body {
 }
 
 .btn-logout {
-    background: linear-gradient(135deg, #003ec7, #60a5fa);
+    background: #003ec7;
     color: #fff;
     white-space: nowrap;
 }

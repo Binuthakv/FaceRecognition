@@ -11,17 +11,17 @@
 <!-- Page Header -->
 <div class="mb-12 flex flex-col gap-1">
     <h1 class="font-semibold" style="font-size:32px; line-height:1.2; letter-spacing:-0.01em; color:#131b2e;">Manage Admin Users</h1>
-    <p style="color:#737688;">View and manage administrator accounts in the system</p>
+    <p style="color:#737688;">View and manage administrator accounts within the system</p>
 </div>
 
 <!-- Alert Messages -->
-@if (!string.IsNullOrEmpty(Model.StatusMessage))
+@* @if (!string.IsNullOrEmpty(Model.StatusMessage))
 {
     <div class="alert-status-green mb-6 flex items-center gap-3 px-4 py-3 rounded-xl">
         <span class="material-symbols-outlined" style="font-size:20px;">check_circle</span>
         <span class="text-sm font-medium">@Model.StatusMessage</span>
     </div>
-}
+} *@
 @if (!string.IsNullOrEmpty(Model.ErrorMessage))
 {
     <div class="alert-status-red mb-6 flex items-center gap-3 px-4 py-3 rounded-xl">
@@ -30,88 +30,38 @@
     </div>
 }
 
-<!-- Statistics Grid -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-    <!-- Total Admin Users -->
-    <div class="glass-card p-6 rounded-xl" style="box-shadow:0 4px 20px 0 rgba(0,82,255,0.05); border-top:2px solid #00ccf9;">
-        <div class="flex items-center justify-between mb-3">
-            <span class="material-symbols-outlined" style="color:#003ec7;">admin_panel_settings</span>
-            <span class="text-xs font-medium px-2 py-1 rounded-full badge-primary">Overall</span>
-        </div>
-        <div class="flex flex-col">
-            <span class="text-2xl font-semibold" style="color:#003ec7;">@Model.TotalAdminUsers</span>
-            <span class="text-sm" style="color:#737688;">Total Admin Users</span>
-        </div>
-    </div>
-    <!-- Active Admin Users -->
-    <div class="glass-card p-6 rounded-xl" style="box-shadow:0 4px 20px 0 rgba(0,82,255,0.05); border-top:2px solid #003ec7;">
-        <div class="flex items-center justify-between mb-3">
-            <span class="material-symbols-outlined" style="color:#00677f;">check_circle</span>
-            <span class="text-xs font-medium px-2 py-1 rounded-full badge-primary">Active</span>
-        </div>
-        <div class="flex flex-col">
-            <span class="text-2xl font-semibold" style="color:#00677f;">@Model.ActiveAdminUsers</span>
-            <span class="text-sm" style="color:#737688;">Active Admins</span>
-        </div>
-    </div>
-    <!-- Inactive Admin Users -->
-    <div class="glass-card p-6 rounded-xl" style="box-shadow:0 4px 20px 0 rgba(0,82,255,0.05); border-top:2px solid #ba1a1a;">
-        <div class="flex items-center justify-between mb-3">
-            <span class="material-symbols-outlined" style="color:#ba1a1a;">block</span>
-            <span class="text-xs font-medium px-2 py-1 rounded-full badge-primary">Inactive</span>
-        </div>
-        <div class="flex flex-col">
-            <span class="text-2xl font-semibold" style="color:#ba1a1a;">@Model.InactiveAdminUsers</span>
-            <span class="text-sm" style="color:#737688;">Inactive Admins</span>
-        </div>
-    </div>
-</div>
+
 
 <!-- Search and Filter Card -->
-<div class="glass-card rounded-xl p-6 mb-8" style="box-shadow:0 4px 20px 0 rgba(0,82,255,0.05);">
-    <div class="flex items-center gap-2 mb-6">
-        <span class="material-symbols-outlined" style="color:#003ec7;">filter_list</span>
-        <h2 class="font-semibold" style="color:#131b2e; font-size:18px;">Search & Filter</h2>
+<form method="get" asp-page="AdminUsersList">
+    <div class="flex items-center justify-end gap-2 mb-6" style="flex-wrap:nowrap;">
+        <input type="text" name="searchQuery"
+               placeholder="Search by username or email..."
+               value="@Model.SearchQuery"
+               class="form-input px-3 py-2 rounded-lg text-sm"
+               style="width:220px; flex-shrink:0; border:1px solid #c3c5d9;" />
+        <select name="sortBy" class="form-input px-3 py-2 rounded-lg text-sm"
+                style="width:160px; flex-shrink:0; border:1px solid #c3c5d9;">
+            <option value="username" selected="@(Model.SortBy == "username")">Username (A-Z)</option>
+            <option value="email" selected="@(Model.SortBy == "email")">Email</option>
+            <option value="role" selected="@(Model.SortBy == "role")">Role</option>
+            <option value="created" selected="@(Model.SortBy == "created")">Recently Created</option>
+            <option value="lastlogin" selected="@(Model.SortBy == "lastlogin")">Recently Logged In</option>
+        </select>
+        <button type="submit"
+                class="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium"
+                style="background:#003ec7; color:#fff; flex-shrink:0;">
+            <span class="material-symbols-outlined" style="font-size:15px;">search</span>
+            Search
+        </button>
+        <a href="/AdminUsersList"
+               class="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium"
+               style="border:1px solid #c3c5d9; color:#434656; background:#fff; flex-shrink:0;">
+            <span class="material-symbols-outlined" style="font-size:15px;">close</span>
+            Clear
+        </a>
     </div>
-    <form method="get" asp-page="AdminUsersList" class="space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <!-- Search Input -->
-            <div>
-                <label for="searchQuery" class="block text-xs font-semibold uppercase tracking-wider mb-2" style="color:#737688;">Search</label>
-                <input type="text" id="searchQuery" name="searchQuery" 
-                       placeholder="Search by username or email..."
-                       value="@Model.SearchQuery"
-                       class="w-full form-input px-4 py-3 rounded-lg text-sm" />
-            </div>
-            <!-- Sort By -->
-            <div>
-                <label for="sortBy" class="block text-xs font-semibold uppercase tracking-wider mb-2" style="color:#737688;">Sort By</label>
-                <select id="sortBy" name="sortBy" class="w-full form-input px-4 py-3 rounded-lg text-sm">
-                    <option value="username" selected="@(Model.SortBy == "username")">Username (A-Z)</option>
-                    <option value="email" selected="@(Model.SortBy == "email")">Email</option>
-                    <option value="role" selected="@(Model.SortBy == "role")">Role</option>
-                    <option value="created" selected="@(Model.SortBy == "created")">Recently Created</option>
-                    <option value="lastlogin" selected="@(Model.SortBy == "lastlogin")">Recently Logged In</option>
-                </select>
-            </div>
-            <!-- Buttons -->
-            <div class="flex items-end gap-3">
-                <button type="submit" 
-                        class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold"
-                        style="background:#003ec7; color:#fff;">
-                    <span class="material-symbols-outlined" style="font-size:18px;">search</span>
-                    Search
-                </button>
-                <a href="/AdminUsersList" 
-                   class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-semibold"
-                   style="border:1px solid #c3c5d9; color:#434656; background:#fff;">
-                    <span class="material-symbols-outlined" style="font-size:18px;">close</span>
-                    Clear
-                </a>
-            </div>
-        </div>
-    </form>
-</div>
+</form>
 
 <!-- Admin Users Table Card -->
 <div class="glass-card rounded-xl overflow-hidden" style="box-shadow:0 4px 20px 0 rgba(0,82,255,0.05);">
