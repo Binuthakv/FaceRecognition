@@ -13,6 +13,7 @@ public partial class LandingPage : ContentPage
     {
         base.OnAppearing();
         UpdateClock();
+        UpdateMenuVisibilityByRole();
         _clockTimer = Dispatcher.CreateTimer();
         _clockTimer.Interval = TimeSpan.FromSeconds(1);
         _clockTimer.Tick += (s, e) => UpdateClock();
@@ -65,4 +66,50 @@ public partial class LandingPage : ContentPage
         await Shell.Current.GoToAsync("///AdminLoginPage");
     }
 
+    private async Task UpdateMenuVisibilityByRole()
+    {
+        try
+        {
+            var roleJson = await SecureStorage.Default.GetAsync("AdminRole");
+            var role = string.IsNullOrEmpty(roleJson) ? "Viewer" : roleJson.Trim('"');
+
+            // Reset all cards to invisible
+            RegisterCard.IsVisible = false;
+            VerifyCard.IsVisible = false;
+            UsersCard.IsVisible = false;
+
+            // Show cards based on role
+            // Viewer: Sees only Verify
+            // Manager: Sees Users and Verify
+            // Admin: Sees Register, Verify and Users
+            switch (role.ToLowerInvariant())
+            {
+                case "admin":
+                    RegisterCard.IsVisible = true;
+                    VerifyCard.IsVisible = true;
+                    UsersCard.IsVisible = true;
+                    break;
+
+                case "manager":
+                    VerifyCard.IsVisible = true;
+                    UsersCard.IsVisible = true;
+                    break;
+
+                case "viewer":
+                default:
+                    VerifyCard.IsVisible = true;
+                    break;
+            }
+        }
+        catch (Exception ex)
+        {
+            // If an error occurs, default to Viewer role (only Verify visible)
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                RegisterCard.IsVisible = false;
+                VerifyCard.IsVisible = true;
+                UsersCard.IsVisible = false;
+            });
+        }
+    }
 }

@@ -1,11 +1,13 @@
 using FaceRecognitionApp.Api.Models;
 using FaceRecognitionApp.Api.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FaceRecognitionApp.Api.Pages;
 
+[Authorize(AuthenticationSchemes = "AdminCookie", Roles = "Admin,Manager")]
 public class AttendanceListModel : PageModel
 {
     private readonly IAttendanceService _attendanceService;
