@@ -117,12 +117,37 @@
                             </VerticalStackLayout>
 
                             <!-- Remember Me -->
-                            <HorizontalStackLayout Spacing="10"
+                            <HorizontalStackLayout Spacing="8"
                                                    VerticalOptions="Center"
                                                    Margin="4,4,0,0">
-                                <CheckBox IsChecked="{Binding RememberMe}"
-                                          Color="{StaticResource Primary}"
-                                          VerticalOptions="Center"/>
+                                <HorizontalStackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ToggleRememberMeCommand}"/>
+                                </HorizontalStackLayout.GestureRecognizers>
+
+                                <!-- Custom checkbox: no built-in padding unlike native CheckBox -->
+                                <Border WidthRequest="20"
+                                        HeightRequest="20"
+                                        StrokeThickness="1.5"
+                                        Stroke="{StaticResource Primary}"
+                                        StrokeShape="RoundRectangle 4"
+                                        BackgroundColor="Transparent"
+                                        VerticalOptions="Center">
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border"
+                                                     Binding="{Binding RememberMe}"
+                                                     Value="True">
+                                            <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>
+                                        </DataTrigger>
+                                    </Border.Triggers>
+                                    <Label Text="✓"
+                                           FontSize="13"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource OnPrimary}"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           IsVisible="{Binding RememberMe}"/>
+                                </Border>
+
                                 <Label Text="Remember me for 30 days"
                                        FontSize="13"
                                        TextColor="{StaticResource OnSurfaceVariant}"
