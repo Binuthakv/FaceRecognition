@@ -5,278 +5,171 @@
     Layout = "~/Pages/Shared/_PublicLayout.cshtml";
 }
 
-@section HeadExtra {
-    <style>
-        /* ── Setup page layout ───────────────────────────────────────────── */
+<!-- Main Content Area -->
+<main class="flex-grow flex items-center justify-center px-gutter">
+    <div class="w-full max-w-[400px] login-card p-md">
 
-        /* On desktop: true full-height split panel (no scroll needed) */
-        @@media (min-width: 768px) {
-            body {
-                overflow: hidden;
-                height: 100vh;
-            }
+        <!-- Brand Header -->
+        <div class="flex flex-col items-center mb-md">
+            <span class="material-symbols-outlined text-[48px] text-primary mb-2">face_6</span>
+            <h1 class="font-headline-md text-headline-md text-primary mb-xs tracking-tight">AVIVANEXT</h1>
+            <p class="font-label-sm text-label-sm text-outline">Admin Setup</p>
+        </div>
+
+        <!-- Error Message -->
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="alert-error flex items-start gap-2 px-4 py-3 mb-sm rounded-lg font-label-sm text-label-sm">
+                <span class="material-symbols-outlined text-[18px] mt-px shrink-0">error</span>
+                <span>@Model.ErrorMessage</span>
+            </div>
         }
 
-        /* On mobile: let the page scroll naturally so the form is reachable,
-                   especially when the software keyboard is open                      */
-        @@media (max-width: 767px) {
-            body {
-                overflow-y: auto;
-                height: auto;
-                min-height: 100dvh;
-            }
-        }
-
-        /* Left panel image: cap height so it never pushes content off-screen */
-        .setup-image-wrap {
-            flex-grow: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem 0;
-            overflow: hidden;
-            min-height: 0; /* critical: lets flex children shrink */
-        }
-
-            .setup-image-wrap img {
-                width: 100%;
-                height: 100%;
-                object-fit: contain;
-                max-height: 340px;
-            }
-
-        @@media (max-width: 767px) {
-            /* Left panel becomes a compact top banner on mobile */
-            .setup-left {
-                padding: 1rem 1rem 0.75rem !important;
-            }
-
-            .setup-image-wrap {
-                display: none; /* hide illustration on small screens to save vertical space */
-            }
-            /* Right panel: no centering needed — top-align so form starts at the top */
-            .setup-right {
-                align-items: flex-start !important;
-                padding: 1.25rem 1rem 2rem !important;
-            }
-            /* Password grid: always single column on mobile */
-            .pw-grid {
-                grid-template-columns: 1fr !important;
-            }
-        }
-
-        @@media (min-width: 375px) and (max-width: 767px) {
-            .setup-right {
-                padding: 1.25rem 1.25rem 2rem !important;
-            }
-        }
-
-        @@media (min-width: 640px) and (max-width: 767px) {
-            /* Tablet portrait: show a short version of the image */
-            .setup-image-wrap {
-                display: flex;
-            }
-
-                .setup-image-wrap img {
-                    max-height: 180px;
-                }
-        }
-    </style>
-}
-
-<main class="flex-grow flex flex-col md:flex-row md:h-full md:overflow-hidden">
-
-    <!-- ── Left Section: Visual & Context ── -->
-    <section class="setup-left md:w-5/12 bg-surface-container-low flex flex-col p-md md:p-xl justify-between border-b md:border-b-0 md:border-r border-outline-variant/30 md:overflow-hidden shrink-0">
-        <div>
-            <h1 class="font-headline-lg md:font-headline-xl text-headline-md md:text-headline-xl text-primary mb-sm">Admin Setup</h1>
-            <p class="font-body-lg text-body-md md:text-body-lg text-on-surface-variant mb-md">Create your first administrator account</p>
-
-            <div class="bg-surface-container-lowest p-md rounded-xl shadow-[0_4px_20px_rgba(0,62,199,0.05)] border border-primary/10">
-                <div class="flex items-start gap-sm">
-                    <div>
-                        <h3 class="font-label-sm text-label-sm text-primary mb-xs uppercase tracking-wider">Setup Instructions</h3>
-                        <p class="font-body-md text-body-md text-on-surface-variant">
-                            Create the administrator account for the Face Recognition System.
-                            This account will have full access to all features.
-                        </p>
-                    </div>
+        <!-- Success Message -->
+        @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+        {
+            <div class="alert-success flex items-start gap-2 px-4 py-3 mb-sm rounded-lg font-label-sm text-label-sm">
+                <span class="material-symbols-outlined text-[18px] mt-px shrink-0">check_circle</span>
+                <div>
+                    <span>@Model.SuccessMessage</span>
+                    <p class="mt-2">
+                        <a href="/Login" class="font-semibold underline">Click here to login →</a>
+                    </p>
                 </div>
             </div>
-        </div>
+        }
 
-        <div class="setup-image-wrap">
-            <div class="w-full max-w-[300px] md:max-w-none rounded-2xl overflow-hidden shadow-xl border border-primary/5 bg-white">
-                <img alt="High-tech face recognition biometric scan illustration"
-                     class="w-full h-full object-contain"
-                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5R0Vu1IpYlYxSDsfRvBhLmzB4C_NCPV2YJt5KCldIgirAmMjB3OVsjT74s-lH0IA_qYY4HX8ro0a2qkAF104A60eR7wtRbeMApNuseFJdjhncxhTMpuVakLDikNN-6jk3xt7TGtZrMbhQmC0BKZQNhS55sKJ-AMQrhQj9mDEJLNNv-e7kagb7MnGY5gK1RYTRuqfHtALkX_FllN7gg1SK0Y-2fbL9F51cN027_nWi6y5D3tCm5xViaIPTdXu3f0HI1DlHkehzIfJU" />
+        <!-- Admin Already Exists Banner -->
+        @if (Model.AdminExists)
+        {
+            <div class="flex items-start gap-2 px-4 py-3 mb-sm rounded-lg bg-surface-container border border-primary/20 text-on-surface-variant font-label-sm text-label-sm">
+                <span class="material-symbols-outlined text-[18px] mt-px shrink-0 text-primary">info</span>
+                <span>
+                    An admin account already exists. Please
+                    <a href="/Login" class="text-primary font-semibold hover:underline">login here</a>.
+                </span>
             </div>
-        </div>
+        }
+        else
+        {
+            <!-- Register Form -->
+            <form method="post" asp-page="Setup" id="setupForm" class="space-y-sm">
+                @Html.AntiForgeryToken()
 
-        <div class="flex items-center gap-xs pt-md md:pt-0 shrink-0">
-            <span class="w-2 h-2 rounded-full bg-primary"></span>
-            <span class="font-label-sm text-[10px] md:text-label-sm text-primary font-bold tracking-widest uppercase">Secured by Avivanext</span>
-        </div>
-    </section>
-
-    <!-- ── Right Section: Registration Form ── -->
-    <section class="setup-right flex-grow flex items-start md:items-center justify-center bg-surface-container-lowest p-md md:p-xl relative overflow-y-auto">
-        <div class="w-full max-w-lg flex flex-col justify-center py-md">
-
-            <!-- Error Message -->
-            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
-            {
-                <div class="alert-error flex items-start gap-2 px-4 py-3 mb-md rounded-lg font-label-sm text-label-sm">
-                    <span class="material-symbols-outlined text-[18px] mt-px shrink-0">error</span>
-                    <span>@Model.ErrorMessage</span>
-                </div>
-            }
-
-            <!-- Success Message -->
-            @if (!string.IsNullOrEmpty(Model.SuccessMessage))
-            {
-                <div class="alert-success flex items-start gap-2 px-4 py-3 mb-md rounded-lg font-label-sm text-label-sm">
-                    <span class="material-symbols-outlined text-[18px] mt-px shrink-0">check_circle</span>
-                    <div>
-                        <span>@Model.SuccessMessage</span>
-                        <p class="mt-2">
-                            <a href="/Login" class="font-semibold underline">Click here to login →</a>
-                        </p>
-                    </div>
-                </div>
-            }
-
-            <!-- Admin Already Exists Banner -->
-            @if (Model.AdminExists)
-            {
-                <div class="flex items-start gap-2 px-4 py-3 mb-md rounded-lg bg-surface-container border border-primary/20 text-on-surface-variant font-label-sm text-label-sm">
-                    <span class="material-symbols-outlined text-[18px] mt-px shrink-0 text-primary">info</span>
-                    <span>
-                        An admin account already exists. Please
-                        <a href="/Login" class="text-primary font-semibold hover:underline">login here</a>.
-                    </span>
-                </div>
-            }
-            else
-            {
-                <form method="post" asp-page="Setup" id="setupForm" class="space-y-md">
-                    @Html.AntiForgeryToken()
-
-                    <div class="mb-sm">
-                        <h2 class="text-headline-md font-headline-md text-on-surface">Account Details</h2>
-                        <div class="h-1 w-12 bg-primary mt-xs rounded-full"></div>
-                    </div>
-
-                    <!-- Username -->
-                    <div class="space-y-xs">
-                        <label class="font-label-sm text-label-sm text-on-surface-variant" for="username">Username</label>
-                        <input class="form-input w-full px-md py-sm rounded-lg font-body-md text-body-md"
+                <!-- Username -->
+                <div class="flex flex-col gap-xs">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant ml-1" for="username">Username</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">person</span>
+                        <input class="form-input w-full pl-10 pr-4 py-3 bg-surface-bright rounded-lg font-body-md text-body-md text-on-surface"
                                type="text"
                                id="username"
                                name="Username"
-                               placeholder="aviva_admin"
+                               placeholder="Enter a username"
                                value="@Model.Username"
                                required
                                minlength="3"
                                maxlength="50"
-                               autocomplete="username" />
-                        <p class="text-[12px] text-outline font-label-sm">This will be your unique identifier within the system.</p>
+                               autocomplete="username"
+                               autofocus />
                     </div>
+                </div>
 
-                    <!-- Email -->
-                    <div class="space-y-xs">
-                        <label class="font-label-sm text-label-sm text-on-surface-variant" for="email">Email Address</label>
-                        <input class="form-input w-full px-md py-sm rounded-lg font-body-md text-body-md"
+                <!-- Email -->
+                <div class="flex flex-col gap-xs">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant ml-1" for="email">Email Address</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">mail</span>
+                        <input class="form-input w-full pl-10 pr-4 py-3 bg-surface-bright rounded-lg font-body-md text-body-md text-on-surface"
                                type="email"
                                id="email"
                                name="Email"
-                               placeholder="admin@company.com"
+                               placeholder="Enter your email"
                                value="@Model.Email"
                                required
                                autocomplete="email" />
-                        <p class="text-[12px] text-outline font-label-sm">Used for password recovery and critical system alerts.</p>
                     </div>
+                </div>
 
-                    <!-- Password + Confirm Grid -->
-                    <div class="pw-grid grid grid-cols-1 sm:grid-cols-2 gap-md">
-                        <div class="space-y-xs">
-                            <label class="font-label-sm text-label-sm text-on-surface-variant" for="password">Password</label>
-                            <input class="form-input w-full px-md py-sm rounded-lg font-body-md text-body-md"
-                                   type="password"
-                                   id="password"
-                                   name="Password"
-                                   placeholder="••••••••"
-                                   required
-                                   minlength="8"
-                                   autocomplete="new-password" />
-                        </div>
-                        <div class="space-y-xs">
-                            <label class="font-label-sm text-label-sm text-on-surface-variant" for="confirmPassword">Confirm Password</label>
-                            <input class="form-input w-full px-md py-sm rounded-lg font-body-md text-body-md"
-                                   type="password"
-                                   id="confirmPassword"
-                                   name="ConfirmPassword"
-                                   placeholder="••••••••"
-                                   required
-                                   autocomplete="new-password" />
-                        </div>
+                <!-- Password -->
+                <div class="flex flex-col gap-xs">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant ml-1" for="password">Password</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">lock</span>
+                        <input class="form-input w-full pl-10 pr-4 py-3 bg-surface-bright rounded-lg font-body-md text-body-md text-on-surface"
+                               type="password"
+                               id="password"
+                               name="Password"
+                               placeholder="••••••••"
+                               required
+                               minlength="8"
+                               autocomplete="new-password" />
                     </div>
+                </div>
 
-                    <!-- Password Requirements -->
-                    <div class="bg-surface-container p-sm rounded-lg">
-                        <p class="font-label-sm text-[12px] text-on-surface-variant mb-xs">Password must include:</p>
-                        <ul class="grid grid-cols-2 gap-xs">
-                            <li class="flex items-center text-[11px] text-outline font-label-sm">
-                                <span class="material-symbols-outlined text-[14px] mr-1 text-secondary">check_circle</span>
-                                8+ characters
-                            </li>
-                            <li class="flex items-center text-[11px] text-outline font-label-sm">
-                                <span class="material-symbols-outlined text-[14px] mr-1">radio_button_unchecked</span>
-                                Special symbol
-                            </li>
-                            <li class="flex items-center text-[11px] text-outline font-label-sm">
-                                <span class="material-symbols-outlined text-[14px] mr-1">radio_button_unchecked</span>
-                                Upper/Lower case
-                            </li>
-                            <li class="flex items-center text-[11px] text-outline font-label-sm">
-                                <span class="material-symbols-outlined text-[14px] mr-1">radio_button_unchecked</span>
-                                Number
-                            </li>
-                        </ul>
+                <!-- Confirm Password -->
+                <div class="flex flex-col gap-xs">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant ml-1" for="confirmPassword">Confirm Password</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">lock_reset</span>
+                        <input class="form-input w-full pl-10 pr-4 py-3 bg-surface-bright rounded-lg font-body-md text-body-md text-on-surface"
+                               type="password"
+                               id="confirmPassword"
+                               name="ConfirmPassword"
+                               placeholder="••••••••"
+                               required
+                               autocomplete="new-password" />
                     </div>
+                </div>
 
-                    <!-- Role Selection -->
-                    <div class="space-y-xs">
-                        <label class="font-label-sm text-label-sm text-on-surface-variant" for="role">System Role</label>
-                        <div class="relative">
-                            <select class="form-input w-full px-md py-sm rounded-lg font-body-md text-body-md appearance-none bg-no-repeat bg-[right_1rem_center]"
-                                    id="role"
-                                    name="Role"
-                                    required
-                                    style="background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23737688%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E');">
-                                <option value="Admin" selected="@(Model.Role == "Admin" ? "selected" : null)">Admin (Full Access)</option>
-                                <option value="Manager" selected="@(Model.Role == "Manager" ? "selected" : null)">Manager (Read/Write)</option>
-                                <option value="Viewer" selected="@(Model.Role == "Viewer" ? "selected" : null)">Viewer (Read Only)</option>
-                            </select>
-                        </div>
+                <!-- System Role -->
+                <div class="flex flex-col gap-xs">
+                    <label class="font-label-sm text-label-sm text-on-surface-variant ml-1" for="role">System Role</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">shield_person</span>
+                        <select class="form-input w-full pl-10 pr-4 py-3 bg-surface-bright rounded-lg font-body-md text-body-md text-on-surface appearance-none bg-no-repeat bg-[right_1rem_center]"
+                                id="role"
+                                name="Role"
+                                required
+                                style="background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23737688%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E');">
+                            <option value="Admin" selected="@(Model.Role == "Admin" ? "selected" : null)">Admin</option>
+                            <option value="Manager" selected="@(Model.Role == "Manager" ? "selected" : null)">Manager</option>
+                            <option value="Viewer" selected="@(Model.Role == "Viewer" ? "selected" : null)">Viewer</option>
+                        </select>
                     </div>
+                </div>
 
-                    <!-- Submit + Back -->
-                    <div class="pt-md flex flex-col items-center gap-md">
-                        <button class="w-full bg-primary text-on-primary py-sm rounded-lg font-medium text-body-md hover:bg-on-primary-fixed-variant transition-colors shadow-md active:scale-[0.98]"
-                                type="submit"
-                                id="submitBtn">
-                            Create Admin Account
-                        </button>
-                        <a class="inline-flex items-center text-primary font-label-sm text-label-sm hover:underline group transition-all" href="/Login">
-                            Back to Login
-                        </a>
-                    </div>
+                <!-- Submit Button -->
+                <button type="submit"
+                        class="w-full py-3 bg-primary text-on-primary font-label-sm text-label-sm font-semibold rounded-lg shadow-sm border border-primary active:scale-[0.98] transition-transform flex items-center justify-center"
+                        id="submitBtn">
+                    Create Admin Account
+                </button>
 
-                </form>
-            }
+                <!-- Back to Login -->
+                <div class="pt-xs text-center">
+                    <span class="font-label-sm text-label-sm text-on-surface-variant">Already have an account? </span>
+                    <a class="font-label-sm text-label-sm text-primary font-semibold hover:underline" href="/Login">
+                        Sign in
+                    </a>
+                </div>
 
-        </div>
-    </section>
+            </form>
+        }
 
+    </div>
 </main>
+
+<!-- Footer -->
+<footer class="site-footer fixed bottom-0 w-full flex items-center justify-center px-8 py-4">
+    <div class="font-inter text-xs tracking-wide text-slate-500 text-center">
+        © 2026 AvivaNext. All rights reserved.
+    </div>
+</footer>
+
+<!-- Decorative Background -->
+<div class="fixed inset-0 -z-10 opacity-10 pointer-events-none">
+    <img alt=""
+         class="w-full h-full object-cover"
+         src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYqNeOoTg3ETqrQ3t4up_NINPyZC44sr4BxUh_IgRmET-H9T4g0El8XtQ1Th4tJTECdwopY9DxIDwhN98zd61jyQVrI5niahInMeB2cr8nlN8dI2TVzaReWz9_U_Alck2W3IfAqgoXqLvY63QXMR-a4X729f8UmvNSCK0UnryovvTlTU5QWVU6WcVJXNhuKePks5JDkCNxqOVok-0VWGsk_7mryIvKg_PfM-i4RTEyXcT395DRYbEybxJIA0MoGzr5M4odBURq4AA8" />
+</div>

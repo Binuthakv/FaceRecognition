@@ -11,7 +11,7 @@
 <!-- Page Header -->
 <div class="mb-12 flex flex-col gap-1">
     <h1 class="font-semibold" style="font-size:32px; line-height:1.2; letter-spacing:-0.01em; color:#131b2e;">User Working Hours</h1>
-    <p style="color:#737688;">View and analyze user working hours with flexible filtering options</p>
+    <p style="color:#737688;">Review and evaluate user work hour patterns</p>
 </div>
 
 <!-- Processing Summary -->
@@ -40,88 +40,87 @@
 }
 
 <!-- Filter Section -->
-<div class="glass-card rounded-xl p-6 mb-8" style="box-shadow:0 4px 20px 0 rgba(0,82,255,0.05);">
-    <div class="flex items-center gap-2 mb-6">
-        <span class="material-symbols-outlined" style="color:#003ec7;">filter_list</span>
-        <h2 class="font-semibold" style="color:#131b2e; font-size:18px;">Filter Records</h2>
-    </div>
-    <form method="get" asp-page="UserWorkingHoursList">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="flex flex-col gap-2">
-                <label for="startDate" class="text-xs font-semibold uppercase tracking-wider" style="color:#737688;">Start Date</label>
-                <input type="date" id="startDate" name="StartDate"
-                       value="@Model.StartDate?.ToString("yyyy-MM-dd")"
-                       class="form-input px-4 py-3 rounded-lg text-sm" />
-            </div>
-            <div class="flex flex-col gap-2">
-                <label for="endDate" class="text-xs font-semibold uppercase tracking-wider" style="color:#737688;">End Date</label>
-                <input type="date" id="endDate" name="EndDate"
-                       value="@Model.EndDate?.ToString("yyyy-MM-dd")"
-                       class="form-input px-4 py-3 rounded-lg text-sm" />
-            </div>
-            <div class="flex flex-col gap-2">
-                <label for="filterUserId" class="text-xs font-semibold uppercase tracking-wider" style="color:#737688;">User ID</label>
-                <div class="relative">
-                    <select id="filterUserId" name="FilterUserId"
-                            class="form-input w-full px-4 py-3 rounded-lg text-sm appearance-none">
-                        <option value="">-- All Users --</option>
-                        @foreach (var user in Model.Users)
-                        {
-                            <option value="@user.UserId" selected="@(Model.FilterUserId == user.UserId)">
-                                @user.UserName
-                            </option>
-                        }
-                    </select>
-                    <span class="material-symbols-outlined absolute right-3 top-3 pointer-events-none" style="color:#737688; font-size:20px;">expand_more</span>
-                </div>
-            </div>
+<div class="flex items-center justify-end gap-2 mb-6" style="flex-wrap:nowrap;">
+
+    <!-- Date & User filters -->
+    <form method="get" asp-page="UserWorkingHoursList" class="flex items-center gap-2" style="flex-wrap:nowrap;">
+        <input type="date" id="startDate" name="StartDate"
+               value="@Model.StartDate?.ToString("yyyy-MM-dd")"
+               class="form-input px-3 py-2 rounded-lg text-sm"
+               style="width:145px; flex-shrink:0; border:1px solid #c3c5d9;" />
+
+        <input type="date" id="endDate" name="EndDate"
+               value="@Model.EndDate?.ToString("yyyy-MM-dd")"
+               class="form-input px-3 py-2 rounded-lg text-sm"
+               style="width:145px; flex-shrink:0; border:1px solid #c3c5d9;" />
+
+        <div class="relative" style="flex-shrink:0;">
+            <select id="filterUserId" name="FilterUserId"
+                    class="form-input px-3 py-2 rounded-lg text-sm appearance-none"
+                    style="width:150px; border:1px solid #c3c5d9; padding-right:28px;">
+                <option value="">-- All Users --</option>
+                @foreach (var user in Model.Users)
+                {
+                    <option value="@user.UserId" selected="@(Model.FilterUserId == user.UserId)">
+                        @user.UserName
+                    </option>
+                }
+            </select>
+            <span class="material-symbols-outlined absolute right-2 top-2 pointer-events-none"
+                  style="color:#737688; font-size:18px;">expand_more</span>
         </div>
+
         <input type="hidden" name="ViewType" value="@Model.ViewType" />
-        <div class="flex flex-wrap items-center gap-3 mt-8">
-            <button type="submit"
-                    class="flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold"
-                    style="background:#003ec7; color:#fff;">
-                <span class="material-symbols-outlined" style="font-size:18px;">search</span>
-                Apply Filters
-            </button>
-            <a href="/UserWorkingHoursList"
-                   class="flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold"
-                   style="border:1px solid #c3c5d9; color:#434656; background:#fff;">
-                <span class="material-symbols-outlined" style="font-size:18px;">close</span>
-                Clear Filters
-            </a>
-        </div>
+
+        <button type="submit"
+                class="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium"
+                style="background:#003ec7; color:#fff; flex-shrink:0;">
+            <span class="material-symbols-outlined" style="font-size:15px;">search</span>
+            Apply
+        </button>
+
+        <a href="/UserWorkingHoursList"
+               class="flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium"
+               style="border:1px solid #c3c5d9; color:#434656; background:#fff; flex-shrink:0;">
+            <span class="material-symbols-outlined" style="font-size:15px;">close</span>
+            Clear
+        </a>
     </form>
-</div>
-<!-- View Type Selection -->
-<div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-    <div>
-        <h3 class="text-xs font-bold uppercase tracking-wider mb-3" style="color:#737688;">Select View Type</h3>
-        <div class="inline-flex p-1 rounded-xl gap-1" style="background:rgba(234,237,255,0.5); border:1px solid rgba(195,197,217,0.3);">
-            @foreach (var vt in new[] { "daily", "weekly", "monthly" })
-            {
-                <form method="get" asp-page="UserWorkingHoursList" style="display:contents;">
-                    <input type="hidden" name="viewType" value="@vt" />
-                    <input type="hidden" name="startDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
-                    <input type="hidden" name="endDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
-                    <input type="hidden" name="filterUserId" value="@Model.FilterUserId" />
-                    <button type="submit"
-                            class="px-5 py-2 rounded-lg text-sm font-semibold transition-all capitalize"
-                            style="@(Model.ViewType == vt ? "background:#003ec7; color:#fff;" : "color:#737688;")">
-                        @(char.ToUpper(vt[0]) + vt.Substring(1))
-                    </button>
-                </form>
-            }
-        </div>
+
+    <!-- Divider -->
+    <div style="width:1px; height:28px; background:#c3c5d9; flex-shrink:0; margin:0 4px;"></div>
+
+    <!-- View type toggle -->
+    <div class="inline-flex p-1 rounded-xl gap-1" style="background:rgba(234,237,255,0.5); border:1px solid rgba(195,197,217,0.3); flex-shrink:0;">
+        @foreach (var vt in new[] { "daily", "weekly", "monthly" })
+        {
+            <form method="get" asp-page="UserWorkingHoursList" style="display:contents;">
+                <input type="hidden" name="viewType" value="@vt" />
+                <input type="hidden" name="startDate" value="@Model.StartDate?.ToString("yyyy-MM-dd")" />
+                <input type="hidden" name="endDate" value="@Model.EndDate?.ToString("yyyy-MM-dd")" />
+                <input type="hidden" name="filterUserId" value="@Model.FilterUserId" />
+                <button type="submit"
+                        class="px-4 py-1.5 rounded-lg text-sm font-semibold capitalize"
+                        style="@(Model.ViewType == vt ? "background:#003ec7; color:#fff;" : "color:#737688;")">
+                    @(char.ToUpper(vt[0]) + vt.Substring(1))
+                </button>
+            </form>
+        }
     </div>
-    <div class="flex items-center gap-2">
+
+    <!-- Divider -->
+    <div style="width:1px; height:28px; background:#c3c5d9; flex-shrink:0; margin:0 4px;"></div>
+
+    <!-- Action icons — pushed to end -->
+    <div class="flex items-center gap-1" style="flex-shrink:0;">
         <button class="p-2 rounded-lg" style="color:#737688;">
-            <span class="material-symbols-outlined">download</span>
+            <span class="material-symbols-outlined" style="font-size:20px;">download</span>
         </button>
         <button class="p-2 rounded-lg" style="color:#737688;">
-            <span class="material-symbols-outlined">print</span>
+            <span class="material-symbols-outlined" style="font-size:20px;">print</span>
         </button>
     </div>
+
 </div>
 
 <!-- Table Card -->

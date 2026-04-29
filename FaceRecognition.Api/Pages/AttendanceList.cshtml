@@ -15,17 +15,17 @@
 <!-- Page Header -->
 <div class="mb-12 flex flex-col gap-1">
     <h1 class="font-semibold" style="font-size:32px; line-height:1.2; letter-spacing:-0.01em; color:#131b2e;">Attendance Records</h1>
-    <p style="color:#737688;">View all attendance records from the Face Recognition System</p>
+    <p style="color:#737688;">View all attendance records captured by the Face Recognition System</p>
 </div>
 
 <!-- Alert Messages -->
-@if (!string.IsNullOrEmpty(Model.StatusMessage))
+@* @if (!string.IsNullOrEmpty(Model.StatusMessage))
 {
     <div class="alert-status-green mb-6 flex items-center gap-3 px-4 py-3 rounded-xl">
         <span class="material-symbols-outlined" style="font-size:20px;">check_circle</span>
         <span class="text-sm font-medium">@Model.StatusMessage</span>
     </div>
-}
+} *@
 @if (!string.IsNullOrEmpty(Model.ErrorMessage))
 {
     <div class="alert-status-red mb-6 flex items-center gap-3 px-4 py-3 rounded-xl">
