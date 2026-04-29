@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authentication;
 using FaceRecognitionApp.Api.Services;
 
+
 namespace FaceRecognitionApp.Api.Pages;
 
-[Authorize(AuthenticationSchemes = "AdminCookie")]
+[Authorize(AuthenticationSchemes = "AdminCookie", Roles = "Admin,Manager,Viewer")]
 public class DashboardModel : PageModel
 {
     private readonly IUserDatabaseService _databaseService;

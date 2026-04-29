@@ -82,7 +82,9 @@
                 <VerticalStackLayout Spacing="14" MaximumWidthRequest="520">
 
                     <!-- Register -->
-                    <Border Style="{StaticResource LandingCardStyle}">
+                    <Border x:Name="RegisterCard"
+                            Style="{StaticResource LandingCardStyle}"
+                            IsVisible="False">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="22"/>
                         </Border.StrokeShape>
@@ -116,9 +118,11 @@
                     </Border>
 
                     <!-- Verify (gradient hero card) -->
-                    <Border StrokeThickness="0"
+                    <Border x:Name="VerifyCard"
+                            StrokeThickness="0"
                             Padding="14"
-                            MinimumHeightRequest="104">
+                            MinimumHeightRequest="104"
+                            IsVisible="False">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="22"/>
                         </Border.StrokeShape>
@@ -160,7 +164,9 @@
                     </Border>
 
                     <!-- Users -->
-                    <Border Style="{StaticResource LandingCardStyle}">
+                    <Border x:Name="UsersCard"
+                            Style="{StaticResource LandingCardStyle}"
+                            IsVisible="False">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="22"/>
                         </Border.StrokeShape>

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace FaceRecognitionApp.Api.Pages;
 
-[Authorize(AuthenticationSchemes = "AdminCookie")]
+[Authorize(AuthenticationSchemes = "AdminCookie", Roles = "Admin")]
 public class AdminUsersListModel : PageModel
 {
     private readonly IUserDatabaseService _userDatabaseService;

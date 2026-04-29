@@ -33,6 +33,13 @@
 
     string MobileNavCls(string key) =>
         activeNav == key ? "mobile-nav-link mobile-nav-link-active" : "mobile-nav-link";
+
+    // Role-based menu visibility
+    bool canViewDashboard = userRole == "Viewer" || userRole == "Manager" || userRole == "Admin";
+    bool canViewEmployees = userRole == "Manager" || userRole == "Admin";
+    bool canViewAttendance = userRole == "Manager" || userRole == "Admin";
+    bool canViewAnalysis = userRole == "Admin";
+    bool canViewAdminUsers = userRole == "Admin";
 }
 
 <!DOCTYPE html>
@@ -112,26 +119,41 @@
         <!-- Nav -->
         <div class="p-4 lg:p-6 overflow-y-auto flex-1">
             <nav class="space-y-1">
-                <a class="@NavCls("dashboard")" href="/Dashboard">
-                    <span class="material-symbols-outlined">dashboard</span>
-                    Dashboard
-                </a>
-                <a class="@NavCls("employees")" href="/UsersList">
-                    <span class="material-symbols-outlined">people</span>
-                    Employees
-                </a>
-                <a class="@NavCls("attendance")" href="/AttendanceList">
-                    <span class="material-symbols-outlined">event_available</span>
-                    Attendance
-                </a>
-                <a class="@NavCls("analysis")" href="/UserWorkingHoursList">
-                    <span class="material-symbols-outlined">query_stats</span>
-                    Analysis
-                </a>
-                <a class="@NavCls("adminusers")" href="/AdminUsersList">
-                    <span class="material-symbols-outlined">people</span>
-                    Users
-                </a>
+                @if (canViewDashboard)
+                {
+                    <a class="@NavCls("dashboard")" href="/Dashboard">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        Dashboard
+                    </a>
+                }
+                @if (canViewEmployees)
+                {
+                    <a class="@NavCls("employees")" href="/UsersList">
+                        <span class="material-symbols-outlined">people</span>
+                        Employees
+                    </a>
+                }
+                @if (canViewAttendance)
+                {
+                    <a class="@NavCls("attendance")" href="/AttendanceList">
+                        <span class="material-symbols-outlined">event_available</span>
+                        Attendance
+                    </a>
+                }
+                @if (canViewAnalysis)
+                {
+                    <a class="@NavCls("analysis")" href="/UserWorkingHoursList">
+                        <span class="material-symbols-outlined">query_stats</span>
+                        Analysis
+                    </a>
+                }
+                @if (canViewAdminUsers)
+                {
+                    <a class="@NavCls("adminusers")" href="/AdminUsersList">
+                        <span class="material-symbols-outlined">people</span>
+                        Users
+                    </a>
+                }
             </nav>
         </div>
     </aside>
@@ -150,22 +172,34 @@
           ══════════════════════════════════════════ -->
     <nav class="mobile-nav md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 safe-bottom px-2 rounded-t-2xl shadow-lg"
          style="padding-bottom: env(safe-area-inset-bottom, 0px);">
-        <a class="@MobileNavCls("dashboard")" href="/Dashboard">
-            <span class="material-symbols-outlined" style="font-size:22px;">home</span>
-            <span>Home</span>
-        </a>
-        <a class="@MobileNavCls("users")" href="/UsersList">
-            <span class="material-symbols-outlined" style="font-size:22px;">people</span>
-            <span>Users</span>
-        </a>
-        <a class="@MobileNavCls("attendance")" href="/AttendanceList">
-            <span class="material-symbols-outlined" style="font-size:22px;">event_available</span>
-            <span>Attendance</span>
-        </a>
-        <a class="@MobileNavCls("analysis")" href="/UserWorkingHoursList">
-            <span class="material-symbols-outlined" style="font-size:22px;">query_stats</span>
-            <span>Analysis</span>
-        </a>
+        @if (canViewDashboard)
+        {
+            <a class="@MobileNavCls("dashboard")" href="/Dashboard">
+                <span class="material-symbols-outlined" style="font-size:22px;">home</span>
+                <span>Home</span>
+            </a>
+        }
+        @if (canViewEmployees)
+        {
+            <a class="@MobileNavCls("users")" href="/UsersList">
+                <span class="material-symbols-outlined" style="font-size:22px;">people</span>
+                <span>Users</span>
+            </a>
+        }
+        @if (canViewAttendance)
+        {
+            <a class="@MobileNavCls("attendance")" href="/AttendanceList">
+                <span class="material-symbols-outlined" style="font-size:22px;">event_available</span>
+                <span>Attendance</span>
+            </a>
+        }
+        @if (canViewAnalysis)
+        {
+            <a class="@MobileNavCls("analysis")" href="/UserWorkingHoursList">
+                <span class="material-symbols-outlined" style="font-size:22px;">query_stats</span>
+                <span>Analysis</span>
+            </a>
+        }
     </nav>
 
     <!-- Shared JS -->
