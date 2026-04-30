@@ -355,7 +355,7 @@
                                             ImageSource="icon_camera.png"
                                             ContentLayout="Left,8"
                                             Style="{StaticResource CaptureButtonStyle}"
-                                            Command="{Binding StartCapturePhoto1Command}" />
+                                            Command="{Binding StartCapturePhoto2Command}" />
 
                                             <!-- Select -->
                                             <Button Grid.Column="1"
@@ -363,7 +363,7 @@
                                             ImageSource="icon_upload.png"
                                             ContentLayout="Left,8"
                                             Style="{StaticResource SelectButtonStyle}"
-                                            Command="{Binding PickPhoto1Command}" />
+                                            Command="{Binding PickPhoto2Command}" />
 
                                         </Grid>
                                     </VerticalStackLayout>
@@ -452,7 +452,7 @@
                                             ImageSource="icon_camera.png"
                                             ContentLayout="Left,8"
                                             Style="{StaticResource CaptureButtonStyle}"
-                                            Command="{Binding StartCapturePhoto1Command}" />
+                                            Command="{Binding StartCapturePhoto3Command}" />
 
                                             <!-- Select -->
                                             <Button Grid.Column="1"
@@ -460,7 +460,7 @@
                                             ImageSource="icon_upload.png"
                                             ContentLayout="Left,8"
                                             Style="{StaticResource SelectButtonStyle}"
-                                            Command="{Binding PickPhoto1Command}" />
+                                            Command="{Binding PickPhoto3Command}" />
 
                                         </Grid>
                                     </VerticalStackLayout>

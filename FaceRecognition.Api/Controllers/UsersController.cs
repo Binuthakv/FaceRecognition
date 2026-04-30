@@ -50,66 +50,114 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<UserRegistrationResponse>> Save(
         [FromBody] UserRegistration user, CancellationToken ct)
     {
-        // Save user first
-        var userId = await _db.SaveUserAsync(user);
-
+        int userId = 0;
         // Extract embeddings from photos (if available)
         var embeddingsExtracted = 0;
         float[]? emb1 = null, emb2 = null, emb3 = null;
-
+        var errors = new List<PhotoEmbeddingError>();
         if (user.Photo1 is { Length: > 0 })
+        {
             emb1 = await _faceService.ExtractEmbeddingAsync(user.Photo1, ct);
+            if (emb1 is null)
+                errors.Add(new PhotoEmbeddingError(1, "Failed to extract face embedding from Photo 1"));
+        }
 
         if (user.Photo2 is { Length: > 0 })
+        {
             emb2 = await _faceService.ExtractEmbeddingAsync(user.Photo2, ct);
+            if (emb2 is null)
+                errors.Add(new PhotoEmbeddingError(2, "Failed to extract face embedding from Photo 2"));
+        }
 
         if (user.Photo3 is { Length: > 0 })
+        {
             emb3 = await _faceService.ExtractEmbeddingAsync(user.Photo3, ct);
+            if (emb3 is null)
+                errors.Add(new PhotoEmbeddingError(3, "Failed to extract face embedding from Photo 3"));
+        }
 
         // Store all embeddings
-        if (emb1 is not null || emb2 is not null || emb3 is not null)
+        if (emb1 is not null && emb2 is not null && emb3 is not null)
         {
+            // Save user first
+            userId = await _db.SaveUserAsync(user);
+
             embeddingsExtracted = await _db.SaveUserEmbeddingsAsync(user.UserId, emb1, emb2, emb3);
-        }
-        else
-        {
 
-        }
-
-        var response = new UserRegistrationResponse(
+            var response = new UserRegistrationResponse(
             userId,//user.Id,
             user.UserId,
             user.Name,
             embeddingsExtracted);
 
-        return CreatedAtAction(nameof(GetById), new { id = userId }, response);
+            return CreatedAtAction(nameof(GetById), new { id = userId }, response);
+        }
+        else
+        {
+            var validationResponse = new PhotoEmbeddingValidationResponse(
+             user.UserId,
+             user.Name,
+             errors,
+             "No valid face embeddings could be extracted from any photos");
+
+            return BadRequest(validationResponse);
+        }
+
+
     }
 
     [HttpPut("{id:int}")]
     public async Task<ActionResult<int>> Update(int id, [FromBody] UserRegistration user, CancellationToken ct)
     {
+        var errors = new List<PhotoEmbeddingError>();
         if (user.Id != id) return BadRequest("ID mismatch.");
-        var result = await _db.UpdateUserAsync(user);
+
         // Extract and update embeddings from photos (if available)
         var embeddingsExtracted = 0;
         float[]? emb1 = null, emb2 = null, emb3 = null;
 
         if (user.Photo1 is { Length: > 0 })
+        {
             emb1 = await _faceService.ExtractEmbeddingAsync(user.Photo1, ct);
+            if (emb1 is null)
+                errors.Add(new PhotoEmbeddingError(1, "Failed to extract face embedding from Photo 1"));
+        }
 
         if (user.Photo2 is { Length: > 0 })
+        {
             emb2 = await _faceService.ExtractEmbeddingAsync(user.Photo2, ct);
+            if (emb2 is null)
+                errors.Add(new PhotoEmbeddingError(2, "Failed to extract face embedding from Photo 2"));
+        }
 
         if (user.Photo3 is { Length: > 0 })
+        {
             emb3 = await _faceService.ExtractEmbeddingAsync(user.Photo3, ct);
-
+            if (emb3 is null)
+                errors.Add(new PhotoEmbeddingError(3, "Failed to extract face embedding from Photo 3"));
+        }
+        var result = await _db.UpdateUserAsync(user);
         // Store all embeddings
         if (emb1 is not null || emb2 is not null || emb3 is not null)
         {
+            //var result = await _db.UpdateUserAsync(user);
             embeddingsExtracted = await _db.SaveUserEmbeddingsAsync(user.UserId, emb1, emb2, emb3);
+
         }
         return Ok(result);
+        //else
+        //{
+        //    var validationResponse = new PhotoEmbeddingValidationResponse(
+        //     user.UserId,
+        //     user.Name,
+        //     errors,
+        //     "No valid face embeddings could be extracted from any photos");
+
+        //    return BadRequest(validationResponse);
+        //}
+
     }
+
 
     /// <summary>
     /// Updates the face embeddings for an existing user by re-extracting from their photos.

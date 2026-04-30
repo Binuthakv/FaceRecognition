@@ -65,4 +65,6 @@ public static class MauiProgram
 		services.AddTransient<UserRegistrationPage>();
 		services.AddTransient<UsersListPage>();
 	}
+    //Apk genration command:
+    //dotnet publish -f net10.0-android -c Debug -p:AndroidPackageFormat=apk -p:AndroidKeyStore=false
 }

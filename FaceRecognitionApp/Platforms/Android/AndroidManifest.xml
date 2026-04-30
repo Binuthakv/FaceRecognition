@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.companyname.facerecognitionapp">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="AvivaNext.facerecognitionapp">
 	<application
 		android:hardwareAccelerated="true"
 		android:allowBackup="true" 

@@ -399,7 +399,7 @@ public partial class UserRegistrationViewModel : ObservableObject
                     "Update Successful",
                     $"User '{Name}' has been updated!\n\nUser ID: {UserId}",
                     "OK");
-                await Shell.Current.GoToAsync("///UsersPage");
+                await Shell.Current.GoToAsync("///UsersListPage");
             }
             else
             {

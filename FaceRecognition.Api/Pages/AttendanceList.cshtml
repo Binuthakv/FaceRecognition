@@ -95,7 +95,7 @@
 
     <!-- Table -->
     <div class="overflow-x-auto">
-        @if (Model.AttendanceRecords.Any())
+        @if (Model.PaginatedRecords.Any())
         {
             <table class="w-full text-left" id="attendanceTable">
                 <thead>
@@ -107,7 +107,7 @@
                     </tr>
                 </thead>
                 <tbody id="tableBody" style="border-top:1px solid rgba(195,197,217,0.3);">
-                    @foreach (var record in Model.AttendanceRecords)
+                    @foreach (var record in Model.PaginatedRecords)
                     {
                         <tr class="table-row">
                             <td class="px-6 py-4 font-medium" style="color:#003ec7;">@record.UserId</td>
@@ -144,10 +144,104 @@
         }
     </div>
 
-    <!-- Table Footer -->
-    <div class="table-footer-bar px-6 py-4 border-t flex justify-between items-center">
+    <!-- Table Footer with Pagination -->
+    <div class="table-footer-bar px-6 py-4 border-t flex flex-col sm:flex-row justify-between items-center gap-4">
         <span class="text-xs font-medium" style="color:#737688;">
-            Showing @Model.AttendanceRecords.Count entries
+            @if (Model.TotalRecords > 0)
+            {
+                <text>Showing @((Model.PageNumber - 1) * 10 + 1) to @Math.Min(Model.PageNumber * 10, Model.TotalRecords) of @Model.TotalRecords entries</text>
+            }
+            else
+            {
+                <text>No entries</text>
+            }
         </span>
+
+        <!-- Pagination Controls -->
+        @if (Model.TotalPages > 1)
+        {
+            <div class="flex items-center gap-2">
+                <!-- Previous Page -->
+                @if (Model.PageNumber > 1)
+                {
+                    <a href="?pageNumber=@(Model.PageNumber - 1)"
+                       class="px-3 py-1 rounded-lg text-sm font-medium transition-all"
+                       style="background:#eaedff; color:#003ec7; border:1px solid #c3c5d9;">
+                        <span class="material-symbols-outlined" style="font-size:18px; vertical-align:middle;">chevron_left</span>
+                    </a>
+                }
+                else
+                {
+                    <button disabled
+                            class="px-3 py-1 rounded-lg text-sm font-medium"
+                            style="background:#f0f0f0; color:#c3c5d9; border:1px solid #e0e0e0; cursor:not-allowed;">
+                        <span class="material-symbols-outlined" style="font-size:18px; vertical-align:middle;">chevron_left</span>
+                    </button>
+                }
+
+                <!-- Page Numbers -->
+                <div class="flex items-center gap-1">
+                    @{
+                        int startPage = Math.Max(1, Model.PageNumber - 2);
+                        int endPage = Math.Min(Model.TotalPages, Model.PageNumber + 2);
+
+                        if (startPage > 1)
+                        {
+                            <a href="?pageNumber=1"
+                               class="px-2 py-1 rounded-lg text-xs font-medium transition-all"
+                               style="background:#fff; color:#003ec7; border:1px solid #c3c5d9;">1</a>
+                            if (startPage > 2)
+                            {
+                                <span style="color:#737688;">...</span>
+                            }
+                        }
+
+                        for (int i = startPage; i <= endPage; i++)
+                        {
+                            if (i == Model.PageNumber)
+                            {
+                                <span class="px-2 py-1 rounded-lg text-xs font-medium"
+                                      style="background:#003ec7; color:#fff;">@i</span>
+                            }
+                            else
+                            {
+                                <a href="?pageNumber=@i"
+                                   class="px-2 py-1 rounded-lg text-xs font-medium transition-all"
+                                   style="background:#fff; color:#003ec7; border:1px solid #c3c5d9;">@i</a>
+                            }
+                        }
+
+                        if (endPage < Model.TotalPages)
+                        {
+                            if (endPage < Model.TotalPages - 1)
+                            {
+                                <span style="color:#737688;">...</span>
+                            }
+                            <a href="?pageNumber=@Model.TotalPages"
+                               class="px-2 py-1 rounded-lg text-xs font-medium transition-all"
+                               style="background:#fff; color:#003ec7; border:1px solid #c3c5d9;">@Model.TotalPages</a>
+                        }
+                    }
+                </div>
+
+                <!-- Next Page -->
+                @if (Model.PageNumber < Model.TotalPages)
+                {
+                    <a href="?pageNumber=@(Model.PageNumber + 1)"
+                       class="px-3 py-1 rounded-lg text-sm font-medium transition-all"
+                       style="background:#eaedff; color:#003ec7; border:1px solid #c3c5d9;">
+                        <span class="material-symbols-outlined" style="font-size:18px; vertical-align:middle;">chevron_right</span>
+                    </a>
+                }
+                else
+                {
+                    <button disabled
+                            class="px-3 py-1 rounded-lg text-sm font-medium"
+                            style="background:#f0f0f0; color:#c3c5d9; border:1px solid #e0e0e0; cursor:not-allowed;">
+                        <span class="material-symbols-outlined" style="font-size:18px; vertical-align:middle;">chevron_right</span>
+                    </button>
+                }
+            </div>
+        }
     </div>
 </div>
