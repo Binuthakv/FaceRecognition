@@ -14,7 +14,15 @@ public class AttendanceListModel : PageModel
     private readonly IUserDatabaseService _userDatabaseService;
     private readonly ILogger<AttendanceListModel> _logger;
 
+    private const int PAGE_SIZE = 10;
+
+    [BindProperty(SupportsGet = true)]
+    public int PageNumber { get; set; } = 1;
+
     public List<AttendanceRecordViewModel> AttendanceRecords { get; set; } = new();
+    public List<AttendanceRecordViewModel> PaginatedRecords { get; set; } = new();
+    public int TotalPages { get; set; }
+    public int TotalRecords { get; set; }
     public string? StatusMessage { get; set; }
     public string? ErrorMessage { get; set; }
 
@@ -51,8 +59,24 @@ public class AttendanceListModel : PageModel
                 })
                 .ToList();
 
-            StatusMessage = $"Successfully loaded {AttendanceRecords.Count} attendance records.";
-            _logger.LogInformation("Attendance records retrieved: {Count}", AttendanceRecords.Count);
+            // Calculate pagination
+            TotalRecords = AttendanceRecords.Count;
+            TotalPages = (int)Math.Ceiling((double)TotalRecords / PAGE_SIZE);
+
+            // Validate page number
+            if (PageNumber < 1)
+                PageNumber = 1;
+            if (PageNumber > TotalPages && TotalPages > 0)
+                PageNumber = TotalPages;
+
+            // Get paginated records
+            PaginatedRecords = AttendanceRecords
+                .Skip((PageNumber - 1) * PAGE_SIZE)
+                .Take(PAGE_SIZE)
+                .ToList();
+
+            StatusMessage = $"Successfully loaded {TotalRecords} attendance records.";
+            _logger.LogInformation("Attendance records retrieved: {Count}", TotalRecords);
         }
         catch (Exception ex)
         {

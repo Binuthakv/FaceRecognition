@@ -84,7 +84,7 @@
                         <th class="px-6 py-4 font-medium">Actions</th>
                     </tr>
                 </thead>
-                <tbody style="border-top:1px solid rgba(195,197,217,0.3);">
+                    <tbody id="tableBody"  style="border-top:1px solid rgba(195,197,217,0.3);">
                     @foreach (var user in Model.Users)
                     {
                         <tr class="table-row">
@@ -138,7 +138,65 @@
     <!-- Table Footer -->
     <div class="table-footer-bar px-6 py-4 border-t flex justify-between items-center">
         <span class="text-xs font-medium" style="color:#737688;">
-            Showing @Model.Users.Count of @Model.TotalUsers Employees
+            Showing <span id="recordInfo"></span>
         </span>
-    </div>
+
+        <div class="flex items-center gap-2">
+            <button onclick="prevPage()"
+                    class="px-3 py-1 rounded-lg text-sm border"
+                    style="border-color:#c3c5d9;">
+                <
+                </button>
+
+                <span id="pageInfo" class="text-sm font-medium"></span>
+
+                <button onclick="nextPage()"
+                        class="px-3 py-1 rounded-lg text-sm border"
+                        style="border-color:#c3c5d9;">
+                    >
+                </button>
+            </div>
+        </div>
 </div>
+<script>
+    const rowsPerPage = 2;
+    let currentPage = 1;
+
+    const tableBody = document.getElementById("tableBody");
+    const rows = Array.from(tableBody.getElementsByTagName("tr"));
+
+    function displayTablePage(page) {
+        const totalRows = rows.length;
+        const totalPages = Math.ceil(totalRows / rowsPerPage);
+
+        if (page < 1) page = 1;
+        if (page > totalPages) page = totalPages;
+
+        currentPage = page;
+
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        rows.forEach((row, index) => {
+            row.style.display = (index >= start && index < end) ? "" : "none";
+        });
+
+        document.getElementById("pageInfo").innerText =
+            `Page ${currentPage} of ${totalPages}`;
+
+        document.getElementById("recordInfo").innerText =
+            `${start + 1}-${Math.min(end, totalRows)} of ${totalRows}`;
+    }
+
+    function nextPage() {
+        displayTablePage(currentPage + 1);
+    }
+
+    function prevPage() {
+        displayTablePage(currentPage - 1);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        displayTablePage(1);
+    });
+</script>
