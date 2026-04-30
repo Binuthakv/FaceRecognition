@@ -1,4 +1,4 @@
-@page
+ï»¿@page
 @model FaceRecognitionApp.Api.Pages.UserWorkingHoursListModel
 @{
     ViewData["Title"] = "AVIVANEXT | Working Hours";
@@ -8,7 +8,312 @@
     Layout = "~/Pages/Shared/_AppLayout.cshtml";
 }
 
-<!-- Page Header -->
+<!-- Print Stylesheet -->
+<style>
+    #printSection { display: none; }
+
+    @@media print {
+        @@page { size: A4 portrait; margin: 0; }
+
+        body > *:not(.print-clone) { display: none !important; }
+
+        .print-clone {
+            display: block !important;
+            position: static !important;
+            width: 100%;
+            background: #fff !important;
+            color: #000 !important;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 11px;
+            padding: 14mm 12mm 10mm 12mm;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        .print-clone * { color: #000 !important; background: transparent !important; }
+
+        .ph-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+        .ph-brand { font-size: 17px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 2px; }
+        .ph-title { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+        .ph-range { font-size: 10px; }
+        .ph-date  { font-size: 10px; font-weight: 600; text-align: right; }
+
+        .pt {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+            margin-bottom: 0;
+        }
+        .pt th, .pt td {
+            border: 1px solid #000;
+            padding: 5px 8px;
+            text-align: left;
+            vertical-align: middle;
+        }
+        .pt thead th {
+            font-weight: 700;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .pt tbody td { font-size: 10px; }
+
+        .pt tfoot td {
+            font-weight: 700;
+            font-size: 10px;
+            border: 1px solid #000;
+        }
+
+        .pf {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 5px 12mm;
+            border-top: 1px solid #000;
+            font-size: 9px;
+            display: flex;
+            justify-content: space-between;
+            background: #fff !important;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+    }
+</style>
+
+<div id="printSection">
+    @{
+        var prDateRange = "";
+        if (Model.StartDate.HasValue && Model.EndDate.HasValue)
+            prDateRange = Model.StartDate.Value.ToString("dd-MM-yyyy") + " - " + Model.EndDate.Value.ToString("dd-MM-yyyy");
+        else if (Model.StartDate.HasValue)
+            prDateRange = "From " + Model.StartDate.Value.ToString("dd-MM-yyyy");
+        else if (Model.EndDate.HasValue)
+            prDateRange = "To " + Model.EndDate.Value.ToString("dd-MM-yyyy");
+        else
+            prDateRange = "All Records";
+    }
+
+    <div class="ph-row">
+        <div>
+            <div class="ph-brand">AVIVANEXT</div>
+            <div class="ph-title">User Working Hours</div>
+            <div class="ph-range">@prDateRange</div>
+        </div>
+        <div class="ph-date">@DateTime.Now.ToString("dd-MM-yyyy")</div>
+    </div>
+
+    @if (Model.ViewType == "weekly" && Model.WeeklyWorkingHours.Any())
+    {
+        var wTotalDays  = Model.WeeklyWorkingHours.Sum(r => r.DaysWorked);
+        var wTotalMins  = Model.WeeklyWorkingHours.Sum(r => (int)Math.Floor(r.TotalHours) * 60 + (int)Math.Round((r.TotalHours - Math.Floor(r.TotalHours)) * 60));
+        var wTotalHDisp = $"{wTotalMins / 60}h {wTotalMins % 60}m";
+        <table class="pt">
+            <thead>
+                <tr>
+                    <th>Week Period</th>
+                    <th>User ID</th>
+                    <th>User Name</th>
+                    <th>Total Hours</th>
+                    <th>Days Worked</th>
+                    <th>Avg Hours / Day</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model.WeeklyWorkingHours)
+                {
+                    <tr>
+                        <td>@r.WeekPeriod</td>
+                        <td>@r.UserId</td>
+                        <td>@r.UserName</td>
+                        <td>@r.TotalHoursFormatted</td>
+                        <td>@r.DaysWorked days</td>
+                        <td>@r.AverageFormatted</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td><strong>Totals</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong>@wTotalHDisp</strong></td>
+                    <td><strong>@wTotalDays days</strong></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    }
+    else if (Model.ViewType == "monthly" && Model.MonthlyWorkingHours.Any())
+    {
+        var mTotalDays  = Model.MonthlyWorkingHours.Sum(r => r.DaysWorked);
+        var mTotalMins  = Model.MonthlyWorkingHours.Sum(r => (int)Math.Floor(r.TotalHours) * 60 + (int)Math.Round((r.TotalHours - Math.Floor(r.TotalHours)) * 60));
+        var mTotalHDisp = $"{mTotalMins / 60}h {mTotalMins % 60}m";
+        <table class="pt">
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>User ID</th>
+                    <th>User Name</th>
+                    <th>Total Hours</th>
+                    <th>Days Worked</th>
+                    <th>Avg Hours / Day</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model.MonthlyWorkingHours)
+                {
+                    <tr>
+                        <td>@r.MonthPeriod</td>
+                        <td>@r.UserId</td>
+                        <td>@r.UserName</td>
+                        <td>@r.TotalHoursFormatted</td>
+                        <td>@r.DaysWorked days</td>
+                        <td>@r.AverageFormatted</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td><strong>Totals</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong>@mTotalHDisp</strong></td>
+                    <td><strong>@mTotalDays days</strong></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    }
+    else if (Model.ViewType == "daily" && Model.WorkingHoursRecords.Any())
+    {
+        var dTotalDays  = Model.WorkingHoursRecords.Select(r => r.LoginDateFormatted).Distinct().Count();
+        var dTotalMins  = Model.WorkingHoursRecords.Sum(r => (int)Math.Floor(r.WorkingHours) * 60 + (int)Math.Round((r.WorkingHours - Math.Floor(r.WorkingHours)) * 60));
+        var dTotalHDisp = $"{dTotalMins / 60}h {dTotalMins % 60}m";
+        <table class="pt">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Working Hours</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model.WorkingHoursRecords)
+                {
+                    <tr>
+                        <td>@r.UserId</td>
+                        <td>@r.Name</td>
+                        <td>@r.LoginDateFormatted</td>
+                        <td>@r.WorkingHoursFormatted</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td><strong>Totals</strong></td>
+                    <td></td>
+                    <td><strong>@dTotalDays days</strong></td>
+                    <td><strong>@dTotalHDisp</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    }
+
+    <div class="pf">
+        <span>AVIVANEXT Face Recognition System &mdash; Confidential</span>
+        <span>Page 1</span>
+    </div>
+</div>
+
+<script id="whDataIsland" type="application/json">
+@{
+    var jsonRows = new System.Text.StringBuilder();
+    jsonRows.Append("[");
+
+    if (Model.ViewType == "weekly" && Model.WeeklyWorkingHours.Any())
+    {
+        bool first = true;
+        foreach (var r in Model.WeeklyWorkingHours)
+        {
+            if (!first) jsonRows.Append(",");
+            first = false;
+            jsonRows.Append("{");
+            jsonRows.Append("\"period\":"     + System.Text.Json.JsonSerializer.Serialize(r.WeekPeriod) + ",");
+            jsonRows.Append("\"userId\":"     + System.Text.Json.JsonSerializer.Serialize(r.UserId.ToString()) + ",");
+            jsonRows.Append("\"userName\":"   + System.Text.Json.JsonSerializer.Serialize(r.UserName) + ",");
+            jsonRows.Append("\"totalHours\":" + System.Text.Json.JsonSerializer.Serialize(r.TotalHoursFormatted) + ",");
+            jsonRows.Append("\"daysWorked\":" + r.DaysWorked + ",");
+            jsonRows.Append("\"avgHours\":"   + System.Text.Json.JsonSerializer.Serialize(r.AverageFormatted));
+            jsonRows.Append("}");
+        }
+    }
+    else if (Model.ViewType == "monthly" && Model.MonthlyWorkingHours.Any())
+    {
+        bool first = true;
+        foreach (var r in Model.MonthlyWorkingHours)
+        {
+            if (!first) jsonRows.Append(",");
+            first = false;
+            jsonRows.Append("{");
+            jsonRows.Append("\"period\":"     + System.Text.Json.JsonSerializer.Serialize(r.MonthPeriod) + ",");
+            jsonRows.Append("\"userId\":"     + System.Text.Json.JsonSerializer.Serialize(r.UserId.ToString()) + ",");
+            jsonRows.Append("\"userName\":"   + System.Text.Json.JsonSerializer.Serialize(r.UserName) + ",");
+            jsonRows.Append("\"totalHours\":" + System.Text.Json.JsonSerializer.Serialize(r.TotalHoursFormatted) + ",");
+            jsonRows.Append("\"daysWorked\":" + r.DaysWorked + ",");
+            jsonRows.Append("\"avgHours\":"   + System.Text.Json.JsonSerializer.Serialize(r.AverageFormatted));
+            jsonRows.Append("}");
+        }
+    }
+    else if (Model.ViewType == "daily" && Model.WorkingHoursRecords.Any())
+    {
+        bool first = true;
+        foreach (var r in Model.WorkingHoursRecords)
+        {
+            if (!first) jsonRows.Append(",");
+            first = false;
+            jsonRows.Append("{");
+            jsonRows.Append("\"userId\":"       + System.Text.Json.JsonSerializer.Serialize(r.UserId.ToString()) + ",");
+            jsonRows.Append("\"userName\":"     + System.Text.Json.JsonSerializer.Serialize(r.Name) + ",");
+            jsonRows.Append("\"date\":"         + System.Text.Json.JsonSerializer.Serialize(r.LoginDateFormatted) + ",");
+            jsonRows.Append("\"workingHours\":" + System.Text.Json.JsonSerializer.Serialize(r.WorkingHoursFormatted));
+            jsonRows.Append("}");
+        }
+    }
+
+    jsonRows.Append("]");
+
+    var filParts = new System.Collections.Generic.List<string>();
+    if (Model.StartDate.HasValue) filParts.Add("From " + Model.StartDate.Value.ToString("dd-MMM-yyyy"));
+    if (Model.EndDate.HasValue)   filParts.Add("To "   + Model.EndDate.Value.ToString("dd-MMM-yyyy"));
+    if (!string.IsNullOrEmpty(Model.FilterUserId?.ToString()))
+    {
+        var fu = Model.Users.FirstOrDefault(x => x.UserId == Model.FilterUserId);
+        if (fu != null) filParts.Add("User: " + fu.UserName);
+    }
+    var islandFilterDesc = filParts.Count > 0 ? string.Join(" | ", filParts) : "All Records";
+
+    var islandJson = new System.Text.StringBuilder();
+    islandJson.Append("{");
+    islandJson.Append("\"viewType\":"   + System.Text.Json.JsonSerializer.Serialize(Model.ViewType) + ",");
+    islandJson.Append("\"filterDesc\":" + System.Text.Json.JsonSerializer.Serialize(islandFilterDesc) + ",");
+    islandJson.Append("\"startDate\":" + System.Text.Json.JsonSerializer.Serialize(Model.StartDate.HasValue ? Model.StartDate.Value.ToString("dd-MM-yyyy") : "") + ",");
+    islandJson.Append("\"endDate\":" + System.Text.Json.JsonSerializer.Serialize(Model.EndDate.HasValue ? Model.EndDate.Value.ToString("dd-MM-yyyy") : "") + ",");
+    islandJson.Append("\"generatedAt\":" + System.Text.Json.JsonSerializer.Serialize(DateTime.Now.ToString("dd MMM yyyy, hh:mm tt")) + ",");
+    islandJson.Append("\"rows\":" + jsonRows.ToString());
+    islandJson.Append("}");
+}
+@Html.Raw(islandJson.ToString())
+</script>
+
 <div class="mb-12 flex flex-col gap-1">
     <h1 class="font-semibold" style="font-size:32px; line-height:1.2; letter-spacing:-0.01em; color:#131b2e;">User Working Hours</h1>
     <p style="color:#737688;">Review and evaluate user work hour patterns</p>
@@ -39,7 +344,7 @@
     </div>
 }
 
-<!-- Filter Section -->
+
 <div class="flex items-center justify-end gap-2 mb-6" style="flex-wrap:nowrap;">
 
     <!-- Date & User filters -->
@@ -111,12 +416,24 @@
     <!-- Divider -->
     <div style="width:1px; height:28px; background:#c3c5d9; flex-shrink:0; margin:0 4px;"></div>
 
-    <!-- Action icons — pushed to end -->
+    <!-- Action icons -->
     <div class="flex items-center gap-1" style="flex-shrink:0;">
-        <button class="p-2 rounded-lg" style="color:#737688;">
+        <button id="btnDownload"
+                onclick="downloadCSV()"
+                title="Download as CSV (Excel)"
+                class="p-2 rounded-lg transition-colors"
+                style="color:#737688;"
+                onmouseover="this.style.background='#eef1ff'; this.style.color='#003ec7';"
+                onmouseout="this.style.background=''; this.style.color='#737688';">
             <span class="material-symbols-outlined" style="font-size:20px;">download</span>
         </button>
-        <button class="p-2 rounded-lg" style="color:#737688;">
+        <button id="btnPrint"
+                onclick="triggerPrint()"
+                title="Print this report"
+                class="p-2 rounded-lg transition-colors"
+                style="color:#737688;"
+                onmouseover="this.style.background='#eef1ff'; this.style.color='#003ec7';"
+                onmouseout="this.style.background=''; this.style.color='#737688';">
             <span class="material-symbols-outlined" style="font-size:20px;">print</span>
         </button>
     </div>
@@ -125,13 +442,11 @@
 
 <!-- Table Card -->
 <div class="glass-card rounded-xl overflow-hidden" style="box-shadow:0 4px 20px 0 rgba(0,82,255,0.05);">
-    <!-- Table Header -->
     <div class="table-controls-bar px-6 py-4 border-b flex items-center gap-3">
         <span class="material-symbols-outlined" style="color:#003ec7;">table_rows</span>
         <h3 class="font-semibold" style="color:#131b2e; font-size:18px;">Records</h3>
     </div>
 
-    <!-- Table -->
     <div class="overflow-x-auto">
         @if (Model.ViewType == "weekly" && Model.WeeklyWorkingHours.Any())
         {
@@ -232,7 +547,6 @@
         }
     </div>
 
-    <!-- Table Footer -->
     <div class="table-footer-bar px-6 py-4 border-t flex justify-between items-center">
         <span class="text-xs font-medium" style="color:#737688;">
             @{
@@ -244,3 +558,201 @@
         </span>
     </div>
 </div>
+
+<!-- ExcelJS .xlsx download -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+
+<!-- JavaScript Download XLSX  &  Print -->
+<script>
+(function () {
+
+    function getDataIsland() {
+        try { return JSON.parse(document.getElementById('whDataIsland').textContent); }
+        catch (e) { console.error('Data island parse error:', e); return null; }
+    }
+
+    function capitalise(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+
+    function parseMins(str) {
+        if (!str) return 0;
+        var s = String(str).trim();
+        var hm = s.match(/^(?:(\d+)h\s*)?(?:(\d+)m)?$/i);
+        if (hm && (hm[1] || hm[2]))
+            return (parseInt(hm[1] || '0', 10) * 60) + parseInt(hm[2] || '0', 10);
+        var num = parseFloat(s);
+        return isNaN(num) ? 0 : Math.round(num * 60);
+    }
+
+    function formatMins(totalMins) {
+        var h = Math.floor(totalMins / 60), m = totalMins % 60;
+        return h + 'h ' + (m < 10 ? '0' : '') + m + 'm';
+    }
+
+    function headerStyle(wb) {
+        return {
+            font:      { name: 'Arial', bold: true, size: 10, color: { argb: 'FF131B2E' } },
+            fill:      { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF3CD' } },
+            alignment: { horizontal: 'center', vertical: 'middle', wrapText: true },
+            border:    {
+                top:    { style: 'thin', color: { argb: 'FFFFC107' } },
+                bottom: { style: 'thin', color: { argb: 'FFFFC107' } }
+            }
+        };
+    }
+
+    function dataStyle() {
+        return {
+            font:      { name: 'Arial', size: 10, color: { argb: 'FF131B2E' } },
+            alignment: { vertical: 'middle' },
+            border:    { bottom: { style: 'hair', color: { argb: 'FFE0E4F0' } } }
+        };
+    }
+
+    function totalsStyle() {
+        return {
+            font:      { name: 'Arial', bold: true, size: 10, color: { argb: 'FF131B2E' } },
+            fill:      { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFF3CD' } },
+            alignment: { horizontal: 'center', vertical: 'middle' },
+            border:    {
+                top:    { style: 'thin', color: { argb: 'FFFFC107' } },
+                bottom: { style: 'thin', color: { argb: 'FFFFC107' } }
+            }
+        };
+    }
+
+    function applyStyle(cell, style) {
+        if (style.font)      cell.font      = style.font;
+        if (style.fill)      cell.fill      = style.fill;
+        if (style.alignment) cell.alignment = style.alignment;
+        if (style.border)    cell.border    = style.border;
+    }
+
+    function styleRow(row, styleFn) {
+        row.eachCell({ includeEmpty: true }, function (cell) {
+            applyStyle(cell, styleFn());
+        });
+        row.height = 22;
+    }
+
+    /* XLSX builder  */
+
+    async function buildXLSX(island) {
+        var wb   = new ExcelJS.Workbook();
+        wb.creator = 'AVIVANEXT';
+        var ws   = wb.addWorksheet('Working Hours', { views: [{ state: 'frozen', ySplit: 1 }] });
+        var rows = island.rows;
+
+        var cols;
+        if (island.viewType === 'daily') {
+            cols = [
+                { header: 'User ID',       key: 'userId',       width: 16 },
+                { header: 'User Name',     key: 'userName',     width: 26 },
+                { header: 'Date',          key: 'date',         width: 18 },
+                { header: 'Working Hours', key: 'workingHours', width: 18 }
+            ];
+        } else {
+            var periodLabel = island.viewType === 'weekly' ? 'Week Period' : 'Month';
+            cols = [
+                { header: periodLabel,     key: 'period',     width: 26 },
+                { header: 'User ID',       key: 'userId',     width: 16 },
+                { header: 'User Name',     key: 'userName',   width: 26 },
+                { header: 'Total Hours',   key: 'totalHours', width: 18 },
+                { header: 'Days Worked',   key: 'daysWorked', width: 16 },
+                { header: 'Avg Hours/Day', key: 'avgHours',   width: 18 }
+            ];
+        }
+        ws.columns = cols;
+
+        var headerRow = ws.getRow(1);
+        headerRow.values = cols.map(function (c) { return c.header; });
+        styleRow(headerRow, headerStyle);
+        headerRow.height = 28;
+
+        rows.forEach(function (r) {
+            var values;
+            if (island.viewType === 'daily') {
+                values = [r.userId, r.userName, r.date, r.workingHours];
+            } else {
+                values = [r.period, r.userId, r.userName, r.totalHours,
+                          typeof r.daysWorked === 'number' ? r.daysWorked + ' days' : r.daysWorked,
+                          r.avgHours];
+            }
+            var dr = ws.addRow(values);
+            styleRow(dr, dataStyle);
+        });
+
+        var grandMins = rows.reduce(function (acc, r) {
+            return acc + parseMins(r.totalHours || r.workingHours);
+        }, 0);
+        var grandDays = rows.reduce(function (acc, r) {
+            return acc + ((typeof r.daysWorked === 'number') ? r.daysWorked : 1);
+        }, 0);
+
+        var totalsValues;
+        if (island.viewType === 'daily') {
+            totalsValues = ['TOTALS', '', '', formatMins(grandMins)];
+        } else {
+            totalsValues = ['TOTALS', '', '', formatMins(grandMins), grandDays + ' days', ''];
+        }
+        var tr = ws.addRow(totalsValues);
+        styleRow(tr, totalsStyle);
+
+        var buffer = await wb.xlsx.writeBuffer();
+        var blob   = new Blob([buffer], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        });
+        var url  = URL.createObjectURL(blob);
+        var ts   = new Date().toISOString().slice(0, 10);
+        var dateRange = island.startDate && island.endDate ? '_' + island.startDate + '_to_' + island.endDate
+                      : island.startDate ? '_from_' + island.startDate
+                      : island.endDate   ? '_to_'   + island.endDate : '';
+        var name = 'user working hours' + '.xlsx';
+        var a    = document.createElement('a');
+        a.href = url; a.download = name; a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () { document.body.removeChild(a); URL.revokeObjectURL(url); }, 600);
+    }
+
+    
+    window.downloadCSV = function () {
+        var island = getDataIsland();
+        if (!island) { alert('No data available to download.'); return; }
+        if (!island.rows || island.rows.length === 0) { alert('No records to download for the current filters.'); return; }
+        buildXLSX(island).catch(function (err) {
+            console.error('XLSX build error:', err);
+            alert('Could not generate the Excel file. Please try again.');
+        });
+    };
+
+    
+    window.triggerPrint = function () {
+        var ps = document.getElementById('printSection');
+        if (!ps) { window.print(); return; }
+
+        var clone = ps.cloneNode(true);
+        clone.removeAttribute('id');          
+        clone.classList.add('print-clone');   
+        clone.style.cssText = '';             
+        document.body.appendChild(clone);
+
+        var originalTitle = document.title;
+        document.title = 'User_Working_Hours_Report';
+
+        requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+                window.print();
+
+               var cleanup = function () {
+                    document.title = originalTitle;
+                    if (clone.parentNode) { clone.parentNode.removeChild(clone); }
+                    window.removeEventListener('afterprint', cleanup);
+                };
+                window.addEventListener('afterprint', cleanup);
+                setTimeout(cleanup, 5000);
+            });
+        });
+    };
+
+})();
+</script>
