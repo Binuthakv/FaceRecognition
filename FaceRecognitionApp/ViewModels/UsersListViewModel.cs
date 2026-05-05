@@ -15,6 +15,9 @@ public partial class UsersListViewModel : ObservableObject
     private ObservableCollection<UserRegistration> _users = new();
 
     [ObservableProperty]
+    private ObservableCollection<UserRegistration> _filteredUsers = new();
+
+    [ObservableProperty]
     private bool _isLoading;
 
     [ObservableProperty]
@@ -37,6 +40,42 @@ public partial class UsersListViewModel : ObservableObject
         _databaseService = databaseService;
     }
 
+    partial void OnSearchTextChanged(string value)
+    {
+        FilterUsers();
+    }
+
+    private void FilterUsers()
+    {
+        if (string.IsNullOrWhiteSpace(SearchText))
+        {
+            FilteredUsers.Clear();
+            foreach (var user in Users)
+            {
+                FilteredUsers.Add(user);
+            }
+        }
+        else
+        {
+            var searchLower = SearchText.ToLower();
+            var filtered = Users.Where(u =>
+                u.Name.Contains(searchLower, StringComparison.OrdinalIgnoreCase) ||
+                u.UserId.ToString().Contains(searchLower) ||
+                (u.Age > 0 && u.Age.ToString().Contains(searchLower))).ToList();
+
+            FilteredUsers.Clear();
+            foreach (var user in filtered)
+            {
+                FilteredUsers.Add(user);
+            }
+        }
+    }
+
+    [RelayCommand]
+    private void ClearSearch()
+    {
+        SearchText = string.Empty;
+    }
 
     [RelayCommand]
     private async Task LoadUsersAsync()
@@ -56,6 +95,7 @@ public partial class UsersListViewModel : ObservableObject
             }
 
             TotalUsers = Users.Count;
+            FilterUsers();
             StatusMessage = $"Loaded {TotalUsers} Employees";
             StatusColor = Colors.Green;
 

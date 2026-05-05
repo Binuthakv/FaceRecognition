@@ -146,6 +146,40 @@
                                     BorderWidth="1"/>
                         </Grid>
 
+                        <!-- Search bar -->
+                        <Border BackgroundColor="{StaticResource SurfaceContainerHighest}"
+                                StrokeShape="RoundRectangle 12"
+                                Stroke="#33C2C6D5"
+                                StrokeThickness="1"
+                                Padding="12,4">
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <Label Grid.Column="0"
+                                       Text="🔍"
+                                       FontSize="18"
+                                       VerticalOptions="Center"
+                                       Margin="8,0,0,0"/>
+                                <Entry Grid.Column="1"
+                                       Text="{Binding SearchText}"
+                                       Placeholder="Search by name, ID, or age..."
+                                       FontFamily="Inter"
+                                       FontSize="13"
+                                       TextColor="{StaticResource OnSurface}"
+                                       PlaceholderColor="{StaticResource OnSurfaceVariant}"
+                                       Margin="8,0"
+                                       VerticalOptions="Center"/>
+                                <ImageButton Grid.Column="2"
+                                 BackgroundColor="Transparent"
+                                    Command="{Binding ClearSearchCommand}"
+                                    VerticalOptions="Center"
+                                     Margin="0,0,8,0"
+                                    IsVisible="{Binding SearchText, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                                    <ImageButton.Source>
+                                        <FontImageSource Glyph="❌" Size="16"/>
+                                    </ImageButton.Source>
+                                </ImageButton>
+                            </Grid>
+                        </Border>
+
                         <!-- User directory -->
                         <VerticalStackLayout Spacing="10">
                             <Label Text="USER DIRECTORY"
@@ -156,7 +190,7 @@
                                    TextColor="{StaticResource OnSurfaceVariant}"
                                    Margin="4,0"/>
 
-                            <CollectionView ItemsSource="{Binding Users}"
+                            <CollectionView ItemsSource="{Binding FilteredUsers}"
                                             SelectionMode="None">
 
                                 <CollectionView.EmptyView>
