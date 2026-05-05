@@ -21,6 +21,8 @@
             <converters:BoolToObjectConverter x:Key="BoolToObjectConverter" />
             <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
             <converters:PercentToDecimalConverter x:Key="PercentToDecimalConverter" />
+            <converters:IsNullOrEmptyConverter x:Key="IsNullOrEmptyConverter" />
+            <converters:IsNotNullOrEmptyConverter x:Key="IsNotNullOrEmptyConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
