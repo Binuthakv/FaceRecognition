@@ -146,49 +146,138 @@
                                     BorderWidth="1"/>
                         </Grid>
 
-                        <!-- Search bar -->
-                        <Border BackgroundColor="{StaticResource SurfaceContainerHighest}"
-                                StrokeShape="RoundRectangle 12"
-                                Stroke="#33C2C6D5"
-                                StrokeThickness="1"
-                                Padding="12,4">
-                            <Grid ColumnDefinitions="Auto,*,Auto">
-                                <Label Grid.Column="0"
-                                       Text="🔍"
-                                       FontSize="18"
-                                       VerticalOptions="Center"
-                                       Margin="8,0,0,0"/>
-                                <Entry Grid.Column="1"
-                                       Text="{Binding SearchText}"
-                                       Placeholder="Search by name, ID, or age..."
-                                       FontFamily="Inter"
-                                       FontSize="13"
-                                       TextColor="{StaticResource OnSurface}"
-                                       PlaceholderColor="{StaticResource OnSurfaceVariant}"
-                                       Margin="8,0"
-                                       VerticalOptions="Center"/>
-                                <ImageButton Grid.Column="2"
-                                 BackgroundColor="Transparent"
-                                    Command="{Binding ClearSearchCommand}"
-                                    VerticalOptions="Center"
-                                     Margin="0,0,8,0"
-                                    IsVisible="{Binding SearchText, Converter={StaticResource IsNotNullOrEmptyConverter}}">
-                                    <ImageButton.Source>
-                                        <FontImageSource Glyph="❌" Size="16"/>
-                                    </ImageButton.Source>
-                                </ImageButton>
-                            </Grid>
-                        </Border>
-
                         <!-- User directory -->
                         <VerticalStackLayout Spacing="10">
-                            <Label Text="USER DIRECTORY"
-                                   FontFamily="Inter"
-                                   FontAttributes="Bold"
-                                   FontSize="10"
-                                   CharacterSpacing="3"
-                                   TextColor="{StaticResource OnSurfaceVariant}"
-                                   Margin="4,0"/>
+                            <!-- USER DIRECTORY header row: label + count badge -->
+                            <Grid ColumnDefinitions="*,Auto" Margin="4,0">
+                                <Label Grid.Column="0"
+                                       Text="USER DIRECTORY"
+                                       FontFamily="Inter"
+                                       FontAttributes="Bold"
+                                       FontSize="10"
+                                       CharacterSpacing="3"
+                                       TextColor="{StaticResource OnSurfaceVariant}"
+                                       VerticalOptions="Center"/>
+                                <!-- Live count pill -->
+                                <Border Grid.Column="1"
+                                        BackgroundColor="#1A2E6FD8"
+                                        StrokeShape="RoundRectangle 20"
+                                        Stroke="#332E6FD8"
+                                        StrokeThickness="1"
+                                        Padding="10,3"
+                                        VerticalOptions="Center">
+                                    <Label Text="{Binding TotalUsers, StringFormat='{0} enrolled'}"
+                                           FontFamily="Inter"
+                                           FontAttributes="Bold"
+                                           FontSize="10"
+                                           CharacterSpacing="0.5"
+                                           TextColor="{StaticResource Primary}"/>
+                                </Border>
+                            </Grid>
+
+                            <!-- ── SEARCH BAR ── -->
+                            <Border BackgroundColor="{StaticResource SurfaceContainerLowest}"
+                                    StrokeShape="RoundRectangle 16"
+                                    Stroke="#882E6FD8"
+                                    StrokeThickness="1.5"
+                                    Padding="0"
+                                    Margin="0,4,0,0">
+                                <Border.Shadow>
+                                    <Shadow Brush="#2E6FD8" Offset="0,4" Radius="14" Opacity="0.13"/>
+                                </Border.Shadow>
+
+                                <!-- Columns: 4 (accent) | * (entry) | 52 (icon button) -->
+                                <Grid ColumnDefinitions="4,*,52" ColumnSpacing="0">
+
+                                    <!-- ① Left blue accent strip -->
+                                    <BoxView Grid.Column="0"
+                                             WidthRequest="4"
+                                             CornerRadius="16,0,0,16"
+                                             VerticalOptions="Fill"/>
+
+                                    <!-- ② Text input -->
+                                    <Entry Grid.Column="1"
+                                           x:Name="SearchEntry"
+                                           Text="{Binding SearchText}"
+                                           Placeholder="Search by Name, ID, Age"
+                                           FontFamily="Inter"
+                                           FontSize="14"
+                                           TextColor="{StaticResource OnSurface}"
+                                           PlaceholderColor="{StaticResource OnSurfaceVariant}"
+                                           VerticalOptions="Center"
+                                           HeightRequest="52"
+                                           Margin="14,0,0,0"
+                                           BackgroundColor="Transparent"
+                                           ClearButtonVisibility="Never"
+                                           ReturnType="Search">
+                                        <Entry.Keyboard>
+                                            <Keyboard x:FactoryMethod="Create">
+                                                <x:Arguments>
+                                                    <KeyboardFlags>Suggestions,CapitalizeNone</KeyboardFlags>
+                                                </x:Arguments>
+                                            </Keyboard>
+                                        </Entry.Keyboard>
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup Name="CommonStates">
+                                                <VisualState Name="Normal"/>
+                                                <VisualState Name="Focused">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="TextColor" Value="{StaticResource Primary}"/>
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+                                    </Entry>
+
+                                    <!-- ③ Right icon column -->
+                                    <Grid Grid.Column="2"
+                                          VerticalOptions="Center"
+                                          HorizontalOptions="Center"
+                                          WidthRequest="48"
+                                          HeightRequest="52">
+
+                                        <!-- Search icon — visible when search box is empty -->
+                                        <Border BackgroundColor="{StaticResource Primary}"
+                                                StrokeShape="RoundRectangle 20"
+                                                Stroke="Transparent"
+                                                WidthRequest="40"
+                                                HeightRequest="40"
+                                                HorizontalOptions="Center"
+                                                VerticalOptions="Center"
+                                                IsVisible="{Binding SearchText, Converter={StaticResource IsNullOrEmptyConverter}}">
+                                            <Image Source="icon_search.png"
+                                                   WidthRequest="18"
+                                                   HeightRequest="18"
+                                                   HorizontalOptions="Center"
+                                                   VerticalOptions="Center"/>
+                                        </Border>
+
+                                        <!-- Clear icon — visible when search box has text -->
+                                        <Border BackgroundColor="{StaticResource Primary}"
+                                                StrokeShape="RoundRectangle 20"
+                                                Stroke="Transparent"
+                                                WidthRequest="40"
+                                                HeightRequest="40"
+                                                HorizontalOptions="Center"
+                                                VerticalOptions="Center"
+                                                IsVisible="{Binding SearchText, Converter={StaticResource IsNotNullOrEmptyConverter}}">
+                                            <ImageButton Source="icon_clear.png"
+                                                         BackgroundColor="Transparent"
+                                                         Command="{Binding ClearSearchCommand}"
+                                                         WidthRequest="18"
+                                                         HeightRequest="18"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center"
+                                                         Padding="0"/>
+                                        </Border>
+
+                                    </Grid>
+                                    <!-- ── end right icon ── -->
+
+                                </Grid>
+                            </Border>
+
+                            <!-- ── END SEARCH BAR ── -->
 
                             <CollectionView ItemsSource="{Binding FilteredUsers}"
                                             SelectionMode="None">
