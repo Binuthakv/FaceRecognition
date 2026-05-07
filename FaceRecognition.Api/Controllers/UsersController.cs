@@ -10,11 +10,15 @@ public class UsersController : ControllerBase
 {
     private readonly IUserDatabaseService _db;
     private readonly IFaceRecognitionService _faceService;
+    private readonly IFaceONNXService _faceOnnxServ;
 
-    public UsersController(IUserDatabaseService db, IFaceRecognitionService faceService)
+    public UsersController(IUserDatabaseService db,
+        IFaceRecognitionService faceService,
+        IFaceONNXService faceOnnxServ)
     {
         _db = db;
         _faceService = faceService;
+        _faceOnnxServ = faceOnnxServ;
     }
 
     [HttpGet]
@@ -57,21 +61,21 @@ public class UsersController : ControllerBase
         var errors = new List<PhotoEmbeddingError>();
         if (user.Photo1 is { Length: > 0 })
         {
-            emb1 = await _faceService.ExtractEmbeddingAsync(user.Photo1, ct);
+            emb1 = await _faceOnnxServ.ExtractEmbeddingAsync(user.Photo1, ct);
             if (emb1 is null)
                 errors.Add(new PhotoEmbeddingError(1, "Failed to extract face embedding from Photo 1"));
         }
 
         if (user.Photo2 is { Length: > 0 })
         {
-            emb2 = await _faceService.ExtractEmbeddingAsync(user.Photo2, ct);
+            emb2 = await _faceOnnxServ.ExtractEmbeddingAsync(user.Photo2, ct);
             if (emb2 is null)
                 errors.Add(new PhotoEmbeddingError(2, "Failed to extract face embedding from Photo 2"));
         }
 
         if (user.Photo3 is { Length: > 0 })
         {
-            emb3 = await _faceService.ExtractEmbeddingAsync(user.Photo3, ct);
+            emb3 = await _faceOnnxServ.ExtractEmbeddingAsync(user.Photo3, ct);
             if (emb3 is null)
                 errors.Add(new PhotoEmbeddingError(3, "Failed to extract face embedding from Photo 3"));
         }
@@ -118,43 +122,43 @@ public class UsersController : ControllerBase
 
         if (user.Photo1 is { Length: > 0 })
         {
-            emb1 = await _faceService.ExtractEmbeddingAsync(user.Photo1, ct);
-            if (emb1 is null)
+            emb1 = await _faceOnnxServ.ExtractEmbeddingAsync(user.Photo1, ct);
+            if (emb1 is null || emb1.Length != 512)
                 errors.Add(new PhotoEmbeddingError(1, "Failed to extract face embedding from Photo 1"));
         }
 
         if (user.Photo2 is { Length: > 0 })
         {
-            emb2 = await _faceService.ExtractEmbeddingAsync(user.Photo2, ct);
-            if (emb2 is null)
+            emb2 = await _faceOnnxServ.ExtractEmbeddingAsync(user.Photo2, ct);
+            if (emb2 is null || emb2.Length != 512)
                 errors.Add(new PhotoEmbeddingError(2, "Failed to extract face embedding from Photo 2"));
         }
 
         if (user.Photo3 is { Length: > 0 })
         {
-            emb3 = await _faceService.ExtractEmbeddingAsync(user.Photo3, ct);
-            if (emb3 is null)
+            emb3 = await _faceOnnxServ.ExtractEmbeddingAsync(user.Photo3, ct);
+            if (emb3 is null || emb3.Length != 512)
                 errors.Add(new PhotoEmbeddingError(3, "Failed to extract face embedding from Photo 3"));
         }
-        var result = await _db.UpdateUserAsync(user);
+        
         // Store all embeddings
-        if (emb1 is not null || emb2 is not null || emb3 is not null)
+        if (emb1 is not null && emb2 is not null && emb3 is not null )
         {
-            //var result = await _db.UpdateUserAsync(user);
+            var result = await _db.UpdateUserAsync(user);
             embeddingsExtracted = await _db.SaveUserEmbeddingsAsync(user.UserId, emb1, emb2, emb3);
-
+            return Ok(result);
         }
-        return Ok(result);
-        //else
-        //{
-        //    var validationResponse = new PhotoEmbeddingValidationResponse(
-        //     user.UserId,
-        //     user.Name,
-        //     errors,
-        //     "No valid face embeddings could be extracted from any photos");
 
-        //    return BadRequest(validationResponse);
-        //}
+        else
+        {
+            var validationResponse = new PhotoEmbeddingValidationResponse(
+             user.UserId,
+             user.Name,
+             errors,
+             "No valid face embeddings could be extracted from any photos");
+
+            return BadRequest(validationResponse);
+        }
 
     }
 
