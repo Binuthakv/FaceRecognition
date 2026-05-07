@@ -7,6 +7,7 @@ builder.Services.AddSingleton<IUserDatabaseService, UserDatabaseService>();
 builder.Services.AddSingleton<IFaceRecognitionService, FaceRecognitionService>();
 builder.Services.AddSingleton<IAttendanceService, AttendanceService>();
 builder.Services.AddSingleton<IUserWorkingHoursService, UserWorkingHoursService>();
+builder.Services.AddSingleton<IFaceONNXService, FaceONNXService>();
 
 builder.Services.AddControllers();
 builder.Services.AddRazorPages();
