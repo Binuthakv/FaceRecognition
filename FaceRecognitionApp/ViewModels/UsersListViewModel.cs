@@ -231,6 +231,7 @@ public partial class UsersListViewModel : ObservableObject
         finally
         {
             IsLoading = false;
+            IsRefreshing = true;            
         }
     }
 

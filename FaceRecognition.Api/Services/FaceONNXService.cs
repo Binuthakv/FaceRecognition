@@ -48,7 +48,8 @@ public class FaceONNXService : IFaceONNXService
         {
             try
             {
-                using var image = GetImage(frameData);
+                var imagedata = FixExifOrientation(frameData);
+                using var image = GetImage(imagedata);
                 var labels = FaceGenderClassifier.Labels;
                 var faces = _detector.Forward(image);
 
