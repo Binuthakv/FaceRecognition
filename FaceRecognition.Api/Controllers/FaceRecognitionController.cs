@@ -11,12 +11,16 @@ public class FaceRecognitionController : ControllerBase
     private readonly IFaceRecognitionService _service;
     private readonly IUserDatabaseService _userDb;
 
+    private readonly IFaceONNXService _faceOnnxServ;
+
     public FaceRecognitionController(
         IFaceRecognitionService service,
-        IUserDatabaseService userDb)
+        IUserDatabaseService userDb,
+        IFaceONNXService faceOnnxServ)
     {
         _service = service;
         _userDb = userDb;
+        _faceOnnxServ = faceOnnxServ;
     }
 
     /// <summary>
@@ -29,7 +33,7 @@ public class FaceRecognitionController : ControllerBase
         [FromBody] ImageRequest request, CancellationToken ct)
     {
         var imageBytes = Convert.FromBase64String(request.ImageData);
-        var result = await _service.AnalyzeFrameAsync(imageBytes, ct);
+        var result = await _faceOnnxServ.AnalyzeFrameAsync(imageBytes, ct);
         return Ok(result);
     }
 
@@ -49,7 +53,7 @@ public class FaceRecognitionController : ControllerBase
         [FromBody] ImageRequest request, CancellationToken ct)
     {
         var imageBytes            = Convert.FromBase64String(request.ImageData);
-        var (detected, faceBytes) = await _service.DetectFaceInFrameAsync(imageBytes, ct);
+        var (detected, faceBytes) = await _faceOnnxServ.DetectFaceInFrameAsync(imageBytes, ct);
         return Ok(new DetectFaceInFrameResponse(detected, faceBytes is null ? null : Convert.ToBase64String(faceBytes)));
     }
 

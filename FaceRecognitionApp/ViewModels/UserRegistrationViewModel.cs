@@ -189,7 +189,8 @@ public partial class UserRegistrationViewModel : ObservableObject
 
         try
         {
-            var compressed = await ResizeForStorageAsync(imageData);
+            //var compressed = await ResizeForStorageAsync(imageData);
+            var compressed = imageData;
 
             switch (ActivePhotoSlot)
             {

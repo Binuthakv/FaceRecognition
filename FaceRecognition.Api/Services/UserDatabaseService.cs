@@ -494,7 +494,7 @@ public class UserDatabaseService : IUserDatabaseService, IDisposable
                 """;
             //cmd.Parameters.AddWithValue("@target_emb", normalized);
             cmd.Parameters.Add("@target_emb", SqliteType.Blob)
-            .Value = FloatArrayToBytes(normalized);
+            .Value = FloatArrayToBytes(queryEmbedding);
 
             cmd.Parameters.AddWithValue("@topK", topK);
            
