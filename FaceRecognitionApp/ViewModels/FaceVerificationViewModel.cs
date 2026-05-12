@@ -258,7 +258,7 @@ public partial class FaceVerificationViewModel : ObservableObject, IDisposable
     public event EventHandler? CameraFacingToggled;
 
     [RelayCommand]
-    private void StopRealtimeCamera()
+    public void StopRealtimeCamera()
     {
         IsCameraActive = false;
         _cameraCts?.Cancel();

@@ -430,7 +430,7 @@ public partial class UserRegistrationViewModel : ObservableObject
 
                 await Shell.Current.DisplayAlertAsync(
                     "Registration Successful",
-                    $"Employee '{Name}' saved!\n\nUser ID: {UserId}\nDatabase ID: {user.Id}",
+                    $"Employee '{Name}' saved!\n\nUser ID: {UserId}",
                     "OK");
 
                 bool registerAnother = await Shell.Current.DisplayAlertAsync(
@@ -440,6 +440,8 @@ public partial class UserRegistrationViewModel : ObservableObject
 
                 if (registerAnother)
                     ResetForm();
+                else
+                    await Shell.Current.GoToAsync("///LandingPage");
             }
         }
         catch (Exception ex)

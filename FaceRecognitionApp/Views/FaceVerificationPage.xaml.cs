@@ -172,7 +172,10 @@ public partial class FaceVerificationPage : ContentPage
         _viewModel.CameraFacingToggled -= OnCameraFacingToggled;
 
         if (_viewModel.IsCameraActive)
+        {
             cameraView.StopCameraPreview();
+            _viewModel.StopRealtimeCamera();
+        }
     }
 
     private async void OnBackClicked(object? sender, EventArgs e)
