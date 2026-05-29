@@ -5,6 +5,10 @@ namespace FaceRecognitionApp.Api.Services;
 public interface IUserDatabaseService
 {
     Task InitializeAsync();
+    /// <summary>
+    /// Loads all embeddings into RAM. Call at startup and after any registration change.
+    /// </summary>
+    Task RefreshEmbeddingCacheAsync();
     Task<int> SaveUserAsync(UserRegistration user);
     Task<int> UpdateUserAsync(UserRegistration user);
     Task<int> DeleteUserAsync(UserRegistration user);

@@ -1,4 +1,5 @@
 using CommunityToolkit.Maui.Core;
+using FaceRecognitionApp.Constants;
 using FaceRecognitionApp.Helpers;
 using FaceRecognitionApp.ViewModels;
 using System.ComponentModel;
@@ -107,7 +108,6 @@ public partial class FaceVerificationPage : ContentPage
             if (e.Media is null)
                 return;
 
-            // On Android the stream position may be non-zero on arrival.
             if (e.Media.CanSeek && e.Media.Position != 0)
                 e.Media.Seek(0, SeekOrigin.Begin);
 
@@ -117,8 +117,6 @@ public partial class FaceVerificationPage : ContentPage
             var imageBytes = ms.ToArray();
             if (imageBytes.Length == 0)
                 return;
-
-            //await Task.Delay(50); // Simulate processing time.
 
             await _viewModel.ProcessCameraFrame(imageBytes);
         }
@@ -134,7 +132,8 @@ public partial class FaceVerificationPage : ContentPage
             {
                 try
                 {
-                    await MainThread.InvokeOnMainThreadAsync(() => cameraView.CaptureImage(CancellationToken.None));
+                    await MainThread.InvokeOnMainThreadAsync(
+                        () => cameraView.CaptureImage(CancellationToken.None));
                 }
                 catch (Exception ex)
                 {

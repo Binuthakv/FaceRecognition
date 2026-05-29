@@ -36,31 +36,62 @@ public static class MauiProgram
 
 	private static void RegisterServices(IServiceCollection services)
 	{
-		// HTTP client shared by the API-backed service implementations.
-		// Update AppConstants.ApiBaseUrl to point to your running API instance.
-		services.AddHttpClient<IUserDatabaseService, ApiUserDatabaseService>(client =>
-			client.BaseAddress = new Uri(AppConstants.ApiBaseUrl));
+        // HTTP client shared by the API-backed service implementations.
+        // Update AppConstants.ApiBaseUrl to point to your running API instance.
+        // HTTP clients with GZip decompression enabled
+        services.AddHttpClient<IUserDatabaseService, ApiUserDatabaseService>(client =>
+        {
+            client.BaseAddress = new Uri(AppConstants.ApiBaseUrl);
+            client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
+        }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+        {
+            AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate,
+            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+            AllowAutoRedirect = false
+        });
 
-		services.AddHttpClient<ApiUserDatabaseService>(client =>
-			client.BaseAddress = new Uri(AppConstants.ApiBaseUrl));
+        services.AddHttpClient<ApiUserDatabaseService>(client =>
+        {
+            client.BaseAddress = new Uri(AppConstants.ApiBaseUrl);
+            client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
+        }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+        {
+            AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate,
+            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+            AllowAutoRedirect = false
+        });
 
-		services.AddHttpClient<IFaceRecognitionService, ApiFaceRecognitionService>(client =>
-			  client.BaseAddress = new Uri(AppConstants.ApiBaseUrl));
+        services.AddHttpClient<IFaceRecognitionService, ApiFaceRecognitionService>(client =>
+        {
+            client.BaseAddress = new Uri(AppConstants.ApiBaseUrl);
+            client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
+        }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+        {
+            AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate,
+            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+            AllowAutoRedirect = false
+        });
 
-		services.AddHttpClient<IAttendanceService, ApiAttendanceService>(client =>
-			  client.BaseAddress = new Uri(AppConstants.ApiBaseUrl));
+        services.AddHttpClient<IAttendanceService, ApiAttendanceService>(client =>
+        {
+            client.BaseAddress = new Uri(AppConstants.ApiBaseUrl);
+            client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
+        }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+        {
+            AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate,
+            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+            AllowAutoRedirect = false
+        });
 
-		// Services — API-backed implementations (swap for local ones when offline)
-		//services.AddTransient<IUserDatabaseService, ApiUserDatabaseService>();
+        // ViewModels as Singleton — preserves warmed-up state across navigation
+        services.AddSingleton<AdminLoginViewModel>();
+        services.AddSingleton<FaceVerificationViewModel>();
+        services.AddSingleton<UserRegistrationViewModel>();
+        services.AddSingleton<UsersListViewModel>();
 
-		// ViewModels
-		services.AddTransient<AdminLoginViewModel>();
-		services.AddTransient<FaceVerificationViewModel>();
-		services.AddTransient<UserRegistrationViewModel>();
-		services.AddTransient<UsersListViewModel>();
 
-		// Pages
-		services.AddTransient<AdminLoginPage>();
+        // Pages
+        services.AddTransient<AdminLoginPage>();
 		services.AddTransient<FaceVerificationPage>();
 		services.AddTransient<UserRegistrationPage>();
 		services.AddTransient<UsersListPage>();
