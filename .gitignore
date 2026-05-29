@@ -9,3 +9,7 @@
 /.vs
 /FaceRecognition.Api/bin/Debug/net10.0
 /FaceRecognitionApp/bin/Debug
+
+*.db
+*.lnk
+*.user
