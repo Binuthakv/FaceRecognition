@@ -16,6 +16,12 @@ public class UserDatabaseService : IUserDatabaseService, IDisposable
     // ArcFace produces 512-dimensional embeddings
     private const int EmbeddingDimension = 512;
 
+    //  In-memory embedding cache — avoids SQLite read on every frame
+    private record CachedEmbedding(string UserId, string UserName, int PhotoNumber, float[] Embedding);
+    private List<CachedEmbedding>? _embeddingCache;
+    private readonly SemaphoreSlim _cacheLock = new(1, 1);
+
+
     public UserDatabaseService(ILogger<UserDatabaseService> logger)
     {
         _logger = logger;
@@ -44,6 +50,12 @@ public class UserDatabaseService : IUserDatabaseService, IDisposable
 
             _connection = new SqliteConnection(connectionString);
             await _connection.OpenAsync();
+
+            // FIX : WAL mode — faster concurrent reads and writes
+            await using var walCmd = _connection.CreateCommand();
+            walCmd.CommandText = "PRAGMA journal_mode=WAL; PRAGMA synchronous=NORMAL;";
+            await walCmd.ExecuteNonQueryAsync();
+
 
             _connection.EnableExtensions(true);  //Enable vector search extension       
             _connection.LoadExtension("vec0.dll");//Enable vector search extension       
@@ -130,6 +142,41 @@ public class UserDatabaseService : IUserDatabaseService, IDisposable
             await InitializeAsync();
         }
     }
+
+    //  Load all embeddings into RAM once at startup.
+    // Called from Program.cs after InitializeAsync(). Also called after SaveUserEmbeddingsAsync.
+    public async Task RefreshEmbeddingCacheAsync()
+    {
+        await EnsureInitializedAsync();
+        await _cacheLock.WaitAsync();
+        try
+        {
+            var cache = new List<CachedEmbedding>();
+            await using var cmd = _connection!.CreateCommand();
+            cmd.CommandText = """
+                SELECT e.UserId, u.Name, e.PhotoNumber, e.Embedding
+                FROM UserEmbeddings e
+                INNER JOIN Users u ON e.UserId = u.UserId;
+                """;
+            await using var reader = await cmd.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                var userId = reader.GetString(0);
+                var userName = reader.GetString(1);
+                var photoNumber = reader.GetInt32(2);
+                var blob = (byte[])reader.GetValue(3);
+                var embedding = BlobToFloatArray(blob);
+                cache.Add(new CachedEmbedding(userId, userName, photoNumber, embedding));
+            }
+            _embeddingCache = cache;
+            _logger.LogInformation("Embedding cache refreshed: {Count} embeddings loaded into memory", cache.Count);
+        }
+        finally
+        {
+            _cacheLock.Release();
+        }
+    }
+
 
     // ── User CRUD operations ──────────────────────────────────────────────────
 
@@ -411,59 +458,37 @@ public class UserDatabaseService : IUserDatabaseService, IDisposable
         await EnsureInitializedAsync();
 
         if (queryEmbedding.Length != EmbeddingDimension)
-        {
-            _logger.LogError("Invalid query embedding dimension: expected {Expected}, got {Actual}",
-                EmbeddingDimension, queryEmbedding.Length);
             throw new ArgumentException($"Query embedding must have {EmbeddingDimension} dimensions");
-        }
 
-        try
+        // Use in-memory cache instead of SQLite read every frame
+        // If cache is empty (first call before startup refresh), fall back to DB
+        if (_embeddingCache == null)
         {
-            var normalized = NormalizeEmbedding(queryEmbedding);
-            var results = new List<EmbeddingSearchResult>();
-
-            await using var cmd = _connection!.CreateCommand();
-            cmd.CommandText = """
-                SELECT e.UserId, e.PhotoNumber, e.Embedding, u.Name
-                FROM UserEmbeddings e
-                INNER JOIN Users u ON e.UserId = u.UserId;
-                """;
-
-            var totalEmbeddings = 0;
-            await using var reader = await cmd.ExecuteReaderAsync();
-            while (await reader.ReadAsync())
-            {
-                totalEmbeddings++;
-                var userId = reader.GetString(0);
-                var photoNumber = reader.GetInt32(1);
-                var embeddingBlob = (byte[])reader.GetValue(2);
-                var userName = reader.GetString(3);
-                var storedEmbedding = BlobToFloatArray(embeddingBlob);
-
-                var similarity = CosineSimilarity(normalized, storedEmbedding);
-
-                if (similarity >= threshold)
-                {
-                    results.Add(new EmbeddingSearchResult(userId, userName, photoNumber, similarity));
-                }
-            }
-
-            var topResults = results
-                .OrderByDescending(r => r.Similarity)
-                .Take(topK)
-                .ToList();
-
-            _logger.LogInformation("Embedding search completed. Scanned {TotalEmbeddings} embeddings, found {MatchCount} matches above threshold {Threshold}, returning top {ReturnCount}",
-                totalEmbeddings, results.Count, threshold, topResults.Count);
-
-            return topResults;
+            _logger.LogWarning("Embedding cache is empty — refreshing now. Consider calling RefreshEmbeddingCacheAsync at startup.");
+            await RefreshEmbeddingCacheAsync();
         }
-        catch (Exception ex)
+
+        var normalized = NormalizeEmbedding(queryEmbedding);
+        var results = new List<EmbeddingSearchResult>();
+
+        foreach (var cached in _embeddingCache!)
         {
-            _logger.LogError(ex, "Failed to search embeddings");
-            throw;
+            var similarity = CosineSimilarity(normalized, cached.Embedding);
+            if (similarity >= threshold)
+                results.Add(new EmbeddingSearchResult(cached.UserId, cached.UserName, cached.PhotoNumber, similarity));
         }
+
+        var topResults = results
+            .OrderByDescending(r => r.Similarity)
+            .Take(topK)
+            .ToList();
+
+        _logger.LogInformation("Cache search: scanned {Total} embeddings, {Matches} matches, returning top {TopK}",
+            _embeddingCache.Count, results.Count, topResults.Count);
+
+        return topResults;
     }
+
 
     public async Task<List<EmbeddingSearchResult>> SearchByEmbeddingSQLAsync(float[] queryEmbedding, int topK = 5, float threshold = 0.42f)
     {
@@ -509,14 +534,19 @@ public class UserDatabaseService : IUserDatabaseService, IDisposable
                 var embeddingBlob = (byte[])reader.GetValue(2);
                 var userName = reader.GetString(3);
                 var distance = reader.GetDouble(4);
-                if (distance <= threshold) //distance distance = 0   → identical faces, distance = 1   → completely different
+
+                // Threshold bug fixed
+                // vec_distance_cosine returns distance (0=identical, 1=opposite)
+                // So we need distance <= (1 - similarityThreshold)
+                // e.g. threshold=0.42 similarity → accept if distance <= 0.58
+                if (distance <= (1.0 - threshold)) 
                 {
                     results.Add(new EmbeddingSearchResult(userId, userName, photoNumber, 1-(float)distance));
                 }
             }
 
             var topResults = results
-                .OrderBy(r => r.Similarity)
+                .OrderByDescending(r => r.Similarity) // FIX: was ascending, now descending (best match first)
                 .Take(topK)
                 .ToList();
 
@@ -628,6 +658,9 @@ public class UserDatabaseService : IUserDatabaseService, IDisposable
         }
 
         _logger.LogInformation("Saved {Count} embeddings for user {UserId}", savedCount, userId);
+
+        // FIX : Refresh in-memory cache after new employee is registered
+        await RefreshEmbeddingCacheAsync();
         return savedCount;
     }
 
@@ -644,6 +677,9 @@ public class UserDatabaseService : IUserDatabaseService, IDisposable
 
             var deleted = await cmd.ExecuteNonQueryAsync();
             _logger.LogInformation("Deleted {Count} embeddings for user {UserId}", deleted, userId);
+            // FIX : Keep cache in sync after deletion
+            await RefreshEmbeddingCacheAsync();
+
         }
         catch (Exception ex)
         {
