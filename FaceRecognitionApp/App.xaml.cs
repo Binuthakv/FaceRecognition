@@ -22,7 +22,7 @@ public partial class App : Application
 	{
 		try
 		{
-			await ResourceHelper.ExtractHaarCascadeAsync();
+			//await ResourceHelper.ExtractHaarCascadeAsync();
 			await _databaseService.InitializeAsync();
 
 			// Request camera permission on app startup for all camera-dependent features
