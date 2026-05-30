@@ -29,7 +29,16 @@ public interface IUserDatabaseService
     Task SaveUserEmbeddingAsync(string userId, int photoNumber, float[] embedding);
 
     /// <summary>
-    /// Saves all 3 embeddings for a user at once.
+    /// Saves a single embedding for a user (Photo1 only).
+    /// Current standard for registration - only one photo required.
+    /// </summary>
+    /// <param name="userId">The user's unique identifier.</param>
+    /// <param name="embedding1">Embedding from photo 1 (required).</param>
+    /// <returns>Number of embeddings saved (0 or 1).</returns>
+    Task<int> SaveUserEmbeddingsAsync(string userId, float[]? embedding1);
+
+    /// <summary>
+    /// Saves multiple embeddings for a user at once (legacy support).
     /// </summary>
     /// <param name="userId">The user's unique identifier.</param>
     /// <param name="embedding1">Embedding from photo 1 (can be null if no face detected).</param>

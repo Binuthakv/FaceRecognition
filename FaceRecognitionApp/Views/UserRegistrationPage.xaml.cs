@@ -178,6 +178,8 @@ public partial class UserRegistrationPage : ContentPage
         _viewModel.PropertyChanged += OnViewModelPropertyChanged;
         if (!_viewModel.IsEditMode)
             _viewModel.ResetFormCommand.Execute(null);
+        else
+            _viewModel.ResetForm();
     }
 
     protected override void OnDisappearing()
@@ -185,6 +187,7 @@ public partial class UserRegistrationPage : ContentPage
         base.OnDisappearing();
         cameraView.MediaCaptured -= OnMediaCaptured;
         _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
+        _viewModel.ResetForm();
         if (_viewModel.IsCameraPreviewVisible)
             cameraView.StopCameraPreview();
     }

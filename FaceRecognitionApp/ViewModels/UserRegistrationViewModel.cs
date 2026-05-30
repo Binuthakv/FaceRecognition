@@ -29,11 +29,11 @@ public partial class UserRegistrationViewModel : ObservableObject
     [ObservableProperty]
     private ImageSource? _photo1;
 
-    [ObservableProperty]
-    private ImageSource? _photo2;
+    //[ObservableProperty]
+    //private ImageSource? _photo2;
 
-    [ObservableProperty]
-    private ImageSource? _photo3;
+    //[ObservableProperty]
+    //private ImageSource? _photo3;
 
     [ObservableProperty]
     private string _statusMessage = "Enter user details to register";
@@ -63,8 +63,8 @@ public partial class UserRegistrationViewModel : ObservableObject
     private int _activePhotoSlot;
 
     private byte[]? _photo1Data;
-    private byte[]? _photo2Data;
-    private byte[]? _photo3Data;
+    //private byte[]? _photo2Data;
+    //private byte[]? _photo3Data;
 
     public UserRegistrationViewModel(IUserDatabaseService databaseService)
     {
@@ -93,22 +93,22 @@ public partial class UserRegistrationViewModel : ObservableObject
                         Photo1 = ImageSource.FromStream(() => new MemoryStream(user.Photo1)));
                 }
 
-                if (user.Photo2 != null)
-                {
-                    _photo2Data = user.Photo2;
-                    await MainThread.InvokeOnMainThreadAsync(() =>
-                        Photo2 = ImageSource.FromStream(() => new MemoryStream(user.Photo2)));
-                }
+                //if (user.Photo2 != null)
+                //{
+                //    _photo2Data = user.Photo2;
+                //    await MainThread.InvokeOnMainThreadAsync(() =>
+                //        Photo2 = ImageSource.FromStream(() => new MemoryStream(user.Photo2)));
+                //}
 
-                if (user.Photo3 != null)
-                {
-                    _photo3Data = user.Photo3;
-                    await MainThread.InvokeOnMainThreadAsync(() =>
-                        Photo3 = ImageSource.FromStream(() => new MemoryStream(user.Photo3)));
-                }
+                //if (user.Photo3 != null)
+                //{
+                //    _photo3Data = user.Photo3;
+                //    await MainThread.InvokeOnMainThreadAsync(() =>
+                //        Photo3 = ImageSource.FromStream(() => new MemoryStream(user.Photo3)));
+                //}
             });
 
-            UpdatePhotoCount();
+            //UpdatePhotoCount();
             StatusMessage = $"Editing user: {user.Name}";
             StatusColor = Colors.Blue;
             AppLogger.Info($"Loaded user for editing: {user.Name} ({user.UserId})");
@@ -126,11 +126,11 @@ public partial class UserRegistrationViewModel : ObservableObject
     [RelayCommand]
     private async Task StartCapturePhoto1Async() => await StartCameraForSlotAsync(1);
 
-    [RelayCommand]
-    private async Task StartCapturePhoto2Async() => await StartCameraForSlotAsync(2);
+    //[RelayCommand]
+    //private async Task StartCapturePhoto2Async() => await StartCameraForSlotAsync(2);
 
-    [RelayCommand]
-    private async Task StartCapturePhoto3Async() => await StartCameraForSlotAsync(3);
+    //[RelayCommand]
+    //private async Task StartCapturePhoto3Async() => await StartCameraForSlotAsync(3);
 
     [RelayCommand]
     private void CancelCameraPreview()
@@ -153,7 +153,7 @@ public partial class UserRegistrationViewModel : ObservableObject
             {
                 await Shell.Current.DisplayAlertAsync(
                     "Permission Required",
-                    "Camera permission is required to capture photos. Please enable it in device settings.",
+                    "Camera permission is required to capture photo. Please enable it in device settings.",
                     "OK");
                 return;
             }
@@ -198,17 +198,17 @@ public partial class UserRegistrationViewModel : ObservableObject
                     _photo1Data = compressed;
                     Photo1 = ImageSource.FromStream(() => new MemoryStream(compressed));
                     break;
-                case 2:
-                    _photo2Data = compressed;
-                    Photo2 = ImageSource.FromStream(() => new MemoryStream(compressed));
-                    break;
-                case 3:
-                    _photo3Data = compressed;
-                    Photo3 = ImageSource.FromStream(() => new MemoryStream(compressed));
-                    break;
+                //case 2:
+                //    _photo2Data = compressed;
+                //    Photo2 = ImageSource.FromStream(() => new MemoryStream(compressed));
+                //    break;
+                //case 3:
+                //    _photo3Data = compressed;
+                //    Photo3 = ImageSource.FromStream(() => new MemoryStream(compressed));
+                //    break;
             }
 
-            UpdatePhotoCount();
+            //UpdatePhotoCount();
             StatusMessage = $"✅ Photo {ActivePhotoSlot} captured successfully!";
             StatusColor = Colors.Green;
             AppLogger.Success($"Photo {ActivePhotoSlot} captured successfully");
@@ -251,11 +251,11 @@ public partial class UserRegistrationViewModel : ObservableObject
     [RelayCommand]
     private async Task PickPhoto1Async() => await PickPhotoAsync(1);
 
-    [RelayCommand]
-    private async Task PickPhoto2Async() => await PickPhotoAsync(2);
+    //[RelayCommand]
+    //private async Task PickPhoto2Async() => await PickPhotoAsync(2);
 
-    [RelayCommand]
-    private async Task PickPhoto3Async() => await PickPhotoAsync(3);
+    //[RelayCommand]
+    //private async Task PickPhoto3Async() => await PickPhotoAsync(3);
 
     private async Task PickPhotoAsync(int photoNumber)
     {
@@ -333,20 +333,20 @@ public partial class UserRegistrationViewModel : ObservableObject
                             _photo1Data = compressed;
                             Photo1 = ImageSource.FromStream(() => new MemoryStream(compressed));
                             break;
-                        case 2:
-                            _photo2Data = compressed;
-                            Photo2 = ImageSource.FromStream(() => new MemoryStream(compressed));
-                            break;
-                        case 3:
-                            _photo3Data = compressed;
-                            Photo3 = ImageSource.FromStream(() => new MemoryStream(compressed));
-                            break;
+                        //case 2:
+                        //    _photo2Data = compressed;
+                        //    Photo2 = ImageSource.FromStream(() => new MemoryStream(compressed));
+                        //    break;
+                        //case 3:
+                        //    _photo3Data = compressed;
+                        //    Photo3 = ImageSource.FromStream(() => new MemoryStream(compressed));
+                        //    break;
                     }
 
-                    UpdatePhotoCount();
-                    StatusMessage = $"✅ Photo {photoNumber} selected successfully!";
+                   // UpdatePhotoCount();
+                    StatusMessage = $"✅ Photo  selected successfully!";
                     StatusColor = Colors.Green;
-                    AppLogger.Success($"Photo {photoNumber} saved successfully");
+                    AppLogger.Success($"Photo  saved successfully");
                 });
             });
         }
@@ -387,8 +387,8 @@ public partial class UserRegistrationViewModel : ObservableObject
                     DateOfBirth = DateOfBirth,
                     Sex = Sex,
                     Photo1 = _photo1Data,
-                    Photo2 = _photo2Data,
-                    Photo3 = _photo3Data
+                   // Photo2 = _photo2Data,
+                  //  Photo3 = _photo3Data
                 };
 
                 await _databaseService.UpdateUserAsync(user);
@@ -419,8 +419,8 @@ public partial class UserRegistrationViewModel : ObservableObject
                     DateOfBirth = DateOfBirth,
                     Sex = Sex,
                     Photo1 = _photo1Data,
-                    Photo2 = _photo2Data,
-                    Photo3 = _photo3Data
+                    //Photo2 = _photo2Data,
+                   // Photo3 = _photo3Data
                 };
 
                 await _databaseService.SaveUserAsync(user);
@@ -461,17 +461,17 @@ public partial class UserRegistrationViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void ResetForm()
+    public void ResetForm()
     {
         UserId = string.Empty;
         Name = string.Empty;
         DateOfBirth = DateTime.Today.AddYears(-18);
         Photo1 = null;
-        Photo2 = null;
-        Photo3 = null;
+        //Photo2 = null;
+       // Photo3 = null;
         _photo1Data = null;
-        _photo2Data = null;
-        _photo3Data = null;
+       // _photo2Data = null;
+        //_photo3Data = null;
         PhotoCount = 0;
         IsEditMode = false;
         IsUserIdReadOnly = false;
@@ -520,9 +520,9 @@ public partial class UserRegistrationViewModel : ObservableObject
             return false;
         }
 
-        if (_photo1Data == null || _photo2Data == null || _photo3Data == null)
+        if (_photo1Data == null )
         {
-            StatusMessage = "Please capture all 3 photos before registering";
+            StatusMessage = "Please capture a photo before registering";
             StatusColor = Colors.Orange;
             return false;
         }
@@ -534,8 +534,8 @@ public partial class UserRegistrationViewModel : ObservableObject
     {
         int count = 0;
         if (_photo1Data != null) count++;
-        if (_photo2Data != null) count++;
-        if (_photo3Data != null) count++;
+        //if (_photo2Data != null) count++;
+        //if (_photo3Data != null) count++;
         PhotoCount = count;
     }
 }

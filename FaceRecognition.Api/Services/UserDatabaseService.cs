@@ -604,6 +604,68 @@ public class UserDatabaseService : IUserDatabaseService, IDisposable
         }
     }
 
+    public async Task<int> SaveUserEmbeddingsAsync(string userId, float[]? embedding1)
+    {
+        _logger.LogDebug("Saving multiple embeddings for user {UserId}...", userId);
+        await EnsureInitializedAsync();
+
+        var savedCount = 0;
+        var embeddings = new (int PhotoNumber, float[]? Embedding)[]
+        {
+            (1, embedding1)
+            
+        };
+
+        foreach (var (photoNumber, embedding) in embeddings)
+        {
+            if (embedding is null)
+            {
+                _logger.LogDebug("Skipping embedding {PhotoNumber} for user {UserId}: null embedding", photoNumber, userId);
+                continue;
+            }
+
+            if (embedding.Length != EmbeddingDimension)
+            {
+                _logger.LogWarning("Skipping embedding {PhotoNumber} for user {UserId}: invalid dimension {Length} (expected {Expected})",
+                    photoNumber, userId, embedding.Length, EmbeddingDimension);
+                continue;
+            }
+
+            try
+            {
+                var normalized = NormalizeEmbedding(embedding);
+                var embeddingBlob = FloatArrayToBlob(normalized);
+
+                await using var cmd = _connection!.CreateCommand();
+                cmd.CommandText = """
+                    INSERT OR REPLACE INTO UserEmbeddings (UserId, PhotoNumber, Embedding)
+                    VALUES (@userId, @photoNumber, @embedding);
+                    """;
+                cmd.Parameters.AddWithValue("@userId", userId);
+                cmd.Parameters.AddWithValue("@photoNumber", photoNumber);
+                cmd.Parameters.AddWithValue("@embedding", embeddingBlob);
+
+                await cmd.ExecuteNonQueryAsync();
+                savedCount++;
+                _logger.LogDebug("Saved embedding {PhotoNumber} for user {UserId}", photoNumber, userId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to save embedding {PhotoNumber} for user {UserId}", photoNumber, userId);
+                throw;
+            }
+        }
+
+        _logger.LogInformation("Saved {Count} embeddings for user {UserId}", savedCount, userId);
+
+        // FIX : Refresh in-memory cache after new employee is registered
+        await RefreshEmbeddingCacheAsync();
+        return savedCount;
+    }
+
+    /// <summary>
+    /// Saves multiple embeddings for a user at once (legacy support for 3 photos).
+    /// </summary>
     public async Task<int> SaveUserEmbeddingsAsync(string userId, float[]? embedding1, float[]? embedding2, float[]? embedding3)
     {
         _logger.LogDebug("Saving multiple embeddings for user {UserId}...", userId);
@@ -659,7 +721,7 @@ public class UserDatabaseService : IUserDatabaseService, IDisposable
 
         _logger.LogInformation("Saved {Count} embeddings for user {UserId}", savedCount, userId);
 
-        // FIX : Refresh in-memory cache after new employee is registered
+        // FIX : Refresh in-memory cache after registration change
         await RefreshEmbeddingCacheAsync();
         return savedCount;
     }

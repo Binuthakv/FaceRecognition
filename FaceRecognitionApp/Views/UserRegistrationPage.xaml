@@ -272,7 +272,7 @@
                                     </VerticalStackLayout>
                                 </Border>
 
-                                <!-- ── PHOTO 2: LEFT PROFILE ── -->
+                                <!-- ── PHOTO 2: LEFT PROFILE ── --><!--
                                 <Border Style="{StaticResource PhotoCardStyle}">
                                     <VerticalStackLayout Spacing="0">
                                         <Grid ColumnDefinitions="*,Auto"
@@ -349,7 +349,7 @@
                                         </Grid>
 
                                         <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Padding="12,10,12,14">
-                                            <!-- Capture -->
+                                            --><!-- Capture --><!--
                                             <Button Grid.Column="0"
                                             Text="CAPTURE"
                                             ImageSource="icon_camera.png"
@@ -357,7 +357,7 @@
                                             Style="{StaticResource CaptureButtonStyle}"
                                             Command="{Binding StartCapturePhoto2Command}" />
 
-                                            <!-- Select -->
+                                            --><!-- Select --><!--
                                             <Button Grid.Column="1"
                                             Text="SELECT"
                                             ImageSource="icon_upload.png"
@@ -369,7 +369,7 @@
                                     </VerticalStackLayout>
                                 </Border>
 
-                                <!-- ── PHOTO 3: RIGHT PROFILE ── -->
+                                --><!-- ── PHOTO 3: RIGHT PROFILE ── --><!--
                                 <Border Style="{StaticResource PhotoCardStyle}">
                                     <VerticalStackLayout Spacing="0">
                                         <Grid ColumnDefinitions="*,Auto"
@@ -446,7 +446,7 @@
                                         </Grid>
 
                                         <Grid ColumnDefinitions="*,*" ColumnSpacing="10" Padding="12,10,12,14">
-                                            <!-- Capture -->
+                                            --><!-- Capture --><!--
                                             <Button Grid.Column="0"
                                             Text="CAPTURE"
                                             ImageSource="icon_camera.png"
@@ -454,7 +454,7 @@
                                             Style="{StaticResource CaptureButtonStyle}"
                                             Command="{Binding StartCapturePhoto3Command}" />
 
-                                            <!-- Select -->
+                                            --><!-- Select --><!--
                                             <Button Grid.Column="1"
                                             Text="SELECT"
                                             ImageSource="icon_upload.png"
@@ -464,7 +464,7 @@
 
                                         </Grid>
                                     </VerticalStackLayout>
-                                </Border>
+                                </Border>-->
 
                             </VerticalStackLayout>
 
@@ -530,7 +530,7 @@
                                     StrokeShape="RoundRectangle 14"
                                     Stroke="Transparent"
                                     Padding="14,12">
-                                <Label Text="ℹ️  All fields and 3 photos are required for successful face recognition"
+                                <Label Text="ℹ️  All fields and a photo are required for successful face recognition."
                                        FontFamily="Inter"
                                        FontSize="12"
                                        TextColor="{StaticResource OnSurfaceVariant}"

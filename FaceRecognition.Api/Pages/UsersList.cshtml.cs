@@ -41,7 +41,7 @@ public class UsersListModel : PageModel
 
             var allUsers = await _userDatabaseService.GetAllUsersAsync();
             TotalUsers = allUsers.Count;
-            UsersWithCompletePhotos = allUsers.Count(u => u.HasAllPhotos);
+            UsersWithCompletePhotos = allUsers.Count(u => u.HasPhoto);
 
             var viewModels = allUsers
                 .Select(u => new UserViewModel
@@ -54,7 +54,7 @@ public class UsersListModel : PageModel
                     Sex = u.Sex,
                     RegisteredDate = u.RegisteredDate,
                     PhotoCount = (u.Photo1 != null ? 1 : 0) + (u.Photo2 != null ? 1 : 0) + (u.Photo3 != null ? 1 : 0),
-                    HasAllPhotos = u.HasAllPhotos
+                    HasAllPhotos = u.HasPhoto
                 })
                 .ToList();
 

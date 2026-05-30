@@ -2,6 +2,8 @@ namespace FaceRecognitionApp.Api.Models;
 
 /// <summary>
 /// Represents a registered user with their photos and face embeddings.
+/// Currently only Photo1 is required and used for face recognition.
+/// Photo2 and Photo3 are reserved for future functionality.
 /// </summary>
 public class UserRegistration
 {
@@ -17,6 +19,9 @@ public class UserRegistration
 
     public DateTime RegisteredDate { get; set; } = DateTime.Now;
 
+    /// <summary>
+    /// Primary face photo for recognition (required).
+    /// </summary>
     public byte[]? Photo1 { get; set; }
     public byte[]? Photo2 { get; set; }
     public byte[]? Photo3 { get; set; }
@@ -32,6 +37,9 @@ public class UserRegistration
         }
     }
 
-    public bool HasAllPhotos => Photo1 != null && Photo2 != null && Photo3 != null;
+    /// <summary>
+    /// Checks if user has at least one photo (required for registration).
+    /// </summary>
+    public bool HasPhoto => Photo1 != null;
 }
 

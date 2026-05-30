@@ -79,8 +79,8 @@
                         <th class="px-6 py-4 font-medium">Gender</th>
                         <th class="px-6 py-4 font-medium">Age</th>
                         <th class="px-6 py-4 font-medium">Date of Birth</th>
-                        <th class="px-6 py-4 font-medium">Photos</th>
-                        <th class="px-6 py-4 font-medium">Registered</th>
+@*                         <th class="px-6 py-4 font-medium">Photos</th>
+ *@                        <th class="px-6 py-4 font-medium">Registered</th>
                         <th class="px-6 py-4 font-medium">Actions</th>
                     </tr>
                 </thead>
@@ -93,7 +93,7 @@
                             <td class="px-6 py-4 text-sm" style="color:#434656;">@(string.IsNullOrEmpty(user.Sex) ? "N/A" : user.Sex)</td>
                             <td class="px-6 py-4 text-sm" style="color:#434656;">@user.Age years</td>
                             <td class="px-6 py-4 text-sm" style="color:#434656;">@user.DateOfBirth.ToString("MMM dd, yyyy")</td>
-                            <td class="px-6 py-4">
+                           @*  <td class="px-6 py-4">
                                 @if (user.HasAllPhotos)
                                 {
                                     <span class="badge-processed inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium">
@@ -108,7 +108,7 @@
                                         @user.PhotoCount of 3
                                     </span>
                                 }
-                            </td>
+                            </td> *@
                             <td class="px-6 py-4 text-sm" style="color:#434656;">@user.RegisteredDate.ToString("MMM dd, yyyy")</td>
                             <td class="px-6 py-4">
                                 <div class="flex gap-2">
